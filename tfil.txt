@@ -1,0 +1,7 @@
+"lava"
+{
+	"base"		"base"
+	"title"		"The Floor is Lava"
+	"maps"		"*"
+}
+// Created by Bull
