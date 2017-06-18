@@ -25,8 +25,6 @@ function Mutators.StartEvent(event)
 	end
 end
 
---Mutators.StartEvent("World Flip!")
-
 hook.RunOnce("HUDPaint", function()
 	if GetGlobalString("$activemutator") ~= "" then
 		Mutators.StartEvent(GetGlobalString("$activemutator"))
