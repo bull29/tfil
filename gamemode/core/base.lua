@@ -12,3 +12,8 @@ function GM:Tick()
 	end
 end
 
+function GM:OnGamemodeLoaded()
+	timer.Simple( 0, function()
+		GM = GM or GAMEMODE
+	end)
+end

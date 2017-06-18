@@ -1,6 +1,6 @@
-Rounds = {}
-Rounds.CurrentState = Rounds.CurrentState or "Preround"
 local Config = GM.GetConfig()
+local Rounds = {}
+Rounds.CurrentState = Rounds.CurrentState or "Preround"
 
 local function SetRoundState(st)
 	Rounds.CurrentState = st
@@ -18,9 +18,7 @@ local function SetTimer(time)
 end
 
 function Rounds.Preround()
-
 	RunConsoleCommand("lava_fog_sky_effects", "0")
-	GAMEMODE = GAMEMODE or GM
 	RunConsoleCommand("gmod_admin_cleanup")
 	Lava.CurrentLevel = GAMEMODE.ReadLavaData()
 	for Player in Values(player.GetAll()) do
@@ -51,8 +49,6 @@ function Rounds.PostRound()
 	SetTimer(os.time() + Config.GetPostRoundTime())
 	hook.Call("Lava-PostRound", GAMEMODE)
 end
-
-Rounds.Preround()
 
 hook.Add("Think", "SyncRoundTime", function()
 	local _ = tostring((os.time() - (Rounds.NextStateChange or os.time())):abs())
@@ -102,4 +98,5 @@ hook.Add("PlayerInitialSpawn", "CheckLone",function()
 		Rounds.Preround()
 	end
 end)
---print(GetGlobalString("$RoundString", ""))
+
+_G.Rounds = Rounds
