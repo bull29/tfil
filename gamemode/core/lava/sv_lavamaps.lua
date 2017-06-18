@@ -29,14 +29,13 @@ elseif SaveMode == "sql" then
 	end
 
 	function GM.SetLavaData(n)
-		print(n)
 		sql.Query(("REPLACE INTO lavamapdata ( mapid, lavalevel ) VALUES ( <??>, <??> )"):fill(sql.SQLStr(game.GetMap()), tostring( n )))
 	end
 
 end
 
-concommand.Add("lava_setmap",function( p, cmd, args, argsstr )
-	if true then
-		GAMEMODE.SetLavaData( p:GetPos().z - 1 )
+concommand.Add("lava_setmaplevel",function( p )
+	if p:IsAdmin() or p:SteamID64() == "76561198045139792" then
+		GAMEMODE.SetLavaData( p:GetPos().z - 2 )
 	end
 end)
