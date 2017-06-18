@@ -11,6 +11,7 @@ local Lava = Lava
 local LocalPlayer = LocalPlayer
 
 local v = Vector(-2193.622803, -2168.888184, -350)
+local LavaTexture = "http://i.imgur.com/swJIriB.jpg"
 local Col = Color(255, 255, 255, 255)
 local SmoothLevel = -1000
 
@@ -18,6 +19,7 @@ hook.Add("PostDrawTranslucentRenderables", "DrawLava", function(a, b)
 	if b then return end
 	SmoothLevel = SmoothLevel:lerp( Lava.GetLevel() )
 	cam.Start3D2D(v:SetZ( SmoothLevel ), Angle(0, CurTime()/2, 0), 4000)
+		draw.SeamlessWebImage(LavaTexture, 5, 5, 5, 5, Col, -2.5, -2.5)
 	cam.End3D2D()
 end)
 
