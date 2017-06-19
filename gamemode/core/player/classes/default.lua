@@ -15,4 +15,4 @@ function PLAYER:Spawn()
 	self.Player:SetupHands()
 end
 
-player_manager.RegisterClass("lava_default", PLAYER, nil)
+player_manager.RegisterClass("lava_default", PLAYER, "player_default" )
