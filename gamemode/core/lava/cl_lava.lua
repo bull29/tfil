@@ -7,7 +7,6 @@ local CurTime = CurTime
 local math = math
 local drawOverlay = DrawMaterialOverlay
 local drawColor = DrawBloom
-local Lava = Lava
 local LocalPlayer = LocalPlayer
 
 local v = Vector(-2193.622803, -2168.888184, -350)

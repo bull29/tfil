@@ -1,6 +1,6 @@
 local SetGlobalFloat = SetGlobalFloat
-local Rounds = Rounds
-local Lava = Lava
+--local Rounds = Rounds
+--local Lava = Lava
 local Values = Values
 local FrameTime = FrameTime
 
@@ -24,7 +24,7 @@ hook.Add("Think", "LavaMain", function()
 			max = 1
 		end
 
-		Lava.ShiftLevel((FrameTime() * max / 50))
+		Lava.ShiftLevel((FrameTime() * max * 0.01 ):max( FrameTime() ))
 	elseif Rounds.CurrentState == "Ended" then
 		Lava.ShiftLevel(-FrameTime() * 5)
 	end
