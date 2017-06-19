@@ -1,6 +1,7 @@
 
 
 local Vec = debug.getregistry().Vector
+local Vector = Vector
 
 function Vec:SetX( n, alter )
 	if not alter then
