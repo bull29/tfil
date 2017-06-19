@@ -27,9 +27,9 @@ hook.Add("CalcMainActivity", "ClimbingAnims", function(Player, Velocity)
 		local Query = string.Split(Player:GetNW2String("$climbquery"), " ")
 
 		if Query[1] ~= "0" then
-			Player:SetCycle(CurTime() * 2 * (Query[1]))
+			Player:SetCycle(CurTime() * 1.4 * (Query[1]))
 		elseif Query[2] ~= "0" then
-			Player:SetCycle(CurTime() * 1.5 * (Query[2]))
+			Player:SetCycle(CurTime() * 1.6 * (Query[2]))
 		else
 			Player:SetCycle(0.2)
 		end
