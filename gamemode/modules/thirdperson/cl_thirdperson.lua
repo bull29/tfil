@@ -4,7 +4,7 @@ local mulvar = 1
 _ontp, tfov = _ontp or false, 65
 local tr = {}
 local tpsma = 0
-local OldPos = Vector(0, 0, 0)
+local OldPos = IsValid( LocalPlayer() ) and LocalPlayer():EyePos() or Vector(0, 0, 0)
 
 local function LerpVector(v1, v2, am)
 	return Vector(lp(am, v1.x, v2.x), lp(am, v1.y, v2.y), lp(am, v1.z, v2.z))
