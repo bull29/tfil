@@ -71,6 +71,12 @@ hook.Add("Tick", "CycleRounds", function()
 end)
 
 hook.Add("PostPlayerDeath", "CheckAllDead", function( Player)
+	if Player:GetPos().z <= Lava.GetLevel() then
+		local rag = Player:GetRagdollEntity()
+		rag:SetModel("models/player/charple.mdl")
+		rag:Ignite( 500, 0 )
+	end
+
 	if Rounds.CurrentState == "Started" then
 		local ShouldRestart = true
 
