@@ -24,14 +24,15 @@ hook.Add("Think", "LavaMain", function()
 			max = 1
 		end
 
-		Lava.ShiftLevel((FrameTime() * max * 0.01 ):max( FrameTime() ))
+		--Lava.ShiftLevel((FrameTime() * max * 0.01 ):max( FrameTime() ))
+		Lava.ShiftLevel( FrameTime() *5 )
 	elseif Rounds.CurrentState == "Ended" then
 		Lava.ShiftLevel(-FrameTime() * 5)
 	end
 end)
 
 hook.Add("PlayerTick", "LavaHurt", function(Player)
-	if Player:GetPos().z <= Lava.CurrentLevel then
+	if Rounds.CurrentState == "Started" and Player:GetPos().z <= Lava.CurrentLevel then
 		Player:Ignite(0.1, 0)
 	end
 end)

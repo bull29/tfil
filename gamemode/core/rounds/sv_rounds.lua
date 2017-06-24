@@ -58,6 +58,7 @@ hook.Add("Think", "SyncRoundTime", function()
 end)
 
 hook.Add("Tick", "CycleRounds", function()
+	Rounds.NextStateChange = Rounds.NextStateChange or 0
 	if Rounds.NextStateChange <= os.time() then
 		if Rounds.CurrentState == "Preround" then
 			Rounds.Start()

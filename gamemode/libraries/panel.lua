@@ -42,6 +42,12 @@ function pmeta:GenerateOverwrite( var )
 	return self[ VarToUse ]
 end
 
+function pmeta:Declip( func )
+	surface.DisableClipping( true )
+	func()
+	surface.DisableClipping( false )
+end
+
 function pmeta:Blur( amount )
 	amount = amount or 3
 	local x, y = self:LocalToScreen( 0, 0 )
@@ -153,13 +159,14 @@ function pmeta:EnsureCenterBounds(desiredW, desiredH, amount )
 	amount = amount or 3
 	self.DesiredWidth = desiredW
 	self.DesiredHeight = desiredH
-	self.PaintOldRebound = self.PaintOldRebound or self.Paint
+	local Old = self:GenerateOverwrite("PaintOver")--self.PaintOldRebound = self.PaintOldRebound or self.Paint
 
 	if self.SetSizable then
 		self:SetSizable(true)
 	end
 
-	function self:Paint(w, h)
+	function self:PaintOver(w, h)
+		Old( self, w, h )
 		if w ~= self.DesiredWidth or h ~= self.DesiredHeight then
 			self:SetWide(math.Round(Lerp(FrameTime() * amount, w, self.DesiredWidth)))
 			self:SetTall(math.Round(Lerp(FrameTime() * amount, h, self.DesiredHeight)))
@@ -168,7 +175,5 @@ function pmeta:EnsureCenterBounds(desiredW, desiredH, amount )
 		if self:GetHorizontalPos() ~= self:GetCenterX() or self:GetVerticalPos() ~= self:GetCenterY() then
 			self:SetPos(Lerp(FrameTime() * amount*2, self:GetHorizontalPos(), self:GetCenterX()), Lerp(FrameTime() * amount*2, self:GetVerticalPos(), self:GetCenterY()))
 		end
-
-		return self.PaintOldRebound(self, w, h)
 	end
 end
