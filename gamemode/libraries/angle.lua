@@ -1,4 +1,5 @@
 local Ang = debug.getregistry().Angle
+local Angle = Angle
 
 function Ang:SetPitch(n, alter)
 	if not alter then return Angle(n, self.y, self.r) end
