@@ -94,3 +94,5 @@ end
 function draw.SteamAvatar( avatar, res, x, y, width, height, color, ang, corner )
 	draw.WebImage( fetchAvatarAsset( avatar, res ), x, y, width, height, color, ang, corner )
 end
+
+draw.fetch_asset = fetch_asset
