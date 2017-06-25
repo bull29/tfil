@@ -37,9 +37,9 @@ hook.Add("PlayerRender", "DrawClimbingAnims", function(Player)
 		Player:SetRenderAngles( Player:GetRenderAngles():SetYaw(climbQuery[3]):SetRoll(Player.LerpedSideClimbVar))
 		Player:SetupBones()
 		local t = (Player.LerpedSideClimbVar:abs() / 2):min(50):max(12):floor()
-		cam.Start3D(EyePos() - Vector(0, 0, t))
-		Player:DrawModel()
-		cam.End3D()
+		cam.Wrap3D( function()
+			Player:DrawModel()
+		end, EyePos() - Vector(0, 0, t) )
 		return true
 	end
 end)
@@ -130,26 +130,26 @@ hook.RunOnce("HUDPaint", function()
 		draw.RoundedBox(0, 0, 0, w, h, color_white)
 		OldPos = LerpVector(FrameTime() * 3, OldPos, LocalPlayer():EyePos() - (tr.HitNormal:Angle() + Angle(0, 180, 0)):Forward() * LocalPlayer():GetVelocity():Length():max(60))
 		OldAng = LerpAngle(FrameTime() * 3, OldAng, tr.HitNormal:Angle() + Angle(0, 180, 0))
-		cam.Start3D()
-		ShouldDrawLP = true
-		render.SetLightingMode(1)
-		render.SuppressEngineLighting(true)
+		cam.Wrap3D( function()
+			ShouldDrawLP = true
+			render.SetLightingMode(1)
+			render.SuppressEngineLighting(true)
 
-		render.RenderView{
-			origin = OldPos,
-			angles = OldAng,
-			x = x,
-			y = y,
-			w = w,
-			h = h,
-			fov = 120,
-			aspectratio = w / h,
-			drawviewmodel = false
-		}
+			render.RenderView{
+				origin = OldPos,
+				angles = OldAng,
+				x = x,
+				y = y,
+				w = w,
+				h = h,
+				fov = 120,
+				aspectratio = w / h,
+				drawviewmodel = false
+			}
 
-		render.SuppressEngineLighting(false)
-		render.SetLightingMode(0)
-		cam.End3D()
+			render.SuppressEngineLighting(false)
+			render.SetLightingMode(0)
+		end)
 		ShouldDrawLP = false
 		draw.RoundedBox(0, 0, 0, w, edge, col)
 		draw.RoundedBox(0, 0, h - edge, w, edge, col)
