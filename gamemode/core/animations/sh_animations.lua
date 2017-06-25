@@ -12,13 +12,12 @@ hook.Add( "CalcMainActivity", "BaseAnimations", function( Player, Velocity )
 	end
 end)
 
-hook.Add("fTick", "HookOntoRender", function()
-	for Player in Values( player.GetAll() ) do
-		if not Player.RenderOverride then
-			Player.RenderOverride = function( self )
-				if hook.Call("PlayerRender", nil, self ) == nil then
-					self:DrawModel()
-				end
+hook.Add("NetworkEntityCreated", "HookOntoRender", function( Object )
+	if not Object:IsPlayer() then return end
+	if not Object.RenderOverride then
+		Object.RenderOverride = function( self )
+			if hook.Call("PlayerRender", nil, self ) == nil then
+				self:DrawModel()
 			end
 		end
 	end
