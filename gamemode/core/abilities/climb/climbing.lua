@@ -63,14 +63,14 @@ hook.Add("SetupMove", "Climbing", function(Player, MoveData, Command)
 
 	if not tr2.Hit and tr.Hit and not tr.HitSky and x.p:floor() == 0 and x.r == 0 then
 		if SERVER and not Player:IsInWorld() then return end
+		if hook.Call("Lava.CanClimb", nil, Player, tr.HitTexture) == false then return end
+
 		Command:ClearMovement()
 		Command:ClearButtons()
 
 		if CLIENT then
 			_cEnabled = true
 		end
-
-		if hook.Call("LavaCanClimbBrush", nil, Player, tr.HitTexture) == false then return end
 
 		if MoveData:KeyDown(6) then
 			MoveData:RemoveKey(6)
