@@ -21,7 +21,7 @@ local math = math
 local mats = {}
 local fetchedavatars = {}
 
-local function fetch_asset(url)
+local function fetch_asset(url, param )
 	if not url then return _error end
 
 	if mats[url] then
@@ -31,7 +31,7 @@ local function fetch_asset(url)
 	local crc = crc(url)
 
 	if exists("downloaded_assets/" .. crc .. ".png", "DATA") then
-		mats[url] = Material("data/downloaded_assets/" .. crc .. ".png")
+		mats[url] = Material("data/downloaded_assets/" .. crc .. ".png", param )
 
 		return mats[url]
 	end
@@ -40,7 +40,7 @@ local function fetch_asset(url)
 
 	fetch(url, function(data)
 		write("downloaded_assets/" .. crc .. ".png", data)
-		mats[url] = Material("data/downloaded_assets/" .. crc .. ".png")
+		mats[url] = Material("data/downloaded_assets/" .. crc .. ".png", param )
 	end)
 
 	return mats[url]
