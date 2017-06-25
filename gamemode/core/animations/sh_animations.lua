@@ -12,6 +12,17 @@ hook.Add( "CalcMainActivity", "BaseAnimations", function( Player, Velocity )
 	end
 end)
 
+hook.Add("fTick", "HookOntoRender", function()
+	for Player in Values( player.GetAll() ) do
+		if not Player.RenderOverride then
+			Player.RenderOverride = function( self )
+				if hook.Call("PlayerRender", nil, self ) == nil then
+					self:DrawModel()
+				end
+			end
+		end
+	end
+end)
 
 function GM:PlayerNoClip()
 	return true

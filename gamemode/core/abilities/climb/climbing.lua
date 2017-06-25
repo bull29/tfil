@@ -14,26 +14,6 @@ local ViewPanel
 
 hook.Add("CalcMainActivity", "ClimbingAnims", function(Player, Velocity)
 	if CLIENT and Player:GetNW2String("$climbquery") ~= "" then
-		if not Player.RenderOverride then
-			Player.RenderOverride = function(self)
-				local climbQuery = self:GetNW2String("$climbquery")
-
-				if climbQuery ~= "" then
-					climbQuery = string.Split(climbQuery, " ")
-					self.LerpedSideClimbVar = self.LerpedSideClimbVar or 0
-					self.LerpedSideClimbVar = self.LerpedSideClimbVar:lerp(climbQuery[2] * 90)
-					self.SetRenderAngles(self, self:GetRenderAngles():SetYaw(climbQuery[3]):SetRoll(self.LerpedSideClimbVar))
-					self:SetupBones()
-					local t = (self.LerpedSideClimbVar:abs() / 2):min(50):max(12):floor()
-					cam.Start3D(EyePos() - Vector(0, 0, t))
-					self:DrawModel()
-					cam.End3D()
-				else
-					self:DrawModel()
-				end
-			end
-		end
-
 		local Query = string.Split(Player:GetNW2String("$climbquery"), " ")
 
 		if Query[1] ~= "0" then
@@ -45,8 +25,22 @@ hook.Add("CalcMainActivity", "ClimbingAnims", function(Player, Velocity)
 		end
 
 		return ACT_ZOMBIE_CLIMB_UP, -1
-	elseif CLIENT then
-		Player.RenderOverride = nil
+	end
+end)
+
+hook.Add("PlayerRender", "DrawClimbingAnims", function(Player)
+	local climbQuery = Player:GetNW2String("$climbquery")
+	if climbQuery ~= "" then
+		climbQuery = string.Split(climbQuery, " ")
+		Player.LerpedSideClimbVar = Player.LerpedSideClimbVar or 0
+		Player.LerpedSideClimbVar = Player.LerpedSideClimbVar:lerp(climbQuery[2] * 90)
+		Player:SetRenderAngles( Player:GetRenderAngles():SetYaw(climbQuery[3]):SetRoll(Player.LerpedSideClimbVar))
+		Player:SetupBones()
+		local t = (Player.LerpedSideClimbVar:abs() / 2):min(50):max(12):floor()
+		cam.Start3D(EyePos() - Vector(0, 0, t))
+		Player:DrawModel()
+		cam.End3D()
+		return true
 	end
 end)
 
@@ -69,6 +63,8 @@ hook.Add("SetupMove", "Climbing", function(Player, MoveData, Command)
 
 	if not tr2.Hit and tr.Hit and not tr.HitSky and x.p:floor() == 0 and x.r == 0 then
 		if SERVER and not Player:IsInWorld() then return end
+		Command:ClearMovement()
+		Command:ClearButtons()
 
 		if CLIENT then
 			_cEnabled = true
