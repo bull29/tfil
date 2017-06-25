@@ -13,6 +13,18 @@ function hook.RunOnce(event, func)
 	end)
 end
 
+function hook.mAdd( events, name, func )
+	for event in Values( events ) do
+		hook.Add( event, name, func )
+	end
+end
+
+function hook.mRemove( events, name, func )
+	for event in Values( events ) do
+		hook.Remove( event, name, func )
+	end
+end
+
 function hook.Flush(st)
 	local h = hook.GetTable()[st]
 
