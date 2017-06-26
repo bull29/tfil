@@ -17,3 +17,7 @@ function GM:OnGamemodeLoaded()
 		GM = GM or GAMEMODE
 	end)
 end
+
+function GM:GetFallDamage( Player )
+	return 4
+end
