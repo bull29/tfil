@@ -12,6 +12,16 @@ local surface = surface
 local v = Vector()
 local LavaTexture = "http://i.imgur.com/swJIriB.jpg"
 local SmoothLevel = -1000
+local MapScale = 1
+local function GetMapBounds()
+	local a, b = Entity(0):GetModelRenderBounds()
+	a.z, b.z = 0, 0
+	return a:Distance( b )
+end
+
+hook.RunOnce("HUDPaint", function()
+	MapScale = GetMapBounds()
+end)
 
 hook.Add("PostDrawTranslucentRenderables", "DrawLava", function(a, b)
 	if b then return end
@@ -20,8 +30,8 @@ hook.Add("PostDrawTranslucentRenderables", "DrawLava", function(a, b)
 	cam.Wrap3D2D(function()
 		surface.SetDrawColor(255, 255, 255)
 		surface.SetMaterial(draw.fetch_asset(LavaTexture, "noclamp"))
-		surface.DrawTexturedRectUV(-8, -8, 16, 16, 0, 0, 10, 10)
-	end, v:SetZ(SmoothLevel), Angle(0, CurTime() / 3, 0), 4000)
+		surface.DrawTexturedRectUV(-MapScale/2, -MapScale/2, MapScale, MapScale, 0, 0, 10, 10)
+	end, v:SetZ(SmoothLevel), Angle(0, CurTime() / 3, 0), 1)
 end)
 
 hook.Add("RenderScreenspaceEffects", "DrawLavaOverlay", function()
