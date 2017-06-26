@@ -3,7 +3,6 @@ local string = string
 local tonumber = tonumber
 local util = util
 local Vector = Vector
-local Fourty = Vector(0, 0, 40)
 local COLLISION_GROUP_DEBRIS = COLLISION_GROUP_DEBRIS
 local cam = cam
 local draw = draw
@@ -13,8 +12,12 @@ local _cEnabled = false
 local ShouldDrawLP = false
 local DarkColor = Color(70, 70, 70)
 local ViewPanel
+local function CanClimb( Player )
+	return Player:HasAbility("Chameleon")
+end
 
 hook.Add("CalcMainActivity", "ClimbingAnims", function(Player, Velocity)
+	if not CanClimb( Player ) then return end
 	if CLIENT and Player:GetNW2String("$climbquery") ~= "" then
 		local Query = string.Split(Player:GetNW2String("$climbquery"), " ")
 
@@ -31,6 +34,7 @@ hook.Add("CalcMainActivity", "ClimbingAnims", function(Player, Velocity)
 end)
 
 hook.Add("PlayerRender", "DrawClimbingAnims", function(Player)
+	if not CanClimb( Player ) then return end
 	local climbQuery = Player:GetNW2String("$climbquery")
 
 	if climbQuery ~= "" then
@@ -50,6 +54,8 @@ hook.Add("PlayerRender", "DrawClimbingAnims", function(Player)
 end)
 
 hook.Add("SetupMove", "Climbing", function(Player, MoveData, Command)
+	if not CanClimb( Player ) then return end
+
 	if not Player:Alive() then
 		Player.m_ClimbAbilityMeter = 100
 		Player:SetNW2Float("$climbabilitymeter", Player.m_ClimbAbilityMeter)
@@ -79,7 +85,7 @@ hook.Add("SetupMove", "Climbing", function(Player, MoveData, Command)
 		if hook.Call("Lava.CanClimb", nil, Player, tr.HitTexture) == false then return end
 
 		if SERVER then
-			Player.m_ClimbAbilityMeter = (Player.m_ClimbAbilityMeter - FrameTime() * 20):max(0)
+			Player.m_ClimbAbilityMeter = (Player.m_ClimbAbilityMeter - FrameTime() * 25):max(0)
 			Player:SetNW2Float("$climbabilitymeter", Player.m_ClimbAbilityMeter)
 
 			if Player.m_ClimbAbilityMeter == 0 then
@@ -145,7 +151,7 @@ hook.RunOnce("HUDPaint", function()
 	c.Paint = function(s, w, h)
 		draw.RoundedBox(0, 0, 0, w, h, DarkColor)
 		draw.RoundedBox(0, h * 0.1, h * 0.1, w - h * 0.2, h * 0.8, pColor():Alpha(50))
-		draw.RoundedBox(0, h * 0.1, h * 0.1, (s.Meter / 100) * (w - h * 0.2), h * 0.8, pColor())
+		draw.RoundedBox(0, h * 0.1, h * 0.1, (s.Meter / 100) * (w - h * 0.2), h * 0.8, LocalPlayer().m_HaveUsedupClimbAbility and (pColor() - 50 ):Alpha( 100 ) or pColor())
 	end
 end)
 
@@ -154,7 +160,7 @@ local LerpedMeter = 100
 hook.Add("HUDPaint", "DrawClimbMeter", function()
 	local cMeter = LocalPlayer():GetNW2Float("$climbabilitymeter", 100)
 
-	if cMeter ~= 100 and ClimbMeterDisplay then
+	if cMeter ~= 100 and ClimbMeterDisplay and CanClimb( LocalPlayer() ) then
 		LerpedMeter = LerpedMeter:lerp(cMeter, FrameTime() * 20)
 		ClimbMeterDisplay.Meter = LerpedMeter
 		ClimbMeterDisplay:PaintManual()
@@ -174,6 +180,7 @@ hook.RunOnce("HUDPaint", function()
 	ViewPanel:MakeBorder((ScrH() / 50):floor(), DarkColor)
 
 	ViewPanel.Paint = function(s, w, h)
+		if not CanClimb( LocalPlayer() ) then return end
 		local edge, col = (ScrH() / 20):floor(), GlobalCustomColor(true)
 
 		if not s.HaveSet and LavaCenterHUD then
@@ -218,7 +225,7 @@ hook.RunOnce("HUDPaint", function()
 end)
 
 hook.Add("HUDPaint", "DrawClimbPanel", function()
-	if ViewPanel and _cEnabled then
+	if ViewPanel and _cEnabled and CanClimb( LocalPlayer() ) then
 		ViewPanel:PaintManual()
 	end
 end)
@@ -232,3 +239,7 @@ hook.Add("Lava.Preround", "ResetMeters", function()
 		Player.m_ClimbAbilityMeter = 100
 	end
 end)
+
+Abilities.Register("Chameleon", [[You can scale any world brush! 
+	Careful though!
+	You take extra fall damage.]], "http://i.imgur.com/AGCi4vd.png")
