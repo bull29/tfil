@@ -43,3 +43,8 @@ end
 function cmeta:Alpha(n)
 	return Color(self.r, self.g, self.b, n)
 end
+
+function pColor()
+	local x = LocalPlayer():GetPlayerColor()
+	return Color( x.r*255, x.g*255, x.b*255)
+end

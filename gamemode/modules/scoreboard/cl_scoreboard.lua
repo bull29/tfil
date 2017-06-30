@@ -65,7 +65,7 @@ hook.RunOnce( "HUDPaint", function()
 		b:SetText("")
 		b:MakeBorder(ed, colors.D)
 		b:SetTall(ScrH() / 17)
-		b.ColorOf = GlobalCustomColor(true)
+		b.ColorOf = pColor()
 
 		local i = b:Add("DPanel")
 		b.Paint = function(s, w, h)
@@ -83,9 +83,9 @@ hook.RunOnce( "HUDPaint", function()
 			text(v.name, "fatkid_score_side", i:GetHorizontalPos() + i:GetWide() + 4, h/2 - ScrH()/80 )
 
 			if s.Hovered then
-				s.ColorOf = s.ColorOf:Approach(GlobalCustomColor(true) + 25, 5)
+				s.ColorOf = s.ColorOf:Approach(pColor() + 25, 5)
 			else
-				s.ColorOf = s.ColorOf:Approach(GlobalCustomColor(true) - 5		, 5)
+				s.ColorOf = s.ColorOf:Approach(pColor() - 5		, 5)
 			end
 		end
 		b.DoClick = v.func
@@ -124,11 +124,11 @@ hook.RunOnce( "HUDPaint", function()
 		topset = h / 10
 		s.TopOf = topset
 		box(0, 0, 0, w, h, colors.A)
-		box(0, 0, 0, w, topset, GlobalCustomColor(true))
+		box(0, 0, 0, w, topset, pColor())
 		box(0,0,topset-1,w,ed,colors.D)
 		text("Nivo", "fatkid_motd_top", s.ScrollOffset, 5)
-		text("[", "fatkid_motd_top", s.ScrollOffset - 15, 5, GlobalCustomColor(true) + 50)
-		text("        ]", "fatkid_motd_top", s.ScrollOffset, 5, GlobalCustomColor(true) + 50)
+		text("[", "fatkid_motd_top", s.ScrollOffset - 15, 5, pColor() + 50)
+		text("        ]", "fatkid_motd_top", s.ScrollOffset, 5, pColor() + 50)
 
 		if s.Flip then
 			s.ScrollOffset = lerp(ft(), s.ScrollOffset, 0)

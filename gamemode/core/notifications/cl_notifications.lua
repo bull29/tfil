@@ -1,5 +1,5 @@
 local function CreateNotification(title, time, InitialColor, sound )
-	InitialColor = InitialColor or GlobalCustomColor( true )
+	InitialColor = InitialColor or pColor()
 	MsgC( Color( 255, 0, 0 ), "\nNotification: " )
 	MsgC( InitialColor, "\n"..title:gsub("\t", "").."\n" )
 	surface.PlaySound( sound )
@@ -42,5 +42,5 @@ function GM.CreateNotification( title, time, color, sound )
 end
 
 net.Receive("lava_notification",function()
-	GAMEMODE.CreateNotification( net.ReadString(), net.ReadInt( 32 ), GlobalCustomColor( true ), net.ReadString())
+	GAMEMODE.CreateNotification( net.ReadString(), net.ReadInt( 32 ), pColor(), net.ReadString())
 end)
