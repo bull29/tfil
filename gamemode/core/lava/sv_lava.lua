@@ -16,7 +16,12 @@ hook.Add("Think", "LavaSync", function()
 end)
 
 hook.Add("Think", "LavaMainCycle", function()
-	if Rounds.CurrentState == "Started" then
+	if Rounds.CurrentState == "Preround" then
+		hook.Call("Lava.PreroundTick")
+
+	elseif Rounds.CurrentState == "Started" then
+		if hook.Call("Lava.RoundStartedTick") then return end
+
 		Rounds.NextSuperDecentTime = Rounds.NextSuperDecentTime or CurTime() + 30
 
 		if Rounds.NextSuperDecentTime < CurTime() then
@@ -41,6 +46,7 @@ hook.Add("Think", "LavaMainCycle", function()
 			Lava.ShiftLevel(FrameTime() * 3)
 		end
 	elseif Rounds.CurrentState == "Ended" then
+		hook.Call("Lava.RoundEndedTick")
 		Rounds.NextSuperDecentTime = nil
 	end
 end)
