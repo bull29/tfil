@@ -1,5 +1,7 @@
 local SetGlobalFloat = SetGlobalFloat
 local table = table
+local Rounds = Rounds
+local Lava = Lava
 local Values = Values
 local FrameTime = FrameTime
 local player_manager = player_manager
@@ -25,15 +27,17 @@ hook.Add("Think", "LavaMain", function()
 					table.remove( tab, k )
 				end
 			end
-			table.sort( tab, function( a, b ) return a:GetPos().z < b:GetPos().z end)
-			local t = ((tab[ 1 ]:GetPos().z - 32 - Lava.GetLevel())*FrameTime()/25):max(FrameTime())
-			Lava.ShiftLevel( t )
+			if tab[ 1 ] then
+				table.sort( tab, function( a, b ) return a:GetPos().z < b:GetPos().z end)
+				local t = ((tab[ 1 ]:GetPos().z - 32 - Lava.GetLevel())*FrameTime()/25):max(FrameTime()*3)
+				Lava.ShiftLevel( t )
 
-			if t == FrameTime() then
-				Rounds.NextSuperDecentTime = CurTime() + 30
+				if t == FrameTime() * 3 then
+					Rounds.NextSuperDecentTime = CurTime() + 30
+				end
 			end
 		else
-			Lava.ShiftLevel( FrameTime())
+			Lava.ShiftLevel( FrameTime()*3 )
 		end
 	elseif Rounds.CurrentState == "Ended" then
 		Rounds.NextSuperDecentTime = nil
