@@ -17,9 +17,13 @@ local function SetTimer(time)
 	Rounds.NextStateChange = time
 end
 
+
 function Rounds.Preround()
+	hook.Call("Lava.PreroundStart")
+
 	RunConsoleCommand("lava_fog_sky_effects", "0")
 	RunConsoleCommand("gmod_admin_cleanup")
+
 	Lava.CurrentLevel = GAMEMODE.ReadLavaData()
 	for Player in Values(player.GetAll()) do
 		Player:Spawn()
@@ -27,10 +31,11 @@ function Rounds.Preround()
 
 	SetRoundState("Preround")
 	SetTimer(os.time() + Config.GetPreroundTime())
-	hook.Call("Lava-Preround", GAMEMODE)
 end
 
 function Rounds.Start()
+	hook.Call("Lava.RoundStart")
+
 	RunConsoleCommand("lava_fog_sky_effects", "1")
 	GAMEMODE.CreateNotification( "Round Started!\nThe Floor is Lava!\nEscape and Survive!", 5 )
 	for Player in Values(player.GetAll()) do
@@ -41,13 +46,12 @@ function Rounds.Start()
 
 	SetRoundState("Started")
 	SetTimer(os.time() + Config.GetRoundTime())
-	hook.Call("Lava-RoundStarted", GAMEMODE)
 end
 
 function Rounds.PostRound()
+	hook.Call("Lava.PostRound" )
 	SetRoundState("Ended")
 	SetTimer(os.time() + Config.GetPostRoundTime())
-	hook.Call("Lava-PostRound", GAMEMODE)
 end
 
 hook.Add("Think", "SyncRoundTime", function()
@@ -95,7 +99,7 @@ hook.Add("PostPlayerDeath", "CheckAllDead", function( Player)
 end)
 
 hook.Add("PlayerDeathThink", "PreventRespawning",function( Player )
-	if not Player:Alive() and Rounds.CurrentState ~= "Preround" then
+	if not Player:Alive() and Rounds.CurrentState ~= "Preround" and hook.Call("Lava.DeathThink", nil, Player ) == nil then
 		return false
 	end
 end)
@@ -107,3 +111,5 @@ hook.Add("PlayerInitialSpawn", "CheckLone",function()
 end)
 
 _G.Rounds = Rounds
+
+Rounds.Preround()
