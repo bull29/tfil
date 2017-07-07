@@ -70,10 +70,11 @@ hook.RunOnce("HUDPaint", function()
 		x:DockMargin(0, 0, 0, 2)
 		x:SetTextColor(pl:GetPlayerColor():ToColor())
 		x.SmoothVoice = pl:VoiceVolume()
-
 		x.PaintOver = function(s, w, h)
-			x:SetText(pl:Nick()) -- Because Mystery Men
-			x:SetTextInset(w - h + 5 - FontFunctions.GetWide(pl:Nick(), "lava_voice_panel") - h / 5, 0)
+				s.SetData = true
+				s:SetText(pl:Nick())
+				s:SetTextInset(w - h + 5 - FontFunctions.GetWide(pl:Nick(), "lava_voice_panel") - h / 5, 0)
+			end
 
 			if not ActivePlayers[pl] or not IsValid(pl) then
 				s:Remove()
@@ -81,7 +82,7 @@ hook.RunOnce("HUDPaint", function()
 				return
 			end
 
-			s.SmoothVoice = s.SmoothVoice:lerp(pl:VoiceVolume() * 1.2, FrameTime() * 5)
+			s.SmoothVoice = s.SmoothVoice:lerp(pl:VoiceVolume() * 1.56, FrameTime() * 5)
 			local var = w - s.SmoothVoice * w - h
 			draw.WebImage(Emoji.Get(eID), var, 3, h - 6, h - 6)
 			draw.WebImage(Emoji.Get(2646), var + h * 0.9, 3, w - var, h - 6)
