@@ -29,6 +29,7 @@ end
 
 function table.CleanValues( tab )
 	for k, v in pairs( tab ) do
+		if not v or not IsValid( v ) then
 			tab[ k ] = nil
 		end
 	end
