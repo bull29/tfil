@@ -1,4 +1,6 @@
 local next = next
+local pairs = pairs
+local IsValid = IsValid
 
 function Values( table )
 	local cKey
@@ -15,4 +17,19 @@ function m_Table( ... )
 		tab[ obj ] = true
 	end
 	return tab
+end
+
+function table.CleanKeys( tab )
+	for k in pairs( tab ) do
+		if not IsValid( k ) then
+			tab[ k ] = nil
+		end
+	end
+end
+
+function table.CleanValues( tab )
+	for k, v in pairs( tab ) do
+			tab[ k ] = nil
+		end
+	end
 end
