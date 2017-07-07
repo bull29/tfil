@@ -13,7 +13,6 @@ surface.CreateFont("lava_round_timer", {
 	outline = false
 })
 
-
 surface.CreateFont("lava_abilities_header", {
 	font = "Coolvetica",
 	size = ScrH() / 15,
@@ -28,4 +27,11 @@ surface.CreateFont("lava_abilities_desc", {
 	antialias = true,
 	weight = 200,
 	outline = false
+})
+
+surface.CreateFont("lava_voice_panel", {
+	font = "Roboto Condensed",
+	size = ScrH() / 32,
+	antialias = true,
+	weight = 200,
 })
