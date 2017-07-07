@@ -71,6 +71,7 @@ hook.RunOnce("HUDPaint", function()
 		x:SetTextColor(pl:GetPlayerColor():ToColor())
 		x.SmoothVoice = pl:VoiceVolume()
 		x.PaintOver = function(s, w, h)
+			if not s.SetData or Mutators.IsActive("Mystery Men") then
 				s.SetData = true
 				s:SetText(pl:Nick())
 				s:SetTextInset(w - h + 5 - FontFunctions.GetWide(pl:Nick(), "lava_voice_panel") - h / 5, 0)
