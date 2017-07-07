@@ -51,7 +51,7 @@ Mutators.RegisterNewEvent("Mystery Men", "Everybody is under an comprehensive al
 					SetPlayer(self, ent, size)
 				end,
 				PaintOver = function(s, w, h)
-					if s.Player:IsValid() and Mutators.IsActive("Mystery Men") and s.Player:Alive() then
+					if s.Player and s.Player:IsValid() and Mutators.IsActive("Mystery Men") and s.Player:Alive() then
 						local url = s.Player:GetNWString("$mys_avatarurl", "")
 
 						if url ~= "" then
