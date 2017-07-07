@@ -3,6 +3,8 @@ local cmeta = debug.getregistry().Color
 local ma = math.Approach
 local lp = Lerp
 local Color = Color
+local LastPlayerColor = Vector( 0, 0, 0 )
+local cLastPlayerColor = Color( 0, 0, 0 )
 
 function cmeta.__unm(s)
 	return Color(255 - s.r, 255 - s.g, 255 - s.b, s.a)
@@ -44,7 +46,18 @@ function cmeta:Alpha(n)
 	return Color(self.r, self.g, self.b, n)
 end
 
+function cmeta:CopyFrom( source )
+	self.r = source.r
+	self.g = source.g
+	self.b = source.b
+	self.a = source.a
+end
+
 function pColor()
 	local x = LocalPlayer():GetPlayerColor()
-	return Color( x.r*255, x.g*255, x.b*255)
+	if x ~= LastPlayerColor then
+		LastPlayerColor = x
+		cLastPlayerColor = Color( x.r*255, x.g*255, x.b*255)
+	end
+	return cLastPlayerColor
 end
