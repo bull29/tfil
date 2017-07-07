@@ -37,14 +37,20 @@ end)
 hook.RunOnce("HUDPaint", function()
 	MapScale = GetMapBounds()
 	MapBounds = Entity(0):GetModelRenderBounds()
-	ClipTab = { {dirs.left, MapBounds.x}, {-dirs.left, MapBounds.x}, {dirs.frwd, MapBounds.y}, {dirs.frwd, MapBounds.y} }
+
+	ClipTab = {
+		[1] = {dirs.left, MapBounds.x},
+		[2] = {-dirs.left, MapBounds.x},
+		[3] = {dirs.frwd, MapBounds.y},
+		[4] = {-dirs.frwd, MapBounds.y}
+	}
 end)
 
 hook.Add("PostDrawTranslucentRenderables", "DrawLava", function(a, b)
 	SmoothLevel = SmoothLevel:lerp(Lava.GetLevel())
 	local LavaLevel = v:SetZ(SmoothLevel)
 
-	render.Clip( ClipTab, function()
+	render.Clip(ClipTab, function()
 		surface.SetDrawColor(255, 255, 255)
 		surface.SetMaterial(draw.fetch_asset(LavaTexture, "noclamp"))
 
@@ -52,14 +58,13 @@ hook.Add("PostDrawTranslucentRenderables", "DrawLava", function(a, b)
 			cam.Wrap3D2D(function()
 				surface.DrawTexturedRectUV(-MapScale / 2, -MapScale / 2, MapScale, MapScale, 0, 0, 10, 10)
 			end, LavaLevel, Angle(0, CurTime() / 3, 0), 1)
+		else
+			cam.Wrap3D2D(function()
+				surface.DrawTexturedRectUV(-MapScale / 2, -MapScale / 2, MapScale, MapScale, 0, 0, 10 * SkyboxScale, 10 * SkyboxScale)
+			end, GetGlobalVector("$skycampos") + (LavaLevel / SkyboxScale), Angle(0, CurTime() / 3, 0), 1)
 		end
-
-		cam.Wrap3D2D(function()
-			surface.DrawTexturedRectUV(-MapScale / 2, -MapScale / 2, MapScale, MapScale, 0, 0, 10 * SkyboxScale, 10 * SkyboxScale)
-		end, GetGlobalVector("$skycampos") + (LavaLevel / SkyboxScale), Angle(0, CurTime() / 3, 0), 1)
 	end)
 end)
-
 
 hook.Add("RenderScreenspaceEffects", "DrawLavaOverlay", function()
 	if hook.Call("Lava.ShouldRenderDamageOverlay") == false then return end
