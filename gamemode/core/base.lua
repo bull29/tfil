@@ -3,6 +3,7 @@
 --[[-------------------------------------------------------------------------
  		FullTick - For something you'd rather not use a timer for
 ---------------------------------------------------------------------------]]
+
 GM.f_NextTick = CurTime()
 
 function GM:Tick()
@@ -13,9 +14,7 @@ function GM:Tick()
 end
 
 function GM:OnGamemodeLoaded()
-	timer.Simple( 0, function()
-		GM = GM or GAMEMODE
-	end)
+	GAMEMODE, GM = gmod.GetGamemode(), gmod.GetGamemode()
 end
 
 function GM:GetFallDamage( Player )
