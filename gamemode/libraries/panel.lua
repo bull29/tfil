@@ -93,16 +93,17 @@ function pmeta:GetNextVerticalPos(offset)
 	return self:GetTall() + self:GetVerticalPos() + offset
 end
 
-function pmeta:MakeBorder(edge, color, top, bottom, left, right, noreplace )
-	local _
+function pmeta:MakeBorder(edge, color )
+	edge = edge or ( ScrH() * 0.001 ):ceil()
+
 	local x = self:GenerateOverwrite("PaintOver")
-	local color = color
 	self.PaintOver = function(s, w, h)
-		x( s, w, h )	
-		_ = not top and draw.RoundedBox(0, 0, 0, w, edge, color)
-		_ = not bottom and draw.RoundedBox(0, 0, h - edge, w, edge, color)
-		_ = not left and draw.RoundedBox(0, 0, 0, edge, h, color)
-		_ = not right and draw.RoundedBox(0, w - edge, 0, edge, h, color)
+		x( s, w, h )
+		draw.NoTexture()
+		surface.SetDrawColor( color )
+		for i = 1, edge do
+			ssurface.DrawOutlinedRect( i - 1, i - 1, w - i * 2, h - i * 2)
+		end
 	end
 
 	return color
