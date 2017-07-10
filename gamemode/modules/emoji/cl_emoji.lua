@@ -1,7 +1,20 @@
 file.CreateDir("tfil")
 
+local tostring = tostring
 local Emoji = {}
 Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
+local Numbers = {
+	["0"] = 2645,
+	["1"] = 2648,
+	["2"] = 2649,
+	["3"] = 2652,
+	["4"] = 2653,
+	["5"] = 2654,
+	["6"] = 2655,
+	["7"] = 2656,
+	["8"] = 2657,
+	["9"] = 2658
+}
 
 hook.RunOnce("HUDPaint", function()
 	if true or not file.Exists("tfil/emoji.txt", "DATA") then
@@ -27,6 +40,15 @@ end
 
 function Emoji.Get(name)
 	return Emoji.Index[name]
+end
+
+function Emoji.ParseNumber( num )
+	local tab = {}
+	local x = tostring( num )
+	for i = 1, # x do
+		tab[ #tab + 1 ] = Numbers[ x:sub( i, i ) ]
+	end
+	return tab
 end
 
 function Emoji.BuildPanel()
