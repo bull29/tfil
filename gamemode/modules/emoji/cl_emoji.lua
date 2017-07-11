@@ -16,24 +16,6 @@ local Numbers = {
 	["9"] = 2658
 }
 
-hook.RunOnce("HUDPaint", function()
-	if true or not file.Exists("tfil/emoji.txt", "DATA") then
-		http.Fetch("http://twitter.github.io/twemoji/2/test/preview.html", function(body)
-			local tab = {}
-			local t = body:Split("<li>&#x")
-
-			for i = 2, #t do
-				table.insert(tab, "https://twemoji.maxcdn.com/2/72x72/" .. (t[i]:Trim():Split(";</li>")[1]:lower():gsub(";&#x", "-")) .. ".png")
-			end
-
-			file.Write("tfil/emoji.txt", util.TableToJSON(tab))
-			Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
-		end)
-	else
-		Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
-	end
-end)
-
 function Emoji.GetRandom()
 	return table.Random(Emoji.Index)
 end
@@ -101,7 +83,24 @@ function Emoji.BuildPanel()
 	end
 end
 
-_G.Emoji = Emoji
 
+hook.RunOnce("HUDPaint", function()
+	if true or not file.Exists("tfil/emoji.txt", "DATA") then
+		http.Fetch("http://twitter.github.io/twemoji/2/test/preview.html", function(body)
+			local tab = {}
+			local t = body:Split("<li>&#x")
+
+			for i = 2, #t do
+				table.insert(tab, "https://twemoji.maxcdn.com/2/72x72/" .. (t[i]:Trim():Split(";</li>")[1]:lower():gsub(";&#x", "-")) .. ".png")
+			end
+
+			file.Write("tfil/emoji.txt", util.TableToJSON(tab))
+			Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
+		end)
+	else
+		Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
+	end
+end)
+_G.Emoji = Emoji
 
 concommand.Add("emoji_index", Emoji.BuildPanel )
