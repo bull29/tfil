@@ -22,6 +22,7 @@ Mutators.RegisterNewEvent("Mystery Men", "Everybody is under an comprehensive al
 			local players = player.GetAll()
 
 			for k, v in pairs(x.results) do
+				if not players[k] then continue end
 				players[k]:SetNWString("$mys_nick", v.name.first:sub(1, 1):upper() .. v.name.first:sub(2) .. " " .. v.name.last:sub(1, 1):upper() .. v.name.last:sub(2))
 				players[k]:SetNWString("$mys_avatarurl", v.picture.large)
 			end
@@ -37,9 +38,9 @@ Mutators.RegisterNewEvent("Mystery Men", "Everybody is under an comprehensive al
 					local Player = player.GetBySteamID64(x)
 					if Player then return gui.OpenURLOld("http://images.google." .. system.GetCountry() .. "/search?tbm=isch&q=" .. Player:Nick():gsub(" ", "+")) end
 				end
-
-				return gui.OpenURLOld(str)
 			end
+
+			return gui.OpenURLOld(str)
 		end -- Its' the little things that count.
 
 		if not vgui.GetControlTable("o_AvatarImage") then
