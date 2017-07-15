@@ -8,6 +8,7 @@ function Vec:SetX( n, alter )
 		return Vector( n, self.y, self.z )
 	end
 	self.x = n
+	return self
 end
 
 function Vec:SetY( n, alter )
@@ -15,6 +16,7 @@ function Vec:SetY( n, alter )
 		return Vector( self.x, n, self.z )
 	end
 	self.y = n
+	return self
 end
 
 function Vec:SetZ( n, alter )
@@ -22,4 +24,5 @@ function Vec:SetZ( n, alter )
 		return Vector( self.x, self.y, n )
 	end
 	self.z = n
+	return self
 end
