@@ -4,6 +4,7 @@ local tostring = tostring
 local Emoji = {}
 Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
 local Numbers = {
+	["."] = 2465,
 	["0"] = 2645,
 	["1"] = 2648,
 	["2"] = 2649,
