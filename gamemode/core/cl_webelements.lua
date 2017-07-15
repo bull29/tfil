@@ -5,5 +5,7 @@ wE.Circle 	  		= "http://i.imgur.com/YmbEJWD.png"
 wE.Lava 	  		= "http://i.imgur.com/swJIriB.jpg"
 wE.BandedCircle		= "http://i.imgur.com/OQpzdFx.png"
 wE.HeartOutline		= "http://i.imgur.com/OFaYwW7.png"
+wE.ClockHand		= "http://i.imgur.com/jQyeVXt.png"
+wE.QuadCircle		= "http://i.imgur.com/8uMN5HY.png"
 
 _G.WebElements = wE
