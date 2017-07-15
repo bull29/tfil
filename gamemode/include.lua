@@ -28,10 +28,10 @@ function IncludeDirectory(dir, cl, sv )
 end
 
 IncludeDirectory("tfil/gamemode/libraries")
-hook.Call("Lava.PostInit")
+hook.Call("Lava.PostInitFiles")
 
 IncludeDirectory("tfil/gamemode/core")
-hook.Call("Lava.PostInitGamemode")
+hook.Call("Lava.PostInitGamemodeFiles")
 
 IncludeDirectory("tfil/gamemode/modules")
-hook.Call("Lava.PostInitModules")
+hook.Call("Lava.PostInitModulesFiles")
