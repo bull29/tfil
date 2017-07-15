@@ -102,7 +102,7 @@ function pmeta:MakeBorder(edge, color )
 		draw.NoTexture()
 		surface.SetDrawColor( color )
 		for i = 1, edge do
-			ssurface.DrawOutlinedRect( i - 1, i - 1, w - i * 2, h - i * 2)
+			surface.DrawOutlinedRect( i - 1, i - 1, w - i * 2, h - i * 2)
 		end
 	end
 
