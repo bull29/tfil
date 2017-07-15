@@ -1,3 +1,5 @@
+include("tfil/gamemode/modules/emoji/cl_emoji.lua")
+
 local wE = {}
 
 wE.CircleOutline	= "http://i.imgur.com/WhK77op.png"
