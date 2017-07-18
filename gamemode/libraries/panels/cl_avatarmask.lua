@@ -4,6 +4,7 @@ if SERVER then return end
 local draw = draw
 local surface = surface
 local table = table
+local math = math
 
 local function MakeCirclePoly(_x, _y, _r, _points)
 	local _u = (_x + _r * 320) - _x
