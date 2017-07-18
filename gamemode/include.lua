@@ -5,7 +5,7 @@ local ff = file.Find
 local string = string
 
 function IncludeDirectory(dir, cl, sv )
-	cl, sv = cl or "cl_", sv or "sv_"	local state
+	cl, sv = cl or "cl_", sv or "sv_"
 	local files, folders = ff(dir .. "/*", "LUA")
 
 	for _, file in sp(files) do
@@ -23,7 +23,7 @@ function IncludeDirectory(dir, cl, sv )
 	end
 
 	for _, folder in sp(folders) do
-		IncludeDirectory(dir .. "/" .. folder )
+		IncludeDirectory(dir .. "/" .. folder, cl, sv )
 	end
 end
 
