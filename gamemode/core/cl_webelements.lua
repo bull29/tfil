@@ -1,7 +1,8 @@
-include("tfil/gamemode/modules/emoji/cl_emoji.lua")
+include("tfil/gamemode/core/emoji/cl_emoji.lua")
 
 local wE = {}
 
+wE.Edge 			= ( ScrH()*0.005 ):ceil()
 wE.CircleOutline	= "http://i.imgur.com/WhK77op.png"
 wE.Circle 	  		= "http://i.imgur.com/YmbEJWD.png"
 wE.Lava 	  		= "http://i.imgur.com/swJIriB.jpg"
