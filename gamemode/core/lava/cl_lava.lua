@@ -11,7 +11,7 @@ local GetGlobalVector = GetGlobalVector
 local LocalPlayer = LocalPlayer
 local surface = surface
 local v = Vector()
-local LavaTexture = "http://i.imgur.com/swJIriB.jpg"
+local LavaTexture = WebElements.Lava
 local SmoothLevel = -1000
 local MapScale = 1
 local SkyboxScale = 1
@@ -49,19 +49,20 @@ end)
 hook.Add("PostDrawTranslucentRenderables", "DrawLava", function(a, b)
 	SmoothLevel = SmoothLevel:lerp(Lava.GetLevel())
 	local LavaLevel = v:SetZ(SmoothLevel)
-
+	local Ang = Angle(0, CurTime(), 0)
 	render.Clip(ClipTab, function()
-		surface.SetDrawColor(255, 255, 255)
+		local x = 220 + ( CurTime():sin()*35 ):abs()
+		surface.SetDrawColor( x, x, x )
 		surface.SetMaterial(draw.fetch_asset(LavaTexture, "noclamp"))
 
 		if not b then
 			cam.Wrap3D2D(function()
-				surface.DrawTexturedRectUV(-MapScale / 2, -MapScale / 2, MapScale, MapScale, 0, 0, 10, 10)
-			end, LavaLevel, Angle(0, CurTime() / 3, 0), 1)
+				surface.DrawTexturedRectUV(-MapScale / 2, -MapScale / 2, MapScale, MapScale, 0, 0, MapScale/5000, MapScale/5000)
+			end, LavaLevel, Ang , 1)
 		else
 			cam.Wrap3D2D(function()
-				surface.DrawTexturedRectUV(-MapScale / 2, -MapScale / 2, MapScale, MapScale, 0, 0, 10 * SkyboxScale, 10 * SkyboxScale)
-			end, GetGlobalVector("$skycampos") + (LavaLevel / SkyboxScale), Angle(0, CurTime() / 3, 0), 1)
+				surface.DrawTexturedRectUV(-MapScale / 2, -MapScale / 2, MapScale, MapScale, 0, 0, MapScale/5000 * SkyboxScale, MapScale/5000 * SkyboxScale)
+			end, GetGlobalVector("$skycampos") + (LavaLevel / SkyboxScale), Ang, 1)
 		end
 	end)
 end)
