@@ -7,7 +7,7 @@ function math.lerp(n, to, val)
 	return Lerp(val, n, to)
 end
 
-function math.NormalizedInt( n, onNeg, onPos )
+function math.absolutize( n, onNeg, onPos )
 	return n == 0 and 0 or n < 0 and (onNeg or -1) or (onPos or 1)
 end
 
