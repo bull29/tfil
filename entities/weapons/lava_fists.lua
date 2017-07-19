@@ -54,7 +54,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:Reload()
-	if not self.Owner:HasAbility("Limpdick Larry") then return end
+	if not self.Owner:HasAbility("Limpy Larry") then return end
 	self.NextRagdollTime = self.NextRagdollTime or CurTime() + 1
 	if SERVER and self.NextRagdollTime < CurTime() then
 		Ragdoll.Enable( self.Owner )
