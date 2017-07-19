@@ -1,5 +1,3 @@
-
-
 --[[-------------------------------------------------------------------------
  		FullTick - For something you'd rather not use a timer for
 ---------------------------------------------------------------------------]]
@@ -17,6 +15,6 @@ function GM:OnGamemodeLoaded()
 	GAMEMODE, GM = gmod.GetGamemode(), gmod.GetGamemode()
 end
 
-function GM:GetFallDamage( Player )
-	return 4
+function GM:GetFallDamage( Player, Speed )
+	return math.max( 15, math.ceil( 0.2418*Speed - 141.75 )*2 )
 end
