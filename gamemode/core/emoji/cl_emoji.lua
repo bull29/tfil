@@ -1,8 +1,6 @@
 file.CreateDir("tfil")
 
 local tostring = tostring
-local Emoji = {}
-Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
 local Numbers = {
 	["."] = 2465,
 	["0"] = 2645,
@@ -16,6 +14,9 @@ local Numbers = {
 	["8"] = 2657,
 	["9"] = 2658
 }
+
+local Emoji = {}
+Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
 
 function Emoji.GetRandom()
 	return table.Random(Emoji.Index)
@@ -102,6 +103,7 @@ hook.RunOnce("HUDPaint", function()
 		Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
 	end
 end)
+
 _G.Emoji = Emoji
 
 concommand.Add("emoji_index", Emoji.BuildPanel )
