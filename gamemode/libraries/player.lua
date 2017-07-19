@@ -11,3 +11,7 @@ end
 function Player:TeamColor()
 	return team.GetColor( self:Team() )
 end
+
+function Player:PlayerColor()
+	return self:GetPlayerColor():ToColor()
+end
