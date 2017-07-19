@@ -1,4 +1,5 @@
 AddCSLuaFile()
+
 SWEP.PrintName = "Fists"
 SWEP.Author = "Kilburn, robotboy655, MaxOfS2D & Tenrys"
 SWEP.Purpose = "Well we sure as hell didn't use guns! We would just wrestle Hunters to the ground with our bare hands! I used to kill ten, twenty a day, just using my fists."
@@ -39,18 +40,30 @@ function SWEP:UpdateNextSprint()
 	self:SetNextSprint(CurTime() + vm:SequenceDuration() / vm:GetPlaybackRate())
 end
 
+
 function SWEP:PrimaryAttack()
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	local anim = "Shove"
-	self.Owner:SetNW2Bool("$attacking", true )
 	tVal = true
 	local vm = self.Owner:GetViewModel()
 	vm:SendViewModelMatchingSequence(vm:LookupSequence(anim))
+
 	self:EmitSound(SwingSound)
 	self:UpdateNextSprint()
+
 	self:SetNextMeleeAttack(CurTime() + 0.2)
 	self:SetNextPrimaryFire(CurTime() + 0.6)
-	self:SetNextSecondaryFire(CurTime() + 0.9)
+	self:SetNextSecondaryFire(CurTime() + 0.6)
+
+	if SERVER then
+		self.Owner:SetNW2Int( "$fist_attack_index", self.Owner:GetNW2Int( "$fist_attack_index" ) + 1 )
+	end
+
+	local tR_v = self.Owner:GetEyeTrace()
+
+	if IsValid( tR_v.Entity ) then
+		tR_v.Entity:SetVelocity( self.Owner:GetAimVector():SetZ( tR_v.Entity:OnGround() and 0.2 or -0.2	 ) * 500 )
+	end
 end
 
 function SWEP:Reload()
@@ -64,68 +77,6 @@ end
 
 function SWEP:SecondaryAttack()
 	self:PrimaryAttack()
-end
-
-function SWEP:DealDamage()
-	local anim = self:GetSequenceName(self.Owner:GetViewModel():GetSequence())
-	self.Owner:LagCompensation(true)
-
-	local tr = util.TraceLine({
-		start = self.Owner:GetShootPos(),
-		endpos = self.Owner:GetShootPos() + self.Owner:GetAimVector() * self.HitDistance,
-		filter = self.Owner,
-		mask = MASK_SHOT_HULL
-	})
-
-	if (not IsValid(tr.Entity)) then
-		tr = util.TraceHull({
-			start = self.Owner:GetShootPos(),
-			endpos = self.Owner:GetShootPos() + self.Owner:GetAimVector() * self.HitDistance,
-			filter = self.Owner,
-			mins = Vector(-10, -10, -8),
-			maxs = Vector(10, 10, 8),
-			mask = MASK_SHOT_HULL
-		})
-	end
-
-	if (tr.Hit and not (game.SinglePlayer() and CLIENT)) then
-		self:EmitSound(HitSound)
-	end
-
-	local hit = false
-
-	if (SERVER and IsValid(tr.Entity) and (tr.Entity:IsNPC() or tr.Entity:IsPlayer() or tr.Entity:Health() > 0)) then
-		local dmginfo = DamageInfo()
-		local attacker = self.Owner
-
-		if (not IsValid(attacker)) then
-			attacker = self
-		end
-
-		dmginfo:SetAttacker(attacker)
-		dmginfo:SetInflictor(self)
-
-		if (anim == "Shove") then
-			dmginfo:SetDamageForce(self.Owner:GetRight() * 4912 + self.Owner:GetForward() * 9998) -- Yes we need those specific numbers
-		elseif (anim == "fists_right") then
-			dmginfo:SetDamageForce(self.Owner:GetRight() * -4912 + self.Owner:GetForward() * 9989)
-		elseif (anim == "fists_uppercut") then
-			dmginfo:SetDamageForce(self.Owner:GetUp() * 5158 + self.Owner:GetForward() * 10012)
-		end
-
-		tr.Entity:TakeDamageInfo(dmginfo)
-		hit = true
-	end
-
-	if (SERVER and IsValid(tr.Entity)) then
-		local phys = tr.Entity:GetPhysicsObject()
-
-		if (IsValid(phys)) then
-			phys:ApplyForceOffset(self.Owner:GetAimVector() * 80 * phys:GetMass(), tr.HitPos)
-		end
-	end
-
-	self.Owner:LagCompensation(false)
 end
 
 function SWEP:OnDrop()
@@ -162,13 +113,6 @@ function SWEP:Think()
 		vm:SendViewModelMatchingSequence(vm:LookupSequence("Attack_Charge_Idle"))
 	elseif owner:OnGround() and anim == "Attack_Charge_Idle" then
 		vm:SendViewModelMatchingSequence(vm:LookupSequence("Idle"))
-	end
-
-	local meleetime = self:GetNextMeleeAttack()
-
-	if (meleetime > 0 and curtime > meleetime) then
-		self:DealDamage()
-		self:SetNextMeleeAttack(0)
 	end
 
 	if not owner:OnGround() and not owner.m_FistsHasJumped then
