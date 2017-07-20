@@ -38,7 +38,7 @@ end
 hook.Add("PlayerTick", "UsainBolt", function(Player, MoveData)
 	if Player:HasAbility("Usain Jolt") then
 		if MoveData:KeyDown(IN_SPEED) and Player:GetVelocity():Length2D() > (Player:GetRunSpeed() - 5) then
-			Player:SetRunSpeed(Player:GetRunSpeed() + FrameTime() * 	util.SharedRandom("m_RandomBolt", 5, 25, CurTime()))
+			Player:SetRunSpeed(Player:GetRunSpeed() + FrameTime() * util.SharedRandom("m_RandomBolt", 5, 25, CurTime()))
 			Player:SetMaxSpeed(Player:GetRunSpeed())
 			Player:SetJumpPower( ( Player:GetRunSpeed() ) )
 		elseif Player:OnGround() then
