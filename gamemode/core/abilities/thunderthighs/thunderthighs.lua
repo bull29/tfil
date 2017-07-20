@@ -10,9 +10,14 @@ end
 
 hook.Add("Lava.ShouldRenderDamageOverlay", "ThunderThighs", func )
 hook.Add("Lava.ShouldTakeLavaDamage", "ThunderThighs", func )
+hook.Add("GetFallDamage", "AvoidFallDamageTT", function(Player)
+	if Player:HasAbility("Thunder Thighs") then return false end
+end)
 
-
-Abilities.Register("Thunder Thighs", [[You're immune to Lava
-	up to your pelvis.
-	Guess why.]], CLIENT and Emoji.Get( 832 ) )
+Abilities.Register("Thunder Thighs", [[Due to intense and
+	frequent repetitive physical
+	exertions you're immune to Lava
+	up to your pelvis. 
+	Guess why. You also take
+	no fall damage.]], CLIENT and Emoji.Get( 832 ) )
 
