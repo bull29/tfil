@@ -94,16 +94,16 @@ function pmeta:GetNextVerticalPos(offset)
 end
 
 function pmeta:MakeBorder(edge, color )
-	edge = edge or ( ScrH() * 0.001 ):ceil()
+	edge = edge or WebElements.Edge
 
 	local x = self:GenerateOverwrite("PaintOver")
+	local color = color
 	self.PaintOver = function(s, w, h)
-		x( s, w, h )
-		draw.NoTexture()
-		surface.SetDrawColor( color )
-		for i = 1, edge do
-			surface.DrawOutlinedRect( i - 1, i - 1, w - i * 2, h - i * 2)
-		end
+		x( s, w, h )	
+		_ = not top and draw.RoundedBox(0, 0, 0, w, edge, color)
+		_ = not bottom and draw.RoundedBox(0, 0, h - edge, w, edge, color)
+		_ = not left and draw.RoundedBox(0, 0, 0, edge, h, color)
+		_ = not right and draw.RoundedBox(0, w - edge, 0, edge, h, color)
 	end
 
 	return color
@@ -112,18 +112,21 @@ end
 function pmeta:GenerateColorShift(var, colorbefore, colorafter, interval)
 
 	local x = self:GenerateOverwrite("PaintOver")
-	self[var] = colorbefore
+	local tab = { colorbefore, colorafter }
+	self[var] = tab[ 1 ]
 
 	self.PaintOver = function(s, w, h)
 		x(s, w, h)
 
 		if s.Hovered then
-			self[var] = self[var]:Approach(colorafter, FrameTime() * interval)
+			self[var] = self[var]:Approach(tab[2], FrameTime() * interval)
 			s:SetCursor("hand")
 		else
-			self[var] = self[var]:Approach(colorbefore, FrameTime() * interval)
+			self[var] = self[var]:Approach(tab[1], FrameTime() * interval)
 		end
 	end
+
+	return tab
 end
 
 function pmeta:RecurseChildren(func)
