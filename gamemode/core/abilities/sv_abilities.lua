@@ -15,6 +15,9 @@ net.Receive("Lava.SelectAbility", function( _, Player )
 	local desired = net.ReadString()
 	if not Abilities.Skills[ desired ] then return end
 	Player.PreferedAbility = desired
+	if Rounds.CurrentState == "Preround" then
+		Player:SetAbility( Player.PreferedAbility )
+	end
 end)
 
 debug.getregistry().Player.SetAbility = function( self, ability )
