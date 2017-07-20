@@ -1,6 +1,10 @@
+local Timer = Timer
+local Entity = Entity
+local Vector = Vector
+
 hook.Add("Lava.ShouldTakeLavaDamage", "SkippyFeet", function(Player)
 	if not Player:HasAbility("Skippy Feet") then return end
-
+	Player:SetGroundEntity( Entity( 0 ) )
 	timer.Simple(0, function()
 		Player:SetPos(Player:GetPos() + Vector(0, 0, 5))
 		Player:SetVelocity(Player:GetAimVector():SetZ(1) * 250)
