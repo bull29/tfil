@@ -1,11 +1,8 @@
-
-
-
 GM.Config = {}
 
 local function NewConfig( name, default, cvar, typeof )
 	cvar = "lava_" .. cvar
-	CreateConVar( cvar, default, {FCVAR_REPLICATED, FCVAR_NOTIFY, FCVAR_ARCHIVE} )
+	CreateConVar( cvar, default, {FCVAR_REPLICATED, FCVAR_ARCHIVE} )
 
 	GM.Config[ "Get"..name ] = function( value )
 		local _ = GetConVar( cvar ):GetString()
@@ -25,8 +22,9 @@ function GM.GetConfig()
 	return GM.Config
 end
 
+NewConfig( "HaltMode", "0", "haltmode", "BOOL")
 NewConfig( "MapEffects", "1", "fog_sky_effects", "BOOL" )
 NewConfig( "RadarRange", "1200", "clientside_radar_range", "NUM" )
-NewConfig( "PreroundTime", "15", "rounds_preroundtime", "NUM")
+NewConfig( "PreroundTime", "45", "rounds_preroundtime", "NUM")
 NewConfig( "RoundTime", "600", "rounds_roundtime", "NUM")
-NewConfig( "PostRoundTime", "15", "rounds_postroundtime", "NUM")
+NewConfig( "PostRoundTime", "25", "rounds_postroundtime", "NUM")
