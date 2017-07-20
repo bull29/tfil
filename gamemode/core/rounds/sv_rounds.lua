@@ -24,7 +24,7 @@ function Rounds.Preround()
 	RunConsoleCommand("lava_fog_sky_effects", "0")
 	RunConsoleCommand("gmod_admin_cleanup")
 
-	Lava.CurrentLevel = GAMEMODE.ReadLavaData()
+	Lava.CurrentLevel = Lava.StartingLevel or Entity(0):GetModelRenderBounds().z
 	for Player in Values(player.GetAll()) do
 		Player:Spawn()
 	end
@@ -37,7 +37,7 @@ function Rounds.Start()
 	hook.Call("Lava.RoundStart")
 
 	RunConsoleCommand("lava_fog_sky_effects", "1")
-	GAMEMODE.CreateNotification( "Round Started!\nThe Floor is Lava!\nEscape and Survive!", 5 )
+	--GAMEMODE.CreateNotification( "Round Started!\nThe Floor is Lava!\nEscape and Survive!", 5 )
 	for Player in Values(player.GetAll()) do
 		if not Player:Alive() then
 			Player:Spawn()
@@ -75,12 +75,6 @@ hook.Add("Tick", "CycleRounds", function()
 end)
 
 hook.Add("PostPlayerDeath", "CheckAllDead", function( Player)
-	if Player:GetPos().z <= Lava.GetLevel() then
-		local rag = Player:GetRagdollEntity()
-		rag:SetModel("models/player/charple.mdl")
-		rag:Ignite( 500, 0 )
-	end
-
 	if Rounds.CurrentState == "Started" then
 		local ShouldRestart = true
 
@@ -92,7 +86,7 @@ hook.Add("PostPlayerDeath", "CheckAllDead", function( Player)
 		end
 
 		if ShouldRestart then
-			GAMEMODE.CreateNotification( Player:Nick() .. " is the winner! ", 10 )
+			--GAMEMODE.CreateNotification( Player:Nick() .. " is the winner! ", 10 )
 			Rounds.PostRound()
 		end
 	end
@@ -111,5 +105,3 @@ hook.Add("PlayerInitialSpawn", "CheckLone",function()
 end)
 
 _G.Rounds = Rounds
-
-Rounds.Preround()

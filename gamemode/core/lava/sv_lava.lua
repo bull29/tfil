@@ -94,5 +94,3 @@ function GM:EntityTakeDamage( Entity, Damage )
 		Damage:ScaleDamage( math.random(7,12) )
 	end
 end
-
-Rounds.Start()
