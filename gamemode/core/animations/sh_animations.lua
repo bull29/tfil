@@ -23,7 +23,7 @@ hook.Add( "CalcMainActivity", "BaseAnimations", function( Player, Velocity )
 	end
 end)
 
-hook.Add("NetworkEntityCreated", "HookOntoRender", function( Object )
+local function RenderHook( Object )
 	if not Object:IsPlayer() then return end
 	if not Object.RenderOverride then
 		Object.RenderOverride = function( self )
@@ -32,7 +32,10 @@ hook.Add("NetworkEntityCreated", "HookOntoRender", function( Object )
 			end
 		end
 	end
-end)
+end
+
+hook.Add("NetworkEntityCreated", "HookOntoPlayerRender", RenderHook )
+hook.Add("NetworkEntityCreated", "HookOntoPlayerRender", OnEntityCreated )
 
 function GM:PlayerNoClip()
 	return true
