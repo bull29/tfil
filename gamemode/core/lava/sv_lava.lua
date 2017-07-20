@@ -6,8 +6,7 @@ end
 
 local SetGlobalFloat = SetGlobalFloat
 local table = table
-local Rounds = Rounds
---local Lava = Lava
+local Lava = Lava
 local Values = Values
 local hook = hook
 local FrameTime = FrameTime
