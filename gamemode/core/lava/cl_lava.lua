@@ -68,7 +68,7 @@ hook.Add("PostDrawTranslucentRenderables", "DrawLava", function(a, b)
 end)
 
 hook.Add("RenderScreenspaceEffects", "DrawLavaOverlay", function()
-	if hook.Call("Lava.ShouldRenderDamageOverlay") == false then return end
+	if hook.Call("Lava.ShouldRenderDamageOverlay", nil, LocalPlayer()) == false then return end
 
 	if EyePos().z < Lava.GetLevel() then
 		if not LocalPlayer():Alive() then
