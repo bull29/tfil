@@ -22,7 +22,8 @@ hook.Add("Lava.PostPlayerSpawn", "HalfenHealth", function( Player )
 	end
 end)
 
-Abilities.Register("Skippy Feet", [[Ever wanted to have a quick way out?
+Abilities.Register("Skippy Feet", [[This is probably the most
+	functionally useful ability.
+	Ever wanted to have a quick way out in a pinch?
 	Everytime you hit lava, you fly away!
-	At the cost of 1/2 HP,
-	You don't take fall damage either!]], CLIENT and Emoji.Get( 2434 ) )
+	You don't take fall damage either; at the cost of 1/2 Starting HP.]], CLIENT and Emoji.Get( 2434 ) )
