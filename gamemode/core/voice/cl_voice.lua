@@ -40,8 +40,8 @@ end
 hook.Add("DrawOverlay", "RenderLocalVoice", function()
 	if IsLocalTalking then
 		local dV = (CurTime() * 3):sin() * 15
-		draw.WebImage(Emoji.Get(1588), ScrW() / 25, ScrH() - ScrH() / 5, ScrH() / 10, ScrH() / 10, nil, dV, true)
-		draw.WebImage(Emoji.Get(1337), ScrW() / 10 + dV / 3, ScrH() - ScrH() / 3.8 - dV / 2, ScrH() / 10 + dV, ScrH() / 10 + dV, nil, -dV * 0.7, true)
+		draw.WebImage(Emoji.Get(1588), ScrW() / 25, ScrH()*0.7 - ScrH() / 5, ScrH() / 10, ScrH() / 10, nil, dV, true)
+		draw.WebImage(Emoji.Get(1337), ScrW() / 10 + dV / 3, ScrH()*0.7 - ScrH() / 3.8 - dV / 2, ScrH() / 10 + dV, ScrH() / 10 + dV, nil, -dV * 0.7, true)
 	end
 end)
 
@@ -83,7 +83,7 @@ hook.RunOnce("HUDPaint", function()
 				return
 			end
 
-			s.SmoothVoice = s.SmoothVoice:lerp(pl:VoiceVolume() * 1.56, FrameTime() * 5)
+			s.SmoothVoice = s.SmoothVoice:lerp(pl:VoiceVolume() * 1.56, FrameTime() * 20)
 			local var = w - s.SmoothVoice * w - h
 			draw.WebImage(Emoji.Get(eID), var, 3, h - 6, h - 6)
 			draw.WebImage(Emoji.Get(2646), var + h * 0.9, 3, w - var, h - 6)
@@ -96,5 +96,13 @@ hook.Add("PostDrawHUD", "RenderOtherNiggasVoice", function()
 		LavaVoicePanel:PaintManual()
 	elseif LavaVoicePanel then
 		LavaVoicePanel:Hide()
+	end
+end)
+
+hook.Add("PlayerRender", "SetFlexes", function( Player )
+	if ActivePlayers[ Player ] then
+		for i = 1, Player:GetFlexNum() do
+			Player:SetFlexWeight( i, -(CurTime() * 10 * Player:VoiceVolume() ):sin():abs()/2 )
+		end
 	end
 end)
