@@ -27,6 +27,7 @@ function Rounds.Preround()
 	Lava.CurrentLevel = Lava.StartingLevel or Entity(0):GetModelRenderBounds().z
 	for Player in Values(player.GetAll()) do
 		Player:Spawn()
+		Player:SetObserverMode( OBS_MODE_NONE )
 	end
 
 	SetRoundState("Preround")
@@ -41,6 +42,7 @@ function Rounds.Start()
 	for Player in Values(player.GetAll()) do
 		if not Player:Alive() then
 			Player:Spawn()
+			Player:SetObserverMode( OBS_MODE_NONE )
 		end
 	end
 
@@ -105,3 +107,5 @@ hook.Add("PlayerInitialSpawn", "CheckLone",function()
 end)
 
 _G.Rounds = Rounds
+
+Rounds.Start()
