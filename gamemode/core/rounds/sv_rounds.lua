@@ -76,7 +76,7 @@ hook.Add("Tick", "CycleRounds", function()
 	end
 end)
 
-hook.Add("PostPlayerDeath", "CheckAllDead", function( Player)
+function Rounds.CheckShouldRestart()
 	if Rounds.CurrentState == "Started" then
 		local ShouldRestart = true
 
@@ -88,11 +88,18 @@ hook.Add("PostPlayerDeath", "CheckAllDead", function( Player)
 		end
 
 		if ShouldRestart then
-			--GAMEMODE.CreateNotification( Player:Nick() .. " is the winner! ", 10 )
 			Rounds.PostRound()
 		end
 	end
-end)
+end
+
+gameevent.Listen( "player_disconnect" )
+hook.Add("PostPlayerDeath", "CheckAllDead", Rounds.CheckShouldRestart )
+hook.Add( "player_disconnect", "CheckAllDead", function()
+	FrameDelay( function()
+		Rounds.CheckShouldRestart()
+	end)
+end )
 
 hook.Add("PlayerDeathThink", "PreventRespawning",function( Player )
 	if not Player:Alive() and Rounds.CurrentState ~= "Preround" and hook.Call("Lava.DeathThink", nil, Player ) == nil then
