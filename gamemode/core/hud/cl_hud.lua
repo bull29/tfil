@@ -3,6 +3,7 @@ local WebElements = WebElements
 local pColor = pColor
 local rTab = {}
 local tonumber = tonumber
+local tPane
 
 hook.RunOnce("HUDPaint", function()
 	local g = InitializePanel("LavaMainCircleHUD", "DLabel")
@@ -117,6 +118,7 @@ hook.RunOnce("HUDPaint", function()
 	-- 1499
 	local o = InitializePanel("LavaTimerPanel", "DLabel")
 	o:SetText("")
+	tPane = o
 	o:SetSize(ScrH() / 5, ScrH() / 5)
 	o:SetPos(ScrW() - ScrH() / 6 - ScrH() / 20, ScrH() / 50)
 
@@ -174,6 +176,12 @@ hook.RunOnce("HUDPaint", function()
 end)
 
 hook.Add("HUDPaint", "RenderLavaElements", function()
+	if not LocalPlayer():Alive() then
+		if tPane then
+			tPane:PaintManual()
+		end
+		return
+	end
 	for Element in pairs(rTab) do
 		Element:PaintManual()
 	end
