@@ -43,7 +43,7 @@ hook.RunOnce("HUDPaint", function()
 	i:Add("DIconLayout"):SetSize(72, 36)
 
 
-	for Name, Properties in pairs(Context.Widgets) do
+	for Name, Properties in SortedPairs(Context.Widgets) do
 		local t = i:Add("DButton")
 		t:SetText("")
 		t:SetSize(72, 72)
@@ -60,6 +60,8 @@ hook.RunOnce("HUDPaint", function()
 		end
 		t.DoClick = function()
 			local Panel = Properties[2]()
+			if not Panel then return end
+
 			Panel:EnsureCenterBounds( ScrW()/2, ScrH()*0.8 )
 			local c = Panel:GenerateOverwrite( "Think" )
 			function Panel:Think()
