@@ -1,5 +1,7 @@
 # The Floor is Lava: a Gamemode for the Garry's Mod Gamemode Competition
 
+#### Start with a concept overwhelmingly simple, tack on complexity. That's how this gamemode came to be. 
+
 <img src="http://thebull.club/screenshots/b68923.png" width="250" height="250">
 
 
