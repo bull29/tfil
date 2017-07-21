@@ -50,23 +50,25 @@ function Ragdoll.Enable( Player )
 end
 
 
-function Ragdoll.Disable( Player )
+function Ragdoll.Disable( Player, h_DisableSpawn )
 	if not Player.m_Ragdoll then return end
 	Player.m_RagdollData.Angles = Player:EyeAngles()
 	Player:SetParent()
 	Player:UnSpectate()
-	Player:Spawn()
-	Player:SetEyeAngles( Player.m_RagdollData.Angles )
-	Player:SetPlayerColor( Player.m_RagdollData.pColor )
-	Player:SetModel( Player.m_RagdollData.Model )
-	Player:SetVelocity( Player.m_Ragdoll:GetVelocity() )
-
 	timer.Simple( 0, function()
 		if not Player:IsValid() or not IsValid( Player.m_Ragdoll ) then return end
 		Player:SetPos( Player.m_Ragdoll:GetBonePosition( 1 ) + Vector( 0, 0, 5 ))
 		Player.m_Ragdoll:Remove()
 		Player.m_Ragdoll = nil
 	end)
+
+	if not h_DisableSpawn then
+		Player:Spawn()
+		Player:SetEyeAngles( Player.m_RagdollData.Angles )
+		Player:SetPlayerColor( Player.m_RagdollData.pColor )
+		Player:SetModel( Player.m_RagdollData.Model )
+		Player:SetVelocity( Player.m_Ragdoll:GetVelocity() )
+	end
 end
 
 hook.Add("NetworkEntityCreated", "ExposeRagdoll", function( ent )
@@ -83,3 +85,14 @@ end)
 
 _G.Ragdoll = Ragdoll
 
+local Player = debug.getregistry().Player
+
+Player.OldSpawn = Player.OldSpawn or debug.getregistry().Entity.Spawn
+
+function Player:Spawn()
+	if self.m_Ragdoll then
+		Ragdoll.Disable( self, true )
+	end
+
+	return self:OldSpawn()
+end
