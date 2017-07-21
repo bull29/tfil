@@ -86,6 +86,7 @@ hook.Add("PostPlayerDeath", "CreateDeathRagdoll",function( Player )
 		rag:SetModel("models/player/charple.mdl")
 		rag:Ignite( 500, 0 )
 	end
+	hook.Call("Lava.PostPlayerDeath", nil, Player )
 end)
 
 function GM:EntityTakeDamage( Entity, Damage )
