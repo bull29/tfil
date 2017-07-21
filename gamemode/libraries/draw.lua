@@ -6,6 +6,7 @@
     Optionally, if you choose to use this within your own software, it would be much appreciated if you could inform me of it.
     I love to see what people have done with my code! :)
 ]]--
+
 if SERVER then return end
 
 file.CreateDir("downloaded_assets")
@@ -93,6 +94,21 @@ end
 
 function draw.SteamAvatar( avatar, res, x, y, width, height, color, ang, corner )
 	draw.WebImage( fetchAvatarAsset( avatar, res ), x, y, width, height, color, ang, corner )
+end
+
+function draw.Rect( x, y, w, h, col, mat )
+	col = col or white
+	if not mat then
+		draw.NoTexture()
+	else
+		if not mats[ mat ] then
+			mats[ mat ] = Material( mat )
+		end
+		surface.SetMaterial( mats[ mat ] )
+	end
+
+	surface.SetDrawColor( col )
+	surface.DrawTexturedRect( x, y, w, h )
 end
 
 draw.fetch_asset = fetch_asset
