@@ -160,7 +160,7 @@ function SWEP:DrawHUD()
 	end
 
 	if LocalPlayer():ShouldDrawLocalPlayer() then
-		c_CValue = c_CValue:max(15)
+		c_CValue = c_CValue:Clamp( 10, ScrH()/20 )
 	end
 
 	local xE, xT = (ScrH() / 100 + c_CValue), (c_CValue * ScrH() / 300)
