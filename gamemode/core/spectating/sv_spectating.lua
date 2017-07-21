@@ -6,6 +6,10 @@ hook.Add("Lava.DeathThink", "LavaSpectating", function(Player)
 			Player.m_SpectateIndex = 1
 		end
 
+		if Player:GetObserverMode() == 0 and ( Player:KeyDown(1) or Player:KeyDown(2) ) then -- Expected cliche behaviour
+			Player:Spectate(Player:GetObserverMode() % 3 + 4)
+		end
+
 		local nP = Player:KeyDown(1) and 1 or Player:KeyDown(2048) and 2 or Player:KeyDown(8192) and 3
 
 		if nP then
