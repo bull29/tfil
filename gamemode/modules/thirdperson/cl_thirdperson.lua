@@ -5,10 +5,7 @@ _ontp, tfov = _ontp or false, 65
 local tr = {}
 local tpsma = 0
 local OldPos = IsValid( LocalPlayer() ) and LocalPlayer():EyePos() or Vector(0, 0, 0)
-
-local function LerpVector(v1, v2, am)
-	return Vector(lp(am, v1.x, v2.x), lp(am, v1.y, v2.y), lp(am, v1.z, v2.z))
-end
+local LerpVector = LerpVector
 
 hook.Add("CalcView", "ThirdPersonView", function(ply, pos, angles, fov)
 	if _ontp and ply:Alive() then
@@ -17,7 +14,7 @@ hook.Add("CalcView", "ThirdPersonView", function(ply, pos, angles, fov)
 		view.angles = angles --+ Angle(1, 10, 0)
 		view.drawviewer = true
 		local vec = ply:EyePos() - (angles:Forward() * 90 * (closevar == 1 and 1 or closevar)) + (angles:Up() * 10) --(angles:Right() * 20) +
-		OldPos = LerpVector(OldPos, vec, FrameTime() * 3 * mulvar)
+		OldPos = LerpVector(FrameTime() * 3 * mulvar,OldPos, vec)
 		tpsma = tpsma:lerp(ply:GetVelocity():Length() / 50)
 
 		tr = util.TraceLine{
@@ -39,4 +36,10 @@ hook.Add("CalcView", "ThirdPersonView", function(ply, pos, angles, fov)
 
 		return view --GAMEMODE:CalcView(ply, view.origin, view.angles, view.fov)
 	end
+end)
+
+hook.Add( "Lava.PopulateWidgetMenu", "Register3PWidget", function( Context )
+	Context.NewWidget( "Toggle Thirdperson", 835, function()
+		_ontp = not _ontp
+	end)
 end)
