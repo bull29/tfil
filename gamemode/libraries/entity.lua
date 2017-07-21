@@ -25,3 +25,12 @@ function ENT:DumpBones()
 		print( i, self:GetBoneName( i ) )
 	end
 end
+
+if SERVER then return end
+
+function SpectatingPlayer()
+	if not LocalPlayer():Alive() and LocalPlayer():GetObserverMode() ~= 0 and LocalPlayer():GetObserverMode() ~= 6 then
+		return LocalPlayer():GetObserverTarget()
+	end
+	return false
+end
