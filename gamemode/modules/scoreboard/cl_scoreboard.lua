@@ -5,6 +5,7 @@ local lerp = Lerp
 local frametime = FrameTime
 local ft = frametime
 local text = draw.SimpleText
+local math = math
 local web = draw.WebImage
 local webof = "http://steamcommunity-a.akamaihd.net/public/images/countryflags/<>.gif"
 
@@ -14,7 +15,7 @@ local wtab = {
 	[3] = "http://i.imgur.com/KImuuj4.png"
 }
 
-local ed = math.ceil(ScrH() * 0.00162074554)
+local ed = WebElements.Edge * 0.5
 local buttons = {}
 
 local function addButton(name, icon, func)
@@ -224,7 +225,10 @@ hook.RunOnce( "HUDPaint", function()
 
 			p.DoClick = function(s)
 				chat.PlaySound()
-				gui.OpenURL("http://steamcommunity.com/profiles/"..v:SteamID64())
+				if Mutators.IsActive( "Mystery Men") and v:Alive() then
+					return gui.OpenURL("http://steamcommunity.com/profiles/"..v:SteamID64())
+				end
+				v:ShowProfile()
 			--	s.DoExpand = not s.DoExpand
 			end
 
@@ -234,6 +238,7 @@ hook.RunOnce( "HUDPaint", function()
 			av:SetPos(3, 3)
 			av:SetPlayer(v, 184)
 			av:MakeBorder(ed, Color(50, 50, 50))
+			print( av.CurrentPlayer )
 		end
 	end
 
