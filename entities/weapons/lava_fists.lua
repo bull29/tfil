@@ -61,8 +61,8 @@ function SWEP:PrimaryAttack()
 
 	local tR_v = self.Owner:GetEyeTrace()
 
-	if IsValid( tR_v.Entity ) then
-		tR_v.Entity:SetVelocity( self.Owner:GetAimVector():SetZ( tR_v.Entity:OnGround() and 0.2 or -0.2	 ) * 500 )
+	if tR_v.Hit and tR_v.HitPos:Distance( self.Owner:GetShootPos() ) < 88 and IsValid( tR_v.Entity ) then
+		tR_v.Entity:SetVelocity( self.Owner:GetAimVector():SetZ( tR_v.Entity:OnGround() and 0.2 or -0.2	 ) * 555 )
 	end
 end
 
