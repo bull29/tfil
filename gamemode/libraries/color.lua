@@ -5,6 +5,7 @@ local lp = Lerp
 local Color = Color
 local LastPlayerColor = Vector( 0, 0, 0 )
 local cLastPlayerColor = Color( 0, 0, 0 )
+local LocalPlayer = LocalPlayer
 
 function cmeta.__unm(s)
 	return Color(255 - s.r, 255 - s.g, 255 - s.b, s.a)
@@ -54,6 +55,10 @@ function cmeta:CopyFrom( source )
 end
 
 function pColor()
+	if SpectatingPlayer() then
+		return SpectatingPlayer():GetPlayerColor():ToColor()
+	end
+
 	local x = LocalPlayer():GetPlayerColor()
 	if x ~= LastPlayerColor then
 		LastPlayerColor = x
