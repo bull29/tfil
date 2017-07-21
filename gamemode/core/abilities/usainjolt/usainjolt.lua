@@ -64,7 +64,7 @@ hook.Add("HUDPaint", "UsainBolt", function()
 end)
 
 hook.Add("GetFallDamage", "AvoidFallUsain", function(Player, Speed)
-	if Player:HasAbility("Usain Jolt") then return math.max( 15, math.ceil( 0.2418*Speed - 141.75 )*2 )/2 end
+	if Player:HasAbility("Usain Jolt") then return GetBaseFallDamage( Speed )/2 end
 end)
 
 Abilities.Register("Usain Jolt", [[You gain increasing
