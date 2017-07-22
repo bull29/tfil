@@ -7,7 +7,7 @@ hook.Add("Lava.PopulateWidgetMenu", "CreateScreenshotPane", function( Context )
 end)
 
 hook.Add( "HUDShouldDraw", "ScreenshotPane", function( name )
-	if m_DisableRenderHUD and name == "CHudGMod" then
+	if m_DisableRenderHUD and ( name == "CHudGMod" or name == "CHudChat") then
 		return false
 	end
 end)
