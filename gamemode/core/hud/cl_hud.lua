@@ -187,7 +187,7 @@ hook.Add("HUDPaint", "RenderLavaElements", function()
 	end
 end)
 
-local tDisable = m_Table( "CHudCrosshair", "CHudMenu", "CHudHealth" )
+local tDisable = m_Table( "CHudCrosshair", "CHudMenu", "CHudHealth", "CHudZoom" )
 
 function GM:HUDShouldDraw( n )
 	return not tDisable[ n ]

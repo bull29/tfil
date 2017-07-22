@@ -10,6 +10,7 @@ PLAYER.StartHealth = 100
 PLAYER.TeammateNoCollide = false
 
 function PLAYER:Spawn()
+	self.Player:SetCanZoom( false )
 end
 
 player_manager.RegisterClass("lava_default", PLAYER, "player_default" )
