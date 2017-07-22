@@ -36,7 +36,7 @@ hook.RunOnce("HUDPaint", function()
 	local i = InitializePanel("LavaContextCore", "DIconLayout")
 	i:Dock(LEFT)
 	i:SetSpaceY(ScrH() / 100)
-	i:SetWide(72)
+	i:SetWide(ScrW()/15)
 	i:SetPaintedManually(true)
 	i:DockMargin(ScrH() / 100, ScrH() / 100, ScrH() / 100, 0)
 	hook.Call("Lava.PopulateWidgetMenu", nil, Context )
@@ -47,7 +47,7 @@ hook.RunOnce("HUDPaint", function()
 	for Name, Properties in SortedPairs(Context.Widgets) do
 		local t = i:Add("DButton")
 		t:SetText("")
-		t:SetSize(72, 72)
+		t:SetSize(ScrW()/15, ScrW()/15)
 		local tab = t:GenerateColorShift("m_ColorVar", pColor():Alpha( 100 ), pColor(), 255 * 3 )
 		t.Paint = function(s, w, h)
 			tab[ 1 ] = pColor():Alpha( 100 )
@@ -57,7 +57,7 @@ hook.RunOnce("HUDPaint", function()
 			end
 
 			draw.WebImage(s.Hovered and WebElements.QuadCircle or WebElements.CircleOutline, 0, 0, w, h, s.m_ColorVar, CurTime():sin() * 360, true)
-			draw.WebImage(Emoji.Get(Properties[1]), 15, 15, 42, 42, White:Alpha( s.m_ColorVar.a * 1.5 ), s.Hovered and -CurTime():sin() * 15, true)
+			draw.WebImage(Emoji.Get(Properties[1]), h/5, h/5, w - w/5 * 2, w - w/5 * 2, White:Alpha( s.m_ColorVar.a * 1.5 ), s.Hovered and -CurTime():sin() * 15, true)
 		end
 		t.DoClick = function()
 			if hook.Call( "Lava.CanUseWidget", nil, Name ) == false then return end
