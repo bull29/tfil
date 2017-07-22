@@ -1,6 +1,8 @@
 local WebElements = WebElements
 local x = NULL
 local bPos = Vector()
+local cam = cam
+local draw = draw
 
 local bPosV = {
 	x = 0,
