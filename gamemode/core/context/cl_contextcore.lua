@@ -60,6 +60,7 @@ hook.RunOnce("HUDPaint", function()
 			draw.WebImage(Emoji.Get(Properties[1]), 15, 15, 42, 42, White:Alpha( s.m_ColorVar.a * 1.5 ), s.Hovered and -CurTime():sin() * 15, true)
 		end
 		t.DoClick = function()
+			if hook.Call( "Lava.CanUseWidget", nil, Name ) == false then return end
 			local Panel = Properties[2]()
 			if not Panel then return end
 
