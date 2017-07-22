@@ -1,3 +1,12 @@
+
+local function NextPlayer( CurrentNumber )
+	return ((CurrentNumber % player.GetCount() + 1))
+end
+
+local function PreviousPlayer( CurrentNumber )
+	return ((CurrentNumber - 2) % player.GetCount()) + 1
+end
+
 hook.Add("Lava.DeathThink", "LavaSpectating", function(Player)
 	Player.m_NextSpectateToggle = Player.m_NextSpectateToggle or CurTime()
 
@@ -18,16 +27,16 @@ hook.Add("Lava.DeathThink", "LavaSpectating", function(Player)
 			if nP == 3 then
 				Player:Spectate(Player:GetObserverMode() % 3 + 4)
 			elseif nP == 2 and Player:GetObserverMode() ~= 0 then
-				Player.m_SpectateIndex = ((Player.m_SpectateIndex - 2) % player.GetCount()) + 1
+				Player.m_SpectateIndex = PreviousPlayer( Player.m_SpectateIndex )
 
 				while (player.GetCount() ~= 1 and player.GetAll()[Player.m_SpectateIndex] == Player) do
-					Player.m_SpectateIndex = ((Player.m_SpectateIndex - 2) % player.GetCount()) + 1
+					Player.m_SpectateIndex = PreviousPlayer( Player.m_SpectateIndex )
 				end
 			elseif nP == 1 and Player:GetObserverMode() ~= 0 then
-				Player.m_SpectateIndex = ((Player.m_SpectateIndex % player.GetCount() + 1))
+				Player.m_SpectateIndex = NextPlayer( Player.m_SpectateIndex )
 
 				while (player.GetCount() ~= 1 and player.GetAll()[Player.m_SpectateIndex] == Player) do
-					Player.m_SpectateIndex = ((Player.m_SpectateIndex % player.GetCount() + 1))
+					Player.m_SpectateIndex = NextPlayer( Player.m_SpectateIndex )
 				end
 			end
 
