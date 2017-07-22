@@ -15,3 +15,9 @@ end
 function GM:PlayerLoadout( Player )
 	Player:Give("lava_fists")
 end
+
+function GM:PlayerSetModel( Player )
+	Player:SetModel(("models/player/Group01/male_0${1}.mdl"):fill(math.random(1, 9)))
+	Player:SetPlayerColor(Vector((1):random(255) / 255, (1):random(255) / 255, (1):random(255) / 255))
+	Player:SetupHands()
+end
