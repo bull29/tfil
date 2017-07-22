@@ -72,4 +72,4 @@ Abilities.Register("Usain Jolt", [[You gain increasing
 	speeds as long as you're still
 	sprinting. Your jumping power
 	correlates directly to your sprint speed.
-	You take half fall damage.]], CLIENT and Emoji.Get(2291))
+	You take half fall damage.]], 2291)

@@ -228,4 +228,4 @@ end)
 
 Abilities.Register("Chameleon", [[At the cost of slower movespeeds
 	You can climb any world brush and parkour!
-	Careful though!]], CLIENT and Emoji.Get(2236))
+	Careful though!]], 2236)

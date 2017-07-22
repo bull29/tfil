@@ -46,7 +46,7 @@ local function CreateAbilitiesPanel()
 		c:GenerateColorShift( "HoverVar", dark:Alpha( 50 ), dark:Alpha( 200 ) + 50, 255 * 3 )
 		c.Paint = function(s, w, h)
 			draw.RoundedBox(0, 0, 0, w, h, s.HoverVar)
-			draw.WebImage(v[2], h * 0.1, h * 0.1, w - h * 0.2, h - h * 0.2)
+			draw.WebImage( Emoji.Get( v[2] ), h * 0.1, h * 0.1, w - h * 0.2, h - h * 0.2)
 
 			if s.Hovered then
 				d.Header = k

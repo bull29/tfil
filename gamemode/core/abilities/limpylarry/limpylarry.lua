@@ -70,4 +70,4 @@ Abilities.Register("Limpy Larry", [[By pressing 'R',
 	damage whilst Ragdolled. 
 	Use your limpness to squeeze into otherwise
 	unreachable spots.
-	]], CLIENT and Emoji.Get(385))
+	]], 385 )

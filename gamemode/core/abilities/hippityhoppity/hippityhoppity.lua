@@ -16,5 +16,5 @@ Abilities.Register("Hippity Hoppity", [[When you hit the ground
 	Similar to Skippy feet. Extremely useful for
 	vertical-oriented maps. 
 	Hold down crouch when landing to 
-	avoid hopping.]], CLIENT and Emoji.Get( 724 ) )
+	avoid hopping.]], 724 )
 

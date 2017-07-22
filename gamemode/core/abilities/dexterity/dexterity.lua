@@ -12,4 +12,4 @@ end)
 
 Abilities.Register("Dexterity", [[Your running speed
 	and jumping power is doubled,
-	and you take ~60% less fall damage.]], CLIENT and Emoji.Get( 2106 ) )
+	and you take ~60% less fall damage.]], 2106 )
