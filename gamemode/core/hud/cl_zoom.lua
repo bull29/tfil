@@ -11,8 +11,11 @@ local mWHM = WebElements.Edge * 5
 local ScrH = ScrH
 local ScrW = ScrW
 local FontFunctions = FontFunctions
+local hook = hook
 
 hook.Add("CalcView", "RenderBetterzoom", function( Player, Origin, Angles, FOV )
+	if hook.Call( "Lava.CanZoom", nil, Player ) == false then return end
+
 	m_Case = LocalPlayer():KeyDown( IN_ZOOM ) and LocalPlayer():Alive()
 	m_In = LocalPlayer():KeyDown( IN_USE )
 	m_Out = LocalPlayer():KeyDown( IN_RELOAD )
