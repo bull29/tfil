@@ -145,14 +145,15 @@ local vgui = vgui
 
 function SWEP:DrawHUD()
 	if vgui.CursorVisible() then return end
-	local tr = LocalPlayer():GetEyeTrace()
+	local Player = SpectatingPlayer() or LocalPlayer()
+	local tr = Player:GetEyeTrace()
 	local tosc
 
 	cam.Wrap3D(function()
 		tosc = tr.HitPos:ToScreen()
 	end)
 
-	c_CValue = c_CValue:lerp(LocalPlayer():GetVelocity():Length() / 5)
+	c_CValue = c_CValue:lerp(Player:GetVelocity():Length() / 5)
 
 	if tVal then
 		c_CValue = c_CValue + ScrH() / 20
