@@ -38,6 +38,7 @@ local function ViewmodelPopup(self, View, Weapon, Player)
 		--if GetViewEntity() ~= LocalPlayer() or EyePos() ~= LocalPlayer():EyePos() then return end
 		local cQuer = Player:GetNW2String("$climbquery", "")
 		if not IsValid( View ) then return end
+		if LocalPlayer():ShouldDrawLocalPlayer() then return end
 		if cQuer ~= "" then
 			c:SetCycle(0.2)
 			Player.m_cEffect:SetNoDraw(false)
