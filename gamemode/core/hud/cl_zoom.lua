@@ -7,7 +7,6 @@ local m_Out
 local White = Color( 255, 255, 255 )
 local WebElements = WebElements
 local draw = draw
-local CrosshairInfo
 local mWHM = WebElements.Edge * 5
 local ScrH = ScrH
 local ScrW = ScrW
