@@ -42,7 +42,7 @@ hook.Add("PlayerTick", "UsainBolt", function(Player, MoveData)
 			Player:SetMaxSpeed(Player:GetRunSpeed())
 			Player:SetJumpPower( ( Player:GetRunSpeed() ) )
 		elseif Player:OnGround() then
-			Player:SetRunSpeed((Player:GetRunSpeed()*0.99 ):max(250))
+			Player:SetRunSpeed((Player:GetRunSpeed()*0.95 ):max(250))
 			Player:SetMaxSpeed(Player:GetRunSpeed())
 			Player:SetJumpPower( Player:GetRunSpeed() )
 		end
