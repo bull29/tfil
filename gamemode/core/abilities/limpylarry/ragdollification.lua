@@ -55,7 +55,7 @@ function Ragdoll.Disable( Player, h_DisableSpawn )
 	Player.m_RagdollData.Angles = Player:EyeAngles()
 	Player:SetParent()
 	Player:UnSpectate()
-	timer.Simple( 0, function()
+	FrameDelay(function()
 		if not Player:IsValid() or not IsValid( Player.m_Ragdoll ) then return end
 		Player:SetPos( Player.m_Ragdoll:GetBonePosition( 1 ) + Vector( 0, 0, 5 ))
 		Player.m_Ragdoll:Remove()
