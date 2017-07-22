@@ -131,7 +131,7 @@ hook.RunOnce("HUDPaint", function()
 	AddHelper(function(Player, s, w, h)
 		if not Abilities.Skills or not Abilities.Skills[Player:GetAbility()] then return end
 		local floor = (h / 25):floor()
-		draw.WebImage(Abilities.Skills[Player:GetAbility()][2], h / 2, h / 2, w - floor * 5, h - floor * 5, nil, CurTime():sin() * 5)
+		draw.WebImage( Emoji.Get( Abilities.Skills[Player:GetAbility()][2] ), h / 2, h / 2, w - floor * 5, h - floor * 5, nil, CurTime():sin() * 5)
 	end)
 
 	AddHelper(function(Player, s, w, h)
