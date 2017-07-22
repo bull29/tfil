@@ -49,10 +49,6 @@ end
 
 hook.Add("HUDPaint", "RenderZoom", function()
 	if not m_Case then return end
-	if not CrosshairInfo then
-		CrosshairInfo = _G.CrosshairInfo
-		return
-	end
 
 	local Text = ( m_InitialFOV / m_ZDelta ):Round( 2 ):max( 1.2 ) .. "x"
 	local t_Wide = FontFunctions.GetWide( Text, "ChatFont" )
