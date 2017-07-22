@@ -1,5 +1,4 @@
-file.CreateDir("tfil")
-
+local file = file
 local tostring = tostring
 local Numbers = {
 	["."] = 2465,
@@ -15,6 +14,8 @@ local Numbers = {
 	["9"] = 2658
 }
 
+file.CreateDir("tfil")
+
 local Emoji = {}
 Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
 
@@ -23,6 +24,7 @@ function Emoji.GetRandom()
 end
 
 function Emoji.Get(name)
+	if not file.Exists( "tfil/emoji.txt", "DATA" ) then return end
 	return Emoji.Index[name]
 end
 
@@ -86,7 +88,7 @@ function Emoji.BuildPanel()
 end
 
 
-hook.RunOnce("HUDPaint", function()
+hook.RunOnce("PreDrawHUD", function()
 	if true or not file.Exists("tfil/emoji.txt", "DATA") then
 		http.Fetch("http://twitter.github.io/twemoji/2/test/preview.html", function(body)
 			local tab = {}
