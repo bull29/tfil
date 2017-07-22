@@ -6,6 +6,7 @@ local vgui = vgui
 local CurTime = CurTime
 local m_HaveClicked
 local White = color_white
+local m_HaveFullyInitializedWorldPanel
 
 Context.Widgets = {}
 
@@ -14,7 +15,7 @@ Context.NewWidget = function(name, iconid, func)
 end
 
 hook.Add("DrawOverlay", "DrawContextCusror", function()
-	if vgui.CursorVisible() then
+	if m_HaveFullyInitializedWorldPanel and vgui.CursorVisible() then
 		local x, y = gui.MousePos()
 		draw.WebImage(Emoji.Get(input.IsMouseDown(107) and 1563 or 1560), x - 16, y, 32, 32)
 
@@ -92,4 +93,7 @@ hook.Add("PostDrawHUD", "DrawContext", function()
 	end
 end)
 
+hook.RunOnce("RenderScene", function()
+	m_HaveFullyInitializedWorldPanel = true
+end)
 _G.LavaContextWidget = Context
