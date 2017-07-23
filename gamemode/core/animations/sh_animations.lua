@@ -10,7 +10,11 @@ hook.Add( "CalcMainActivity", "BaseAnimations", function( Player, Velocity )
 		Player:AddVCDSequenceToGestureSlot( GESTURE_SLOT_FLINCH, Player:LookupSequence("jump_land"), 0, true )
 		Player.LastOnGround = false
 	end
-
+	Player.m_FistAttackIndex = Player.m_FistAttackIndex or Player:GetNW2Int("$fist_attack_index")
+	if Player.m_FistAttackIndex ~= Player:GetNW2Int("$fist_attack_index") then
+		Player.m_FistAttackIndex = Player:GetNW2Int("$fist_attack_index")
+		Player:AddVCDSequenceToGestureSlot( 5, Player:LookupSequence("zombie_attack_0" .. ( ( Player.m_FistAttackIndex )% 7 + 1 )), 0.5, true )
+	end
 	if Player:IsOnGround() and Velocity:Length() > Player:GetRunSpeed() - 10 then
 		return ACT_HL2MP_RUN_FAST, -1
 	end
