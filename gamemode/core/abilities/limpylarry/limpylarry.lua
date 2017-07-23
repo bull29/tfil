@@ -63,6 +63,18 @@ if SERVER then
 	end)
 end
 
+hook.Add("PlayerSwitchFlashlight", "PreventLimpyLight", function( Player, State )
+	if State and Player.m_Ragdoll then
+		return false
+	end
+end)
+
+hook.Add( "CanPlayerSuicide", "PreventSuicide", function( Player )
+	if Player.m_Ragdoll then
+		return false
+	end
+end)
+
 Abilities.Register("Limpy Larry", [[By pressing 'R',
 	you have the ability to toggle becoming
 	a limp, lifeless ragdoll that
