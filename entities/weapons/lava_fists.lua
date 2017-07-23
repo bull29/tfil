@@ -136,6 +136,14 @@ function SWEP:PreDrawViewModel(View, Weapon, Player)
 	View.RenderOverride = function() end
 end
 
+hook.Add( "CalcMainActivity", "FistAttackAnims", function( Player ) 
+	Player.m_FistAttackIndex = Player.m_FistAttackIndex or Player:GetNW2Int("$fist_attack_index")
+	if Player.m_FistAttackIndex ~= Player:GetNW2Int("$fist_attack_index") then
+		Player.m_FistAttackIndex = Player:GetNW2Int("$fist_attack_index")
+		Player:AddVCDSequenceToGestureSlot( 5, Player:LookupSequence("zombie_attack_0" .. ( ( Player.m_FistAttackIndex )% 7 + 1 )), 0.5, true )
+	end
+end)
+
 if SERVER then return end
 local surface = surface
 local draw = draw
