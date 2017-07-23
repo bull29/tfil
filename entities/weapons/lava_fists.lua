@@ -71,6 +71,7 @@ function SWEP:Reload()
 	self.NextRagdollTime = self.NextRagdollTime or CurTime() + 1
 	if SERVER and self.NextRagdollTime < CurTime() then
 		Ragdoll.Enable( self.Owner )
+		self.Owner:Flashlight( false )
 		self.Owner.m_NextRagdollifcationTime = CurTime() + 1
 	end
 end
