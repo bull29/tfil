@@ -58,6 +58,7 @@ function Ragdoll.Disable( Player, h_DisableSpawn )
 	FrameDelay(function()
 		if not Player:IsValid() or not IsValid( Player.m_Ragdoll ) then return end
 		Player:SetPos( Player.m_Ragdoll:GetBonePosition( 1 ) + Vector( 0, 0, 5 ))
+		Player:Extinguish()
 		Player.m_Ragdoll:Remove()
 		Player.m_Ragdoll = nil
 	end)
