@@ -15,12 +15,11 @@ local LavaTexture = WebElements.Lava
 local SmoothLevel = -1000
 local MapScale = 1
 local SkyboxScale = 1
-local MapBounds = Vector()
 local ClipTab = {}
 
 local dirs = {
-	left = Vector(-1, 0, 0),
-	frwd = Vector(0, -1, 0)
+	right = Vector(1, 0, 0),
+	frwd = Vector(0, 1, 0)
 }
 
 local function GetMapBounds()
@@ -35,14 +34,14 @@ hook.RunOnce("SetupSkyboxFog", function(Scale)
 end)
 
 hook.RunOnce("HUDPaint", function()
-	MapScale = GetMapBounds()
-	MapBounds = Entity(0):GetModelRenderBounds()
+	MapScale = GetMapBounds()*2
+	local min, max = Entity(0):GetModelRenderBounds()
 
 	ClipTab = {
-		[1] = {dirs.left, MapBounds.x},
-		[2] = {-dirs.left, MapBounds.x},
-		[3] = {dirs.frwd, MapBounds.y},
-		[4] = {-dirs.frwd, MapBounds.y}
+		[1] = { dirs.right, -min.x:abs() },
+		[2] = { -dirs.right, -max.x:abs() },
+		[3] = { dirs.frwd, -min.y:abs() },
+		[4] = { -dirs.frwd, -max.y:abs() }
 	}
 end)
 
@@ -60,7 +59,7 @@ hook.Add("PostDrawTranslucentRenderables", "DrawLava", function(a, b)
 				surface.DrawTexturedRectUV(-MapScale / 2, -MapScale / 2, MapScale, MapScale, 0, 0, MapScale/5000, MapScale/5000)
 			end, LavaLevel, Ang , 1)
 		else
-			cam.Wrap3D2D(function()
+ 			cam.Wrap3D2D(function()
 				surface.DrawTexturedRectUV(-MapScale / 2, -MapScale / 2, MapScale, MapScale, 0, 0, MapScale/5000 * SkyboxScale, MapScale/5000 * SkyboxScale)
 			end, GetGlobalVector("$skycampos") + (LavaLevel / SkyboxScale), Ang, 1)
 		end
