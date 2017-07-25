@@ -2,7 +2,7 @@ local PLAYER = {}
 
 PLAYER.DisplayName = "Lava Base Class"
 PLAYER.WalkSpeed = 150
-PLAYER.RunSpeed = 250
+PLAYER.RunSpeed = 225
 PLAYER.CrouchedWalkSpeed = 0.2
 PLAYER.JumpPower = 250
 PLAYER.MaxHealth = 100
