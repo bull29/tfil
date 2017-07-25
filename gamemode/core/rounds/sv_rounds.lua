@@ -87,11 +87,11 @@ function Rounds.CheckShouldRestart()
 			end
 		end
 
-		if player.GetCount() > 1 and #player.GetAlive() == 1 then
-			ShouldRestart = true
+		if #player.GetAlive() == 1 then
+			if player.GetCount() ~= 1 then
+				ShouldRestart = true
+			end
 		end
-
-		PrintMessage( 4, ( player.GetAlive()[1] or player.GetAll()[1] ):Nick() .. " is the Winner!" )
 
 		if ShouldRestart then
 			Rounds.PostRound()
