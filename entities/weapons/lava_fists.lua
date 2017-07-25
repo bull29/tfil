@@ -1,4 +1,4 @@
-fAddCSLuaFile()
+AddCSLuaFile()
 
 SWEP.PrintName = "Fists"
 SWEP.Author = "Kilburn, robotboy655, MaxOfS2D & Tenrys"
@@ -20,7 +20,7 @@ SWEP.Secondary.Automatic = true
 SWEP.Secondary.Ammo = "none"
 SWEP.DrawCrosshair = true
 SWEP.DrawAmmo = false
-SWEP.HitDistance = 48
+SWEP.HitDistance = 64
 local SwingSound = Sound("WeaponFrag.Throw")
 local HitSound = Sound("Flesh.ImpactHard")
 local tVal
@@ -55,16 +55,36 @@ function SWEP:PrimaryAttack()
 	self:SetNextPrimaryFire(CurTime() + 0.6)
 	self:SetNextSecondaryFire(CurTime() + 0.6)
 
-	if SERVER then
-		self.Owner:SetNW2Int( "$fist_attack_index", self.Owner:GetNW2Int( "$fist_attack_index" ) + 1 )
+	self.Owner:SetNW2Int( "$fist_attack_index", self.Owner:GetNW2Int( "$fist_attack_index" ) + 1 )
+
+
+	local tR_v = util.TraceLine( {
+		start = self.Owner:GetShootPos(),
+		endpos = self.Owner:GetShootPos() + self.Owner:GetAimVector() * self.HitDistance,
+		filter = self.Owner,
+		mask = MASK_SHOT_HULL
+	} )
+
+	if not IsValid( tR_v.Entity ) then
+		tR_v = util.TraceHull( {
+			start = self.Owner:GetShootPos(),
+			endpos = self.Owner:GetShootPos() + self.Owner:GetAimVector() * self.HitDistance,
+			filter = self.Owner,
+			mins = Vector( -10, -10, -8 ),
+			maxs = Vector( 10, 10, 8 ),
+			mask = MASK_SHOT_HULL
+		} )
 	end
 
-	local tR_v = self.Owner:GetEyeTrace()
-
-	if tR_v.Hit and tR_v.HitPos:Distance( self.Owner:GetShootPos() ) < 88 and IsValid( tR_v.Entity ) then
-		tR_v.Entity:SetVelocity( self.Owner:GetAimVector():SetZ( tR_v.Entity:OnGround() and 0.2 or -0.2	 ) * 555 )
-		if not tR_v:IsPlayer() then
-			
+	if tR_v.Hit and IsValid( tR_v.Entity ) then
+		self:EmitSound(HitSound)
+		local Entity = tR_v.Entity
+		if not Entity:IsPlayer() then
+			if Entity:GetPhysicsObject():IsValid() then
+				Entity:GetPhysicsObject():AddVelocity( self.Owner:GetAimVector() * ( 10000 * Entity:GetPhysicsObject():GetMass():Clamp( 1, 100 ) ) )
+			end
+		else
+			Entity:SetVelocity( self.Owner:GetForward():SetZ( Entity:OnGround() and 0.2 or -0.2 ) * 1000 )
 		end
 	end
 end
@@ -120,19 +140,20 @@ function SWEP:Think()
 	end
 
 	if SERVER then
+		local rand = util.SharedRandom("m_SharedPunch",-1,1,os.time())
 		if not owner:OnGround() and not owner.m_FistsHasJumped then
 			owner.m_FistsHasJumped = true
-			owner:ViewPunch(Angle(-5, math.random(-1, 1), math.random(-1, 1)))
+			owner:ViewPunch(Angle(-5, rand, rand))
 		elseif owner:OnGround() and owner.m_FistsHasJumped then
 			owner.m_FistsHasJumped = nil
-			owner:ViewPunch(Angle(-2, math.random(-1, 1), math.random(-1, 1)))
+			owner:ViewPunch(Angle(-2, rand, rand))
 		end
 
 		if owner:OnGround() and (owner:KeyDown(4) or owner:Crouching()) and not owner.m_FistHasCrouched then
-			owner:ViewPunch(Angle(-3.5, math.random(-0.5, 0.5), math.random(-0.5, 0.5)))
+			owner:ViewPunch(Angle(-3.5, rand/2, rand/2))
 			owner.m_FistHasCrouched = true
 		elseif (not owner:KeyDown(4) and not owner:Crouching()) and owner.m_FistHasCrouched then
-			owner:ViewPunch(Angle(-2, math.random(-0.5, 0.5), math.random(-0.5, 0.5)))
+			owner:ViewPunch(Angle(-2, rand/2, rand/2))
 			owner.m_FistHasCrouched = nil
 		end
 	end
