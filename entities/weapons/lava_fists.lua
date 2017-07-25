@@ -80,6 +80,9 @@ function SWEP:PrimaryAttack()
 
 	if tR_v.Hit then
 		self:EmitSound(HitSound)
+		if SERVER then
+			self.Owner:ViewPunch( Angle( 0, (-2):random( 2 ), (-2):random( 2 ) ))
+		end
 		local Entity = tR_v.Entity
 		if not IsValid( Entity ) then return end
 		if not Entity:IsPlayer() then
