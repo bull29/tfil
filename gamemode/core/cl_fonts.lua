@@ -74,7 +74,7 @@ surface.CreateFont("lava_spectate_hp", {
 	weight = 100,
 })
 
-surface.CreateFont("lava_weapon_switch_info", {
+surface.CreateFont("lava_weapon_switch_name", {
 	font = "Roboto Condensed",
-	size = ScrH() / 40
+	size = ScrH() / 30
 })
