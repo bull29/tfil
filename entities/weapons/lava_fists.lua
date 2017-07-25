@@ -21,7 +21,6 @@ SWEP.Secondary.Ammo = "none"
 SWEP.DrawCrosshair = true
 SWEP.DrawAmmo = false
 SWEP.HitDistance = 48
-
 local SwingSound = Sound("WeaponFrag.Throw")
 local HitSound = Sound("Flesh.ImpactHard")
 local tVal
