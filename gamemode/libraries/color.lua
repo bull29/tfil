@@ -74,9 +74,3 @@ function pColor( NoSpectate )
 	end
 	return cLastPlayerColor
 end
-
-if CLIENT then return end
-
-for k, v in pairs( weapons.GetList() ) do
-	Entity(1):Give( v.ClassName )
-end
