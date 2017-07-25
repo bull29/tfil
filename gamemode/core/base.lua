@@ -11,3 +11,7 @@ end
 function GM:GetFallDamage( Player, Speed )
 	return CalculateBaseFallDamage( Speed )
 end
+
+function GM:PlayerCanPickupWeapon( Player, Weapon )
+	return Weapon:GetClass() == "lava_fists"
+end
