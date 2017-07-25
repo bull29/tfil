@@ -15,3 +15,16 @@ end
 function Player:PlayerColor()
 	return self:GetPlayerColor():ToColor()
 end
+
+local player = player
+local pairs = pairs
+
+function player.GetAlive()
+	local tab = player.GetAll()
+	for Index, Player in pairs( tab ) do
+		if not Player:Alive() then
+			tab[ Index ] = nil
+		end
+	end
+	return tab
+end
