@@ -7,7 +7,7 @@ local LastPlayerColor = Vector( 0, 0, 0 )
 local cLastPlayerColor = Color( 0, 0, 0 )
 local LocalPlayer = LocalPlayer
 
-function cmeta.__len( self )
+function cmeta:clamp()
 	self.r = self.r:max( 0 )
 	self.g = self.g:max( 0 )
 	self.b = self.b:max( 0 )
@@ -16,30 +16,30 @@ function cmeta.__len( self )
 end
 
 function cmeta.__unm(s)
-	return #Color(255 - s.r, 255 - s.g, 255 - s.b, s.a)
+	return Color(255 - s.r, 255 - s.g, 255 - s.b, s.a):clamp()
 end
 
 function cmeta.__add(a, b)
 	if type(b) == 'number' then
-		return #Color(a.r + b, a.g + b, a.b + b, a.a)
+		return Color(a.r + b, a.g + b, a.b + b, a.a):clamp()
 	elseif b.b then
-		return #Color(a.r + b.r, a.g + b.g, a.b + b.b, a.a + b.a)
+		return Color(a.r + b.r, a.g + b.g, a.b + b.b, a.a + b.a):clamp()
 	end
 end
 
 function cmeta.__sub(a, b)
 	if type(b) == 'number' then
-		return #Color(a.r - b, a.g - b, a.b - b, a.a)
+		return Color(a.r - b, a.g - b, a.b - b, a.a):clamp()
 	elseif b.b then
-		return #Color(a.r - b.r, a.g - b.g, a.b - b.b, a.a - b.a)
+		return Color(a.r - b.r, a.g - b.g, a.b - b.b, a.a - b.a):clamp()
 	end
 end
 
 function cmeta.__mul (a, b)
 	if type(b) == 'number' then
-		return #Color(a.r* b, a.g* b, a.b* b, a.a)
+		return Color(a.r* b, a.g* b, a.b* b, a.a):clamp()
 	elseif b.b then
-		return #Color(a.r* b.r, a.g *b.g, a.b* b.b, a.a* b.a)
+		return Color(a.r* b.r, a.g *b.g, a.b* b.b, a.a* b.a):clamp()
 	end
 end
 
