@@ -96,8 +96,9 @@ function draw.SteamAvatar( avatar, res, x, y, width, height, color, ang, corner 
 	draw.WebImage( fetchAvatarAsset( avatar, res ), x, y, width, height, color, ang, corner )
 end
 
-function draw.Rect( x, y, w, h, col, mat, corigin )
+function draw.Rect( x, y, w, h, col, mat, ang, corigin )
 	col = col or white
+
 	if not mat then
 		draw.NoTexture()
 	else
@@ -108,7 +109,12 @@ function draw.Rect( x, y, w, h, col, mat, corigin )
 	end
 
 	surface.SetDrawColor( col )
-	surface.DrawTexturedRect( x - ( corigin and w/2 or 0 ), y - ( corigin and h/2 or 0 ), w, h )
+
+	if ang then
+		surface.DrawTexturedRectRotated( x - ( corigin and w/2 or 0 ), y - ( corigin and h/2 or 0 ), w, h, ang )
+	else
+		surface.DrawTexturedRect( x - ( corigin and w/2 or 0 ), y - ( corigin and h/2 or 0 ), w, h )
+	end
 end
 
 draw.fetch_asset = fetch_asset
