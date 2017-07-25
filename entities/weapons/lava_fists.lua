@@ -1,4 +1,4 @@
-AddCSLuaFile()
+fAddCSLuaFile()
 
 SWEP.PrintName = "Fists"
 SWEP.Author = "Kilburn, robotboy655, MaxOfS2D & Tenrys"
@@ -63,6 +63,9 @@ function SWEP:PrimaryAttack()
 
 	if tR_v.Hit and tR_v.HitPos:Distance( self.Owner:GetShootPos() ) < 88 and IsValid( tR_v.Entity ) then
 		tR_v.Entity:SetVelocity( self.Owner:GetAimVector():SetZ( tR_v.Entity:OnGround() and 0.2 or -0.2	 ) * 555 )
+		if not tR_v:IsPlayer() then
+			
+		end
 	end
 end
 
@@ -116,20 +119,22 @@ function SWEP:Think()
 		vm:SendViewModelMatchingSequence(vm:LookupSequence("Idle"))
 	end
 
-	if not owner:OnGround() and not owner.m_FistsHasJumped then
-		owner.m_FistsHasJumped = true
-		owner:ViewPunch(Angle(-5, math.random(-1, 1), math.random(-1, 1)))
-	elseif owner:OnGround() and owner.m_FistsHasJumped then
-		owner.m_FistsHasJumped = nil
-		owner:ViewPunch(Angle(-2, math.random(-1, 1), math.random(-1, 1)))
-	end
+	if SERVER then
+		if not owner:OnGround() and not owner.m_FistsHasJumped then
+			owner.m_FistsHasJumped = true
+			owner:ViewPunch(Angle(-5, math.random(-1, 1), math.random(-1, 1)))
+		elseif owner:OnGround() and owner.m_FistsHasJumped then
+			owner.m_FistsHasJumped = nil
+			owner:ViewPunch(Angle(-2, math.random(-1, 1), math.random(-1, 1)))
+		end
 
-	if owner:OnGround() and (owner:KeyDown(4) or owner:Crouching()) and not owner.m_FistHasCrouched then
-		owner:ViewPunch(Angle(-3.5, math.random(-0.5, 0.5), math.random(-0.5, 0.5)))
-		owner.m_FistHasCrouched = true
-	elseif (not owner:KeyDown(4) and not owner:Crouching()) and owner.m_FistHasCrouched then
-		owner:ViewPunch(Angle(-2, math.random(-0.5, 0.5), math.random(-0.5, 0.5)))
-		owner.m_FistHasCrouched = nil
+		if owner:OnGround() and (owner:KeyDown(4) or owner:Crouching()) and not owner.m_FistHasCrouched then
+			owner:ViewPunch(Angle(-3.5, math.random(-0.5, 0.5), math.random(-0.5, 0.5)))
+			owner.m_FistHasCrouched = true
+		elseif (not owner:KeyDown(4) and not owner:Crouching()) and owner.m_FistHasCrouched then
+			owner:ViewPunch(Angle(-2, math.random(-0.5, 0.5), math.random(-0.5, 0.5)))
+			owner.m_FistHasCrouched = nil
+		end
 	end
 end
 
