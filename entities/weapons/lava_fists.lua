@@ -20,11 +20,13 @@ SWEP.Secondary.Automatic = true
 SWEP.Secondary.Ammo = "none"
 SWEP.DrawCrosshair = true
 SWEP.DrawAmmo = false
-SWEP.HitDistance = 64
+SWEP.HitDistance = 48
 local SwingSound = Sound("WeaponFrag.Throw")
 local HitSound = Sound("Flesh.ImpactHard")
 local tVal
 local math = math
+local util = util
+local Vector = Vector
 
 function SWEP:Initialize()
 	self:SetHoldType("normal")
@@ -76,9 +78,10 @@ function SWEP:PrimaryAttack()
 		} )
 	end
 
-	if tR_v.Hit and IsValid( tR_v.Entity ) then
+	if tR_v.Hit then
 		self:EmitSound(HitSound)
 		local Entity = tR_v.Entity
+		if not IsValid( Entity ) then return end
 		if not Entity:IsPlayer() then
 			if Entity:GetPhysicsObject():IsValid() then
 				Entity:GetPhysicsObject():AddVelocity( self.Owner:GetAimVector() * ( 10000 * Entity:GetPhysicsObject():GetMass():Clamp( 1, 100 ) ) )
