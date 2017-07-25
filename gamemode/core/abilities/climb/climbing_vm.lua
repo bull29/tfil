@@ -1,12 +1,9 @@
 if SERVER then return end
 
-
 local function ViewmodelPopup(self, View, Weapon, Player)
-	if not Player:Alive() or not Player:HasAbility("Chameleon") then
-		return
-	end
+	if not Player:Alive() or not Player:HasAbility("Chameleon") then return end
 
-	if not IsValid( Player.m_InvisParent ) then
+	if not IsValid(Player.m_InvisParent) then
 		Player.m_InvisParent = ClientsideModel("models/v_me_fists.mdl")
 	end
 
@@ -14,8 +11,8 @@ local function ViewmodelPopup(self, View, Weapon, Player)
 		Player.m_cEffect = ClientsideModel("models/weapons/c_arms_citizen.mdl")
 		Player.m_cEffect:SetParent(Player.m_InvisParent)
 		Player.m_cEffect:AddEffects(EF_BONEMERGE)
-		Player.m_cEffect.GetPlayerColor = function(self)
 
+		Player.m_cEffect.GetPlayerColor = function(self)
 			local data = player_manager.TranslatePlayerHands(LocalPlayer():GetModel())
 
 			if data then
@@ -37,8 +34,15 @@ local function ViewmodelPopup(self, View, Weapon, Player)
 	c.RenderOverride = function(self)
 		--if GetViewEntity() ~= LocalPlayer() or EyePos() ~= LocalPlayer():EyePos() then return end
 		local cQuer = Player:GetNW2String("$climbquery", "")
-		if not IsValid( View ) then return end
-		if LocalPlayer():ShouldDrawLocalPlayer() then return end
+		if not IsValid(View) then return end
+
+		if LocalPlayer():ShouldDrawLocalPlayer() then
+			View:SetNoDraw(false)
+			Player.m_cEffect:SetNoDraw(true)
+
+			return
+		end
+
 		if cQuer ~= "" then
 			c:SetCycle(0.2)
 			Player.m_cEffect:SetNoDraw(false)
@@ -59,10 +63,12 @@ end
 
 if CLIENT then
 	hook.Add("Tick", "CheckWeaponSwitch", function()
-		if not IsValid( LocalPlayer() ) then return end
+		if not IsValid(LocalPlayer()) then return end
 		local wep = LocalPlayer():GetActiveWeapon()
+
 		if not wep.HaveSetHack and wep:IsValid() and wep:GetClass() == "lava_fists" then
 			wep.HaveSetHack = true
+
 			wep.PreDrawViewModel = function(a, b, c, d)
 				ViewmodelPopup(a, b, c, d)
 			end

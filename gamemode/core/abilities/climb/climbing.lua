@@ -37,6 +37,7 @@ end)
 
 hook.Add("PlayerRender", "DrawClimbingAnims", function(Player)
 	if not CanClimb(Player) then return end
+
 	local climbQuery = Player:GetNW2String("$climbquery")
 
 	if climbQuery ~= "" then
@@ -45,11 +46,10 @@ hook.Add("PlayerRender", "DrawClimbingAnims", function(Player)
 		Player.LerpedSideClimbVar = Player.LerpedSideClimbVar:lerp(climbQuery[2] * 90)
 		Player:SetRenderAngles(Player:GetRenderAngles():SetYaw(climbQuery[3]):SetRoll(Player.LerpedSideClimbVar))
 		Player:SetupBones()
-		local t = (Player.LerpedSideClimbVar:abs() / 2):min(50):max(12):floor()
 
 		cam.Wrap3D(function()
 			Player:DrawModel()
-		end, EyePos() - Vector(0, 0, t))
+		end, EyePos() - Vector(0, 0, (Player.LerpedSideClimbVar:abs() / 2):min(50):max(12):floor()))
 
 		return true
 	end
