@@ -375,10 +375,8 @@ hook.RunOnce("HUDPaint", function()
 
 					if not isHovered then
 						draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - 100)
-						draw.WebImage(WebElements.CircleOutline, w / 2, h / 2, w * 0.9, h * 0.9, pColor() - 50, 0)
 					else
 						draw.WebImage(WebElements.QuadCircle, w / 2, h / 2, w, h, pColor() - 100, CurTime():sin() * 180)
-						draw.WebImage(WebElements.CircleOutline, w / 2, h / 2, w * 0.9, h * 0.9, pColor(), 0)
 					end
 				end
 
