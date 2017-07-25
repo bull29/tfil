@@ -47,11 +47,11 @@ hook.Add("Think", "LavaMainCycle", function()
 
 			if tab[1] then
 				table.sort(tab, function(a, b) return a:GetPos().z < b:GetPos().z end)
-				local t = ((tab[1]:GetPos().z - 32 - Lava.GetLevel()) * FrameTime() / 25):max(FrameTime() * 5)
+				local t = ((tab[1]:GetPos().z - 32 - Lava.GetLevel()) * FrameTime() / 15		):max(FrameTime() * 5)
 				Lava.ShiftLevel(t)
 
 				if t == FrameTime() * 5 then
-					Rounds.NextSuperDecentTime = CurTime() + 30
+					Rounds.NextSuperDecentTime = CurTime() + 15
 				end
 			end
 		else
@@ -91,6 +91,9 @@ end)
 
 function GM:EntityTakeDamage( Entity, Damage )
 	if IsValid( Entity ) and IsValid( Damage:GetAttacker() ) and Entity:IsPlayer() and Damage:GetAttacker():GetClass() == "entityflame" then
-		Damage:ScaleDamage( math.random(7,12) )
+		Damage:ScaleDamage( math.random(7,15) )
+	end
+	if Damage:IsBulletDamage() and not hook.Call("Lava.ShouldBlockBulletDamage", nil, Entity, Damage ) then
+		return true
 	end
 end
