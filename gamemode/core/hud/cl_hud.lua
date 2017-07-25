@@ -106,7 +106,7 @@ hook.RunOnce("HUDPaint", function()
 		k:PaintManual()
 		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - 50)
 		draw.WebImage(WebElements.CircleOutline, floor, floor, w - floor * 2, h - floor * 2, pColor() - 20)
-		s:SetText(((LocalPlayer():GetPos().z - Lava.GetLevel()) / 52 * 1.7):Round(1) .. "m")
+		s:SetText(((LocalPlayer():GetPos().z - Lava.GetLevel()) / 52 ):Round(1) .. "m")
 	end
 
 	k.PaintCircle = function(s, w, h)
