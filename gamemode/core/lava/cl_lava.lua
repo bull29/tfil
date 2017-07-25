@@ -59,6 +59,12 @@ hook.Add("PostDrawTranslucentRenderables", "DrawLava", function(a, b)
 			cam.Wrap3D2D(function()
 				surface.DrawTexturedRectUV(-MapScale / 2, -MapScale / 2, MapScale, MapScale, 0, 0, MapScale / 5000, MapScale / 5000)
 			end, LavaLevel, Ang, 1)
+
+			if EyePos().z < SmoothLevel then
+				cam.Wrap3D2D(function()
+					surface.DrawTexturedRectUV(-MapScale / 2, -MapScale / 2, MapScale, MapScale, 0, 0, MapScale / 5000, MapScale / 5000)
+				end, LavaLevel, Ang + Angle( 180, 0, 0 ), 1)
+			end
 		end
 	end)
 
