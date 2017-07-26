@@ -44,6 +44,10 @@ function SWEP:UpdateNextSprint()
 end
 
 function SWEP:PrimaryAttack(NoForce)
+	if not NoForce then
+		hook.Call("Lava.FistsSecondaryAttack", nil, self.Owner, self )
+	end
+
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	local anim = "Shove"
 	tVal = not NoForce
@@ -97,6 +101,7 @@ function SWEP:PrimaryAttack(NoForce)
 end
 
 function SWEP:Reload()
+	hook.Call("Lava.FistsReload", nil, self.Owner, self )
 	if not self.Owner:HasAbility("Limpy Larry") then return end
 	self.NextRagdollTime = self.NextRagdollTime or CurTime() + 1
 
@@ -108,6 +113,7 @@ function SWEP:Reload()
 end
 
 function SWEP:SecondaryAttack()
+	hook.Call("Lava.FistsSecondaryAttack", nil, self.Owner, self )
 	self:PrimaryAttack(self:GetEggs() > 0)
 	if self:GetEggs() < 1 then return end
 	self:SetEggs(self:GetEggs() - 1)
