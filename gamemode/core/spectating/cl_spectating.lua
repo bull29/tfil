@@ -1,3 +1,4 @@
+local tShouldDisable
 local tH
 local tVH
 
@@ -158,7 +159,7 @@ hook.Add("HUDPaint", "RenderSpectateControls", function()
 		tH:Hide()
 	end
 
-	if SpectatingPlayer() and not IsValid(LocalPlayer().m_Ragdoll) and tVH then
+	if SpectatingPlayer() and not IsValid(LocalPlayer().m_Ragdoll) and tVH and not tShouldDisable then
 		if not tVH:IsVisible() then
 			tVH:Show()
 		end
@@ -168,3 +169,12 @@ hook.Add("HUDPaint", "RenderSpectateControls", function()
 		tVH:Hide()
 	end
 end)
+
+hook.Add("OnContextMenuOpen", "DisableSpecContextRender", function()
+	tShouldDisable = true
+end)
+
+hook.Add("OnContextMenuClose", "DisableSpecContextRender", function()
+	tShouldDisable = false
+end)
+
