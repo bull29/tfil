@@ -26,7 +26,7 @@ local tVal
 local math = math
 local util = util
 local Vector = Vector
-Entity(1):GetActiveWeapon():SetEggs( 7 )
+
 function SWEP:Initialize()
 	self:SetHoldType("normal")
 	self:SetEggs(6)
@@ -118,13 +118,15 @@ function SWEP:SecondaryAttack()
 		egg:SetModel("models/props_phx/misc/egg.mdl")
 		egg.m_EggParent = self.Owner
 		egg:Spawn()
-		egg:SetOwner( self.Owner )
+		egg:SetOwner(self.Owner)
 		egg:Activate()
 		egg:GetPhysicsObject():AddAngleVelocity(self.Owner:GetAimVector() * 1024)
 		egg:GetPhysicsObject():AddVelocity(self.Owner:GetAimVector() * 1024)
-		FrameDelay( function()
+
+		FrameDelay(function()
 			if IsValid(egg) then
 				egg:SetOwner()
+				egg.m_Velocity = egg:GetVelocity()
 			end
 		end)
 	end
@@ -199,6 +201,10 @@ if SERVER then
 
 	hook.Add("PropBreak", "PropVengeance", function(Player, Object)
 		if Object.m_EggParent and Object:GetModel() == "models/props_phx/misc/egg.mdl" then
+			if Object.m_Velocity then
+				util.Decal("BirdPoop", Object:GetPos(), Object:GetPos() + Object.m_Velocity, Object)
+			end
+
 			for Player in Values(player.GetAll()) do
 				if Player:EyePos():Distance(Object:GetPos()) < 28 then
 					if Object.m_EggParent ~= Player then
@@ -236,7 +242,7 @@ else
 			DrawMaterialOverlay("models/props_lab/tank_glass001", m_EggRefract)
 			DrawMaterialOverlay("effects/water_warp01", m_EggRefract)
 			DrawMaterialOverlay("models/shadertest/shader3", m_EggRefract)
-			m_EggRefract = m_EggRefract:lerp(0, FrameTime() )
+			m_EggRefract = m_EggRefract:lerp(0, FrameTime())
 
 			if m_EggRefract < 0.01 then
 				m_AmEgged = nil
