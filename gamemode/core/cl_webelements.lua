@@ -10,5 +10,6 @@ wE.BandedCircle		= "http://i.imgur.com/OQpzdFx.png"
 wE.HeartOutline		= "http://i.imgur.com/OFaYwW7.png"
 wE.ClockHand		= "http://i.imgur.com/jQyeVXt.png"
 wE.QuadCircle		= "http://i.imgur.com/8uMN5HY.png"
+wE.PlusSign			= "http://i.imgur.com/N78SHA0.png"
 
 _G.WebElements = wE
