@@ -28,3 +28,15 @@ function player.GetAlive()
 	end
 	return tab
 end
+
+function player.GetSpectators()
+	local tab = player.GetAll()
+	for Index, Player in pairs( tab ) do
+		if Player:Alive() then
+			tab[ Index ] = nil
+		end
+	end
+	return tab
+end
+
+player.GetDead = player.GetSpectators
