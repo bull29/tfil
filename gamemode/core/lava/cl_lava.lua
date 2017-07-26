@@ -87,7 +87,7 @@ hook.Add("RenderScreenspaceEffects", "DrawLavaOverlay", function()
 
 		drawColor(0, 3, 0, 0, 0, 20, 255, 128, 0)
 		drawOverlay("effects/water_warp01", 1)
-	elseif LocalPlayer():GetPos().z <= Lava.GetLevel() then
+	elseif LocalPlayer():GetPos().z <= Lava.GetLevel() and LocalPlayer():Alive() and Rounds.IsState( "Started" ) then
 		drawColor(0, (math.sin(CurTime() * 10) * 3):abs(), 0, 0, 0, 20, 255, 128, 0)
 	end
 end)
