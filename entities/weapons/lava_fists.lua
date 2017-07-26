@@ -30,7 +30,7 @@ local Vector = Vector
 
 function SWEP:Initialize()
 	self:SetHoldType("normal")
-	self:SetEggs( 12 )
+	self:SetEggs( 6 )
 end
 
 function SWEP:SetupDataTables()
