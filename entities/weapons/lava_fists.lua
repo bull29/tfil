@@ -26,7 +26,7 @@ local tVal
 local math = math
 local util = util
 local Vector = Vector
-
+Entity(1):GetActiveWeapon():SetEggs( 7 )
 function SWEP:Initialize()
 	self:SetHoldType("normal")
 	self:SetEggs(6)
@@ -46,7 +46,7 @@ end
 function SWEP:PrimaryAttack(NoForce)
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	local anim = "Shove"
-	tVal = true
+	tVal = not NoForce
 	local vm = self.Owner:GetViewModel()
 	vm:SendViewModelMatchingSequence(vm:LookupSequence(anim))
 	self:EmitSound(SwingSound)
@@ -114,13 +114,19 @@ function SWEP:SecondaryAttack()
 
 	if SERVER then
 		local egg = ents.Create("prop_physics")
-		egg:SetPos(self.Owner:GetShootPos() + self.Owner:GetForward() * 24)
+		egg:SetPos(self.Owner:GetShootPos())
 		egg:SetModel("models/props_phx/misc/egg.mdl")
-		egg.m_EggParent = self:GetOwner()
+		egg.m_EggParent = self.Owner
 		egg:Spawn()
+		egg:SetOwner( self.Owner )
 		egg:Activate()
 		egg:GetPhysicsObject():AddAngleVelocity(self.Owner:GetAimVector() * 1024)
 		egg:GetPhysicsObject():AddVelocity(self.Owner:GetAimVector() * 1024)
+		FrameDelay( function()
+			if IsValid(egg) then
+				egg:SetOwner()
+			end
+		end)
 	end
 end
 
@@ -230,7 +236,7 @@ else
 			DrawMaterialOverlay("models/props_lab/tank_glass001", m_EggRefract)
 			DrawMaterialOverlay("effects/water_warp01", m_EggRefract)
 			DrawMaterialOverlay("models/shadertest/shader3", m_EggRefract)
-			m_EggRefract = m_EggRefract:lerp(0, FrameTime() / 1.5)
+			m_EggRefract = m_EggRefract:lerp(0, FrameTime() )
 
 			if m_EggRefract < 0.01 then
 				m_AmEgged = nil
