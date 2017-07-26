@@ -122,7 +122,7 @@ function SWEP:SecondaryAttack()
 		egg:Activate()
 		egg:GetPhysicsObject():AddAngleVelocity(self.Owner:GetAimVector() * 1024)
 		egg:GetPhysicsObject():AddVelocity(self.Owner:GetAimVector() * 1024)
-
+		egg.m_Velocity = egg:GetVelocity()
 		FrameDelay(function()
 			if IsValid(egg) then
 				egg:SetOwner()
