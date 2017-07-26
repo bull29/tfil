@@ -12,6 +12,7 @@ local hook = hook
 local FrameTime = FrameTime
 local player_manager = player_manager
 local CurTime = CurTime
+local m_UnderDescentAmount = 128
 
 Rounds.NextSuperDecentTime = nil
 
@@ -34,7 +35,7 @@ hook.Add("Think", "LavaMainCycle", function()
 	elseif Rounds.CurrentState == "Started" then
 		if hook.Call("Lava.RoundStartedTick") then return end
 
-		Rounds.NextSuperDecentTime = Rounds.NextSuperDecentTime or CurTime() + 30
+		Rounds.NextSuperDecentTime = Rounds.NextSuperDecentTime or CurTime()
 
 		if Rounds.NextSuperDecentTime < CurTime() then
 			local tab = player.GetAll()
@@ -47,11 +48,12 @@ hook.Add("Think", "LavaMainCycle", function()
 
 			if tab[1] then
 				table.sort(tab, function(a, b) return a:GetPos().z < b:GetPos().z end)
-				local t = ((tab[1]:GetPos().z - 64 - Lava.GetLevel()) * FrameTime() ):max(FrameTime() * 3)
+				local t = ((tab[1]:GetPos().z - m_UnderDescentAmount - Lava.GetLevel()) * FrameTime() ):max(FrameTime() * 3)
 				Lava.ShiftLevel(t)
 
 				if t == FrameTime() * 3 then
 					Rounds.NextSuperDecentTime = CurTime() + 30
+					m_UnderDescentAmount = 64
 				end
 			end
 		else
