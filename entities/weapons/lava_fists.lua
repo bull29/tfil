@@ -30,9 +30,11 @@ local Vector = Vector
 
 function SWEP:Initialize()
 	self:SetHoldType("normal")
+	self:SetEggs( 12 )
 end
 
 function SWEP:SetupDataTables()
+	self:NetworkVar("Int", 0, "Eggs")
 	self:NetworkVar("Float", 0, "NextMeleeAttack")
 	self:NetworkVar("Float", 1, "NextSprint")
 end
@@ -43,7 +45,7 @@ function SWEP:UpdateNextSprint()
 end
 
 
-function SWEP:PrimaryAttack()
+function SWEP:PrimaryAttack( NoForce )
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	local anim = "Shove"
 	tVal = true
@@ -60,37 +62,39 @@ function SWEP:PrimaryAttack()
 	self.Owner:SetNW2Int( "$fist_attack_index", self.Owner:GetNW2Int( "$fist_attack_index" ) + 1 )
 
 
-	local tR_v = util.TraceLine( {
-		start = self.Owner:GetShootPos(),
-		endpos = self.Owner:GetShootPos() + self.Owner:GetAimVector() * self.HitDistance,
-		filter = self.Owner,
-		mask = MASK_SHOT_HULL
-	} )
-
-	if not IsValid( tR_v.Entity ) then
-		tR_v = util.TraceHull( {
+	if not NoForce then
+		local tR_v = util.TraceLine( {
 			start = self.Owner:GetShootPos(),
 			endpos = self.Owner:GetShootPos() + self.Owner:GetAimVector() * self.HitDistance,
 			filter = self.Owner,
-			mins = Vector( -10, -10, -8 ),
-			maxs = Vector( 10, 10, 8 ),
 			mask = MASK_SHOT_HULL
 		} )
-	end
 
-	if tR_v.Hit then
-		self:EmitSound(HitSound)
-		if SERVER then
-			self.Owner:ViewPunch( Angle( 0, (-2):random( 2 ), (-2):random( 2 ) ))
+		if not IsValid( tR_v.Entity ) then
+			tR_v = util.TraceHull( {
+				start = self.Owner:GetShootPos(),
+				endpos = self.Owner:GetShootPos() + self.Owner:GetAimVector() * self.HitDistance,
+				filter = self.Owner,
+				mins = Vector( -10, -10, -8 ),
+				maxs = Vector( 10, 10, 8 ),
+				mask = MASK_SHOT_HULL
+			} )
 		end
-		local Entity = tR_v.Entity
-		if not IsValid( Entity ) then return end
-		if not Entity:IsPlayer() then
-			if Entity:GetPhysicsObject():IsValid() then
-				Entity:GetPhysicsObject():AddVelocity( self.Owner:GetAimVector() * ( 10000 * Entity:GetPhysicsObject():GetMass():Clamp( 1, 100 ) ) )
+
+		if tR_v.Hit then
+			self:EmitSound(HitSound)
+			if SERVER then
+				self.Owner:ViewPunch( Angle( 0, (-2):random( 2 ), (-2):random( 2 ) ))
 			end
-		else
-			Entity:SetVelocity( self.Owner:GetForward():SetZ( Entity:OnGround() and 0.2 or -0.2 ) * 1000 )
+			local Entity = tR_v.Entity
+			if not IsValid( Entity ) then return end
+			if not Entity:IsPlayer() then
+				if Entity:GetPhysicsObject():IsValid() then
+					Entity:GetPhysicsObject():AddVelocity( self.Owner:GetAimVector() * ( 10000 * Entity:GetPhysicsObject():GetMass():Clamp( 1, 100 ) ) )
+				end
+			else
+				Entity:SetVelocity( self.Owner:GetForward():SetZ( Entity:OnGround() and 0.2 or -0.2 ) * 1000 )
+			end
 		end
 	end
 end
@@ -106,7 +110,18 @@ function SWEP:Reload()
 end
 
 function SWEP:SecondaryAttack()
-	self:PrimaryAttack()
+	self:PrimaryAttack( self:GetEggs() > 0 )
+	if self:GetEggs() < 1 then return end
+	self:SetEggs( self:GetEggs() - 1 )
+	if SERVER then
+		local bug = ents.Create("prop_physics")
+		bug:SetPos( self.Owner:GetShootPos() + self.Owner:GetForward() * 24 )
+		bug:SetModel("models/props_phx/misc/egg.mdl")
+		bug:Spawn()
+		bug:Activate()
+		bug:GetPhysicsObject():AddAngleVelocity( self.Owner:GetAimVector() * 1024 )
+		bug:GetPhysicsObject():AddVelocity( self.Owner:GetAimVector() * 1024 )
+	end
 end
 
 function SWEP:OnDrop()
@@ -200,4 +215,9 @@ function SWEP:DrawHUD()
 	local xE, xT = (ScrH() / 100 + c_CValue), (c_CValue * ScrH() / 300)
 	draw.WebImage(WebElements.QuadCircle, tosc.x, tosc.y, xE / 2 + (CurTime() * 10):sin() * 5, xE / 2 + (CurTime() * 10):sin() * 5, pColor():Alpha(255 - c_CValue), (c_CValue / 5):sin() * 180)
 	draw.WebImage(WebElements.CircleOutline, tosc.x, tosc.y, xT + (CurTime() * 10):sin() * 5, xT + (CurTime() * 10):sin() * 5, pColor():Alpha(255 - c_CValue), 0)
+
+	local Size = ScrH()/12
+	for i = 1, self:GetEggs() do
+		draw.WebImage( Emoji.Get( 2204 ), ScrW() - Size * ( 0.3 * i ) - Size, ScrH() - Size * 1.5 , Size, Size, nil, i == self:GetEggs() and ( CurTime() * 5 ):sin() * 15 or -15, true )
+	end
 end
