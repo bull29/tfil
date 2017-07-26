@@ -1,271 +1,135 @@
-local system = system or {}
-local draw = draw
-local box = draw.RoundedBox
-local lerp = Lerp
-local frametime = FrameTime
-local ft = frametime
-local text = draw.SimpleText
-local math = math
-local web = draw.WebImage
-local webof = "http://steamcommunity-a.akamaihd.net/public/images/countryflags/<>.gif"
+local Gray = Color(0, 0, 0, 150)
+local s
+local Datapoints = {}
 
-local wtab = {
-	[1] = "http://i.imgur.com/QYiylM6.png",
-	[2] = "http://i.imgur.com/m32EIeS.png",
-	[3] = "http://i.imgur.com/KImuuj4.png"
-}
-
-local ed = WebElements.Edge * 0.5
-local buttons = {}
-
-local function addButton(name, icon, func)
-	table.insert(buttons, {
-		name = name,
-		icon = icon,
-		func = func
-	})
+local function AddDatapoint( func )
+	table.insert( Datapoints, func  )
 end
 
-addButton("Join our group!", "http://i.imgur.com/HTu2GaE.png", function()
-	gui.OpenURL("http://steamcommunity.com/groups/nivogamers")
+AddDatapoint( function( Player )
+	return Player:Ping()
 end)
 
-addButton("Toggle Thirdperson", "http://i.imgur.com/vwIuS8b.png", function()
-	_ontp = not _ontp
-end)
+hook.RunOnce("HUDPaint", function()
+	s = InitializePanel("LavaScore", "DPanel")
+	s:SetSize(ScrW() * 0.6, ScrH() * 0.8)
+	s:Center()
 
-local colors = {
-	A = Color(50, 50, 50, 150),
-	B = Color(100, 68, 54),
-	C = Color(143, 96, 72),
-	D = Color(50, 50, 50 )
-}
-
-hook.RunOnce( "HUDPaint", function()
-	local st = InitializePanel("FATKID_SCORE_SIDETAB", "DPanel")
-	st:MakeBorder(ed, colors.D)
-	st:SetPaintedManually( true )
-	st.Paint = function(s, w, h)
-		box(0, 0, 0, w, h, colors.A)
-
-		if FATKID_SCORE then
-			local p = FATKID_SCORE
-			s:SetWide(p:GetWide() / 4.5)
-			s:SetTall(p:GetTall() - p.TopOf)
-			s:SetPos(p:GetHorizontalPos() - p:GetWide() / 4.5, p:GetVerticalPos() + p.TopOf)
-		end
+	s.Paint = function(s, w, h)
+		draw.Rect(0, 0, w, h, Gray)
+		draw.Rect(0, 0, w, h / 7, pColor() - 100)
+		draw.Rect(0, h / 7, w, 1, pColor() - 50)
+		draw.SimpleText(GetHostName(), "lava_score_title", h / 7, h / 14, nil, nil, TEXT_ALIGN_CENTER)
+		draw.SimpleText("You're playing on:", "lava_score_title_sub", h / 7 * 0.9, h / 14 * 0.6, nil, nil, TEXT_ALIGN_CENTER)
 	end
 
-	local ic = st:Add("DIconLayout")
+	local m = s:Add("DCirclePanel")
+	m:SetPos(ScrH() * 0.8 / 8 / 16, ScrH() * 0.8 / 8 / 16)
+	m:SetSize(ScrH() * 0.8 / 8, ScrH() * 0.8 / 8)
 
-	ic:Dock(FILL)
-	ic:SetSpaceY(ed)
-
-	for k, v in pairs(buttons) do
-		local b = ic:Add("DButton")
-		b:SetText("")
-		b:MakeBorder(ed, colors.D)
-		b:SetTall(ScrH() / 17)
-		b.ColorOf = pColor()
-
-		local i = b:Add("DPanel")
-		b.Paint = function(s, w, h)
-			local h8 = math.ceil( h/8 )
-			s:SetWide(ic:GetWide())
-			box(0, 0, 0, w, h, s.ColorOf)
-			box(0, 0, 0, h8, h8, colors.D)
-			box(0, w - h8, h - h8, h8, h8, colors.D)
-			box(0, w - h8, 0, h8, h8, colors.D)
-			box(0, 0, h - h8, h8, h8, colors.D)
-
-			box(0, 0, h8 - ed*2, w, ed, colors.D)
-			box(0, 0, h - h8 + ed, w, ed, colors.D)
-
-			text(v.name, "fatkid_score_side", i:GetHorizontalPos() + i:GetWide() + 4, h/2 - ScrH()/80 )
-
-			if s.Hovered then
-				s.ColorOf = s.ColorOf:Approach(pColor() + 25, 5)
-			else
-				s.ColorOf = s.ColorOf:Approach(pColor() - 5		, 5)
-			end
-		end
-		b.DoClick = v.func
-		i.Paint = function( s, w, h )
-			s:SetPos( ed*4, ed*4 )
-			s:SetWide( b:GetTall() - ed*8 )
-			s:SetTall( b:GetTall() - ed*8 )
-			box( 0, 0, 0, ed, h, colors.D )
-			box( 0, w-ed, 0, ed, h, colors.D )
-			web( v.icon, 0, ed, w, h, colors.D )
-		end
-	end
-end)
-
-local pcolors = {
-	Human = Color(100, 68, 54)
-}
-
-hook.RunOnce( "HUDPaint", function()
-	local m = InitializePanel("FATKID_SCORE","DFrame")
-	m:SetSize(ScrW() * 0.1, ScrH() * 0.1)
-	m:ShowCloseButton(false)
-	m:SetTitle"" --("Nivo - Fat kid")
-	m.DesiredWidth, m.DesiredHeight = math.floor(ScrW() * 0.6), math.floor(ScrH() * 0.8)
-	m:Center()
-	m:MakePopup()
-	m:MakeBorder(ed, Color(50, 50, 50))
-	local topset
-	m.ScrollOffset = 0
-	m.TopOf = 0
-
-	m.Paint = function(s, w, h)
-		if FATKID_SCORE_SIDETAB then
-			FATKID_SCORE_SIDETAB:PaintManual()
-		end
-		topset = h / 10
-		s.TopOf = topset
-		box(0, 0, 0, w, h, colors.A)
-		box(0, 0, 0, w, topset, pColor())
-		box(0,0,topset-1,w,ed,colors.D)
-		text("Nivo", "fatkid_motd_top", s.ScrollOffset, 5)
-		text("[", "fatkid_motd_top", s.ScrollOffset - 15, 5, pColor() + 50)
-		text("        ]", "fatkid_motd_top", s.ScrollOffset, 5, pColor() + 50)
-
-		if s.Flip then
-			s.ScrollOffset = lerp(ft(), s.ScrollOffset, 0)
-		else
-			s.ScrollOffset = lerp(ft(), s.ScrollOffset, w - topset * 2.333)
-		end
-
-		if s.ScrollOffset > w - (topset * 2.333) - 20 or s.ScrollOffset < 20 then
-			s.Flip = not s.Flip
-		end
-
-		if s:GetHorizontalPos() ~= s:GetCenterX() or s:GetVerticalPos() ~= s:GetCenterY() then
-			s:SetPos(lerp(frametime() * 5, s:GetHorizontalPos(), s:GetCenterX()), lerp(frametime() * 5, s:GetVerticalPos(), s:GetCenterY()))
-		end
-
-		if w ~= s.DesiredWidth or h ~= s.DesiredHeight then
-			s:SetSize(lerp(frametime() * 5, w, s.DesiredWidth), lerp(frametime() * 5, h, s.DesiredHeight))
-		end
+	m.PaintCircle = function(s, w, h)
+		draw.WebImage(Emoji.Get(328), w / 2, h / 2, w, h, nil, CurTime():cos() * -15)
+		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - 50)
 	end
 
-	local s = m:Add("DScrollPanel")
+	local l = s:Add("DScrollPanel")
+	s.Canvas = l
+	local m_H = l:GetVBar():GetChildren()[2]:GetTall() * 0.7
+	local ts = l:GetVBar():GetChildren()[3]
+	l:Dock(FILL)
+	l:DockMargin(0, ScrH() * 0.8 / 6.9, 0, 0)
+	l.Paint = function() end
+	l:GetVBar():GetChildren()[1].Paint = nil
+	l:GetVBar():GetChildren()[2].Paint = nil
+	local tab = ts:GenerateColorShift("sMA", pColor() - 50, pColor(), 255)
 
-	s.Paint = function(self, w, h)
-		if w ~= m:GetWide() - 4 then
-			self:SetWide(m:GetWide() - 4)
-			self:SetPos(3, m:GetTall() / 10 + 2)
-		end
-
-		if h ~= m:GetTall() - 4 then
-			self:SetTall(m:GetTall() - 29)
-			self:SetPos(3, m:GetTall() / 10 + 2)
-		end
+	ts.Paint = function(s, w, h)
+		tab[1], tab[2] = pColor() - 50, pColor()
+		s:Declip(function()
+			draw.Rect(0, -m_H, w, h + m_H * 2, s.sMA)
+		end)
 	end
 
-	local i = s:Add("DIconLayout")
-	i:SetSpaceY(1)
+	function l:Repopulate()
+		self:GetCanvas():RemoveChildren()
 
-	i.PaintOver = function(self, w, h)
-		if w ~= s:GetWide() then
-			self:SetWide(s:GetWide())
-		end
-
-		if h ~= s:GetTall() then
-			self:SetTall(s:GetTall())
-		end
-	end
-
-	m.Redo = function()
-		for k, v in pairs( i:GetChildren() ) do
-			v:Remove()
-		end
-		for k, v in pairs(player.GetAll()) do
-			local p = i:Add("DButton")
-			p:MakeBorder(ed, Color(50, 50, 50))
-			p:SetTall(ScrH() / 15)
-			p:SetText""
-			p.StartCol = Color( v:GetPlayerColor().r*255, v:GetPlayerColor().g*255, v:GetPlayerColor().b*255 )  - 50
-			local maxof = math.max(p:GetTall() / 5 * 1.45454545, 16)
-			local minof = math.max(p:GetTall() / 5, 11)
-			local ih = p:GetTall()
-			local av = p:Add("AvatarImage")
-
-			p.Paint = function(se, w, h)
-				if not IsValid(v) then
-					se:Remove()
-					i:Layout()
+		local function AddPlayer(Player, Section )
+			local p = l:Add("DLabel")
+			p:Dock(TOP)
+			p:SetMouseInputEnabled( true )
+			p:SetTall(ScrH() / 25)
+			p:SetTextColor(color_white)
+			p:SetFont("lava_score_player_row")
+			p:SetTextInset(ScrW() / 40, 0)
+			local tab = p:GenerateColorShift("sMA", Player:PlayerColor(), Player:PlayerColor() + 25, 128)
+			p.Paint = function(s, w, h)
+				if not IsValid( Player ) then
+					s:Remove()
 					return
 				end
-				if w ~= (s:InnerWidth() - 2) then
-					se:SetWide(s:InnerWidth() - 2)
-					i:Layout()
+				if Section == "P" and not Player:Alive() then
+					s:Remove()
+					AddPlayer( Player, "S" )
+					return
 				end
-
-				if se.Hovered then
-					se.StartCol = se.StartCol:Approach(Color( v:GetPlayerColor().r*255, v:GetPlayerColor().g*255, v:GetPlayerColor().b*255 )  - 50+ 25, 5)
-				else
-					se.StartCol = se.StartCol:Approach(Color( v:GetPlayerColor().r*255, v:GetPlayerColor().g*255, v:GetPlayerColor().b*255 )  - 50, 5)
-				end
-
-				if se.DoExpand and h ~= (ScrH() / 15 * 3) then
-					se:SetTall(lerp(ft() * 5, h, ScrH() / 15 * 3))
-					i:Layout()
-				elseif not se.DoExpand then
-					se:SetTall(lerp(ft() * 5, h, ScrH() / 15))
-					i:Layout()
-				end
-
-				box(0, 0, 0, w, ih, se.StartCol:Alpha(225))
-				box(0, 0, ih - 1, w, ed, colors.A:Alpha(225))
-				box(0, 0, ih, w, h, colors.A:Alpha(150))
-				text(v:Nick(), "fatkid_score", av:GetHorizontalPos() + av:GetWide() + 4, ih / 2 - ScrH() / 60)
+				tab[1], tab[2] = Player:PlayerColor(), Player:PlayerColor() + 25,
+				draw.Rect(0, 0, w, h, s.sMA)
+				s:SetText(Player:Nick())
 			end
 
-			p.DoClick = function(s)
-				chat.PlaySound()
-				if Mutators.IsActive( "Mystery Men") and v:Alive() then
-					return gui.OpenURL("http://steamcommunity.com/profiles/"..v:SteamID64())
-				end
-				v:ShowProfile()
-			--	s.DoExpand = not s.DoExpand
-			end
+			local v = p:Add("AvatarImage")
+			v:SetSize(ScrH() / 25 - WebElements.Edge/2, ScrH() / 25 - WebElements.Edge/2)
+			v:SetPos(WebElements.Edge / 4, WebElements.Edge / 4)
+			v:SetPlayer(Player, 184)
+			v:MakeBorder( WebElements.Edge/2, Player:GetPlayerColor():ToColor() - 50 )
+		end
 
-			--box( 8, w - minof - maxof*2, h / 2 - minof / 2, minof, minof, Color( 0, 0, 0, 150 ))
-			--web(wtab[v:GetNWInt("operating_system", 1)], w - minof - maxof*2, h / 2 - minof / 2, minof, minof )
-			av:SetSize(p:GetTall() - 6, p:GetTall() - 6)
-			av:SetPos(3, 3)
-			av:SetPlayer(v, 184)
-			av:MakeBorder(ed, Color(50, 50, 50))
-			print( av.CurrentPlayer )
+		local aHeader = l:Add("DLabel")
+		aHeader:Dock(TOP)
+		aHeader:SetTall(ScrH() / 25)
+		aHeader:SetFont("lava_score_header")
+		aHeader:SetText("Players")
+		aHeader:SetTextColor(color_white)
+		aHeader:SetTextInset(ScrW() / 100, 0)
+
+		aHeader.Paint = function(s, w, h)
+			draw.Rect(0, 0, w, h, pColor() - 75)
+		end
+
+		for Player in Values(player.GetAlive()) do
+			AddPlayer(Player, "P")
+		end
+
+		local bHeader = l:Add("DLabel")
+		bHeader:Dock(TOP)
+		bHeader:SetTall(ScrH() / 25)
+		bHeader:SetFont("lava_score_header")
+		bHeader:SetText("Spectators")
+		bHeader:SetTextInset(ScrW() / 100, 0)
+
+		bHeader.Paint = function(s, w, h)
+			draw.Rect(0, 0, w, h, pColor() - 75)
+		end
+
+		for Player in Values(player.GetDead()) do
+			AddPlayer(Player, "S")
 		end
 	end
 
-	function GAMEMODE:ScoreboardShow()
-		m:Show()
-		m.Redo()
-	end
-	function GAMEMODE:ScoreboardHide()
-		m:SetSize(ScrW() * 0.1, ScrH() * 0.1)
-		m:Hide()
-	end
-	m:Hide()
+	l:Repopulate()
 end)
 
-surface.CreateFont("fatkid_score", {
-	font = "Coolvetica",
-	size = ScrH() / 30,
-	weight = 100
-})
-surface.CreateFont("fatkid_score_side", {
-	font = "Roboto Lt",
-	size = ScrH() / 40,
-	weight = 200
-})
-surface.CreateFont("fatkid_motd_top", {
-	font = "Roboto Bold",
-	weight = 100,
-	outline = false,
-	size = ScrH() / 15
-})
+function GM:ScoreboardShow()
+	if s then
+		s:Show()
+		s.Canvas:Repopulate()
+		s:MakePopup()
+	end
+end
+
+function GM:ScoreboardHide()
+	if s then
+		s:Hide()
+	end
+end
+
