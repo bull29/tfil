@@ -12,7 +12,7 @@ local hook = hook
 local FrameTime = FrameTime
 local player_manager = player_manager
 local CurTime = CurTime
-local m_UnderDescentAmount = 128
+local m_UnderDescentAmount = 128 * 1.5
 
 Rounds.NextSuperDecentTime = nil
 
