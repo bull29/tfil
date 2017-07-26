@@ -78,3 +78,23 @@ surface.CreateFont("lava_weapon_switch_name", {
 	font = "Roboto Condensed",
 	size = ScrH() / 30
 })
+
+surface.CreateFont("lava_score_title", {
+	font = "Roboto Bold",
+	size = ScrH() / 30
+})
+
+surface.CreateFont("lava_score_title_sub", {
+	font = "Roboto Bold",
+	size = ScrH() / 50
+})
+
+surface.CreateFont("lava_score_header", {
+	font = "Roboto Bold",
+	size = ScrH() / 30
+})
+
+surface.CreateFont("lava_score_player_row", {
+	font = "Roboto Condensed",
+	size = ScrH() / 35
+})
