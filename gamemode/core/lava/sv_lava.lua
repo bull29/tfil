@@ -34,7 +34,7 @@ hook.Add("Think", "LavaMainCycle", function()
 	elseif Rounds.CurrentState == "Started" then
 		if hook.Call("Lava.RoundStartedTick") then return end
 
-		Rounds.NextSuperDecentTime = Rounds.NextSuperDecentTime or CurTime() + 10
+		Rounds.NextSuperDecentTime = Rounds.NextSuperDecentTime or CurTime() + 30
 
 		if Rounds.NextSuperDecentTime < CurTime() then
 			local tab = player.GetAll()
@@ -47,15 +47,15 @@ hook.Add("Think", "LavaMainCycle", function()
 
 			if tab[1] then
 				table.sort(tab, function(a, b) return a:GetPos().z < b:GetPos().z end)
-				local t = ((tab[1]:GetPos().z - 32 - Lava.GetLevel()) * FrameTime() / 15		):max(FrameTime() * 5)
+				local t = ((tab[1]:GetPos().z - 64 - Lava.GetLevel()) * FrameTime() ):max(FrameTime() * 3)
 				Lava.ShiftLevel(t)
 
-				if t == FrameTime() * 5 then
-					Rounds.NextSuperDecentTime = CurTime() + 15
+				if t == FrameTime() * 3 then
+					Rounds.NextSuperDecentTime = CurTime() + 30
 				end
 			end
 		else
-			Lava.ShiftLevel(FrameTime() * 5)
+			Lava.ShiftLevel(FrameTime() * 3)
 		end
 	elseif Rounds.CurrentState == "Ended" then
 		hook.Call("Lava.RoundEndedTick")
