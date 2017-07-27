@@ -26,6 +26,7 @@ local tVal
 local math = math
 local util = util
 local Vector = Vector
+local m_HasDispatchedEgg
 
 function SWEP:Initialize()
 	self:SetHoldType("normal")
@@ -117,6 +118,7 @@ function SWEP:SecondaryAttack()
 	self:PrimaryAttack(self:GetEggs() > 0)
 	if self:GetEggs() < 1 then return end
 	self:SetEggs(self:GetEggs() - 1)
+	m_HasDispatchedEgg = true
 
 	if SERVER then
 		local egg = ents.Create("prop_physics")
@@ -126,9 +128,16 @@ function SWEP:SecondaryAttack()
 		egg:Spawn()
 		egg:SetOwner(self.Owner)
 		egg:Activate()
-		egg:GetPhysicsObject():AddAngleVelocity(self.Owner:GetAimVector() * 1024)
-		egg:GetPhysicsObject():AddVelocity(self.Owner:GetAimVector() * 1024)
+		local m_Vel = hook.Call("Lava.PlayerEggDispatched", nil, self.Owner, self, egg )
+		egg:GetPhysicsObject():AddAngleVelocity(self.Owner:GetAimVector() * (m_Vel or 1024))
+		egg:GetPhysicsObject():AddVelocity(self.Owner:GetAimVector() * (m_Vel or 1024))
 		egg.m_Velocity = egg:GetVelocity()
+
+		if m_Vel == false then
+			egg:Remove()
+			return
+		end
+
 		FrameDelay(function()
 			if IsValid(egg) then
 				egg:SetOwner()
@@ -262,11 +271,13 @@ else
 		if Weapon:IsValid() and Weapon:GetClass() == "lava_fists" then
 			EggCount = EggCount or Weapon:GetEggs()
 
-			if EggCount < Weapon:GetEggs() then
+			if ( LocalPlayer():HasAbility("Egg Meister") and m_HasDispatchedEgg ) or EggCount < Weapon:GetEggs() then
+				if m_HasDispatchedEgg then
+					m_HasDispatchedEgg = nil
+				end
 				EggCount = Weapon:GetEggs()
 				m_Position = ScrH() - ScrH() / 7
 				m_ShouldPlus = true
-				chat.PlaySound()
 			elseif EggCount ~= Weapon:GetEggs() then
 				EggCount = Weapon:GetEggs()
 			end
