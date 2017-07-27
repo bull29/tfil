@@ -77,6 +77,7 @@ hook.Add("NetworkEntityCreated", "ExposeRagdoll", function( ent )
 		ent.m_Player = ent:GetNW2Entity( "m_PlayerParent", NULL )
 		ent.m_Player.m_Ragdoll = ent
 		ent:DestroyShadow()
+		ent:SnatchModelInstance( ent.m_Player )
 		ent.GetPlayerColor = function( self )
 			return self.m_Player:GetPlayerColor()
 		end
