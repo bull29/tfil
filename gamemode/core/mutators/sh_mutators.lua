@@ -26,12 +26,29 @@ function Mutators.StartEvent(event)
 
 end
 
+function Mutators.RegisterHooks( eventname, tab )
+	Mutators.Events[eventname].hooks = tab
+	local HookIndex = 1
+
+	return function( func )
+		hook.Add( tab[ HookIndex ], "mutator_hook_" .. HookIndex, func )
+		HookIndex = HookIndex + 1
+		return eventname
+	end
+end
+
 function Mutators.EndEvent()
 	local tab = Mutators.Events[ GetGlobalString("$activemutator") ]
 	if not tab then return end
 
 	if tab.endfn then
 		tab.endfn()
+	end
+
+	if Mutators.Events[ GetGlobalString("$activemutator") ].hooks then
+		for Index, Hook in pairs( Mutators.Events[ GetGlobalString("$activemutator") ].hooks ) do
+			hook.Remove( Hook, "mutator_hook_" .. Index )
+		end
 	end
 
 	SetGlobalString("$activemutator", "" )
@@ -41,6 +58,7 @@ function Mutators.IsActive( name )
 	if not name then return GetGlobalString("$activemutator") ~= "" end
 	return GetGlobalString("$activemutator") == name
 end
+
 
 hook.RunOnce("HUDPaint", function()
 	if Mutators.IsActive() then
