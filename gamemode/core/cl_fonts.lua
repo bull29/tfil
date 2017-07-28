@@ -98,3 +98,8 @@ surface.CreateFont("lava_score_player_row", {
 	font = "Roboto Condensed",
 	size = ScrH() / 35
 })
+
+surface.CreateFont("lava_score_button_row", {
+	font = "Arial",
+	size = ScrH() / 40
+})
