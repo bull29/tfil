@@ -129,5 +129,3 @@ Mutators.RegisterNewEvent("World Flip!", "The Game World is completely Flipped!"
 end, function()
 	MapMirrorToggle = false
 end)
-
---Mutators.StartEvent("World Flip!")
