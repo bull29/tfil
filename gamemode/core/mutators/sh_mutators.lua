@@ -33,7 +33,7 @@ function Mutators.RegisterHooks( eventname, tab )
 	return function( func )
 		hook.Add( tab[ HookIndex ], "mutator_hook_" .. HookIndex, func )
 		HookIndex = HookIndex + 1
-		return eventname
+		return tab[ HookIndex ], eventname, "mutator_hook_" .. HookIndex, func
 	end
 end
 
