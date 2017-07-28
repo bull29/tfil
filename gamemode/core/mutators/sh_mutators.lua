@@ -59,6 +59,9 @@ function Mutators.IsActive( name )
 	return GetGlobalString("$activemutator") == name
 end
 
+function Mutators.GetActive()
+	return GetGlobalString("$activemutator", false )
+end
 
 hook.RunOnce("HUDPaint", function()
 	if Mutators.IsActive() then
