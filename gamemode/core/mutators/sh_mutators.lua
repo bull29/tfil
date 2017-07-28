@@ -1,8 +1,10 @@
 --[[
 	Round Mutators - Shit to make each and every round more interesting
 ]]
+
 local Mutators = Mutators or {}
 Mutators.Events = Mutators.Events or {}
+Mutators.LastActiveMutator = ""
 
 function Mutators.RegisterNewEvent(name, desc, startfunc, endfunc)
 	Mutators.Events[name] = Mutators.Events[name] or {}
@@ -13,10 +15,11 @@ function Mutators.RegisterNewEvent(name, desc, startfunc, endfunc)
 end
 
 function Mutators.StartEvent(event)
-	if hook.Call("Lava.MutatorStart", nil, Mutators.Events[ event ] ) == false then return end
+	if hook.Call("Lava.MutatorStart", nil, event, Mutators.Events[ event ] ) == false then return end
 
 	if not Mutators.Events[ event ] then return end
 
+	Mutators.LastActiveMutator = event
 	Mutators.Events[ event ].startfn()
 
 	if SERVER then
@@ -38,20 +41,20 @@ function Mutators.RegisterHooks( eventname, tab )
 end
 
 function Mutators.EndEvent()
-	local tab = Mutators.Events[ GetGlobalString("$activemutator") ]
+	local tab = Mutators.Events[ Mutators.LastActiveMutator ]
 	if not tab then return end
-
 	if tab.endfn then
 		tab.endfn()
 	end
 
-	if Mutators.Events[ GetGlobalString("$activemutator") ].hooks then
-		for Index, Hook in pairs( Mutators.Events[ GetGlobalString("$activemutator") ].hooks ) do
+	if Mutators.Events[ Mutators.LastActiveMutator ] and Mutators.Events[ Mutators.LastActiveMutator ].hooks then
+		for Index, Hook in pairs( Mutators.Events[ Mutators.LastActiveMutator ].hooks ) do
 			hook.Remove( Hook, "mutator_hook_" .. Index )
 		end
 	end
 
 	SetGlobalString("$activemutator", "" )
+	Mutators.LastActiveMutator = nil
 end
 
 function Mutators.IsActive( name )
@@ -70,13 +73,13 @@ hook.RunOnce("HUDPaint", function()
 end)
 
 hook.Add("Lava.PostRound", "EndMutator", function()
-	if GetGlobalString("$activemutator", "" ) ~= "" then
+	if Mutators.GetActive() then
 		Mutators.EndEvent()
 	end
 end)
 
 function Mutators.GetRandomPlayerForEvent( event )
-	if not hook.Call( "Lava.ChooseRandomPlayerForEvent", event ) then
+	if not hook.Call( "Lava.ChooseRandomPlayerForEvent", nil, event ) then
 		return table.Random( player.GetAll() )
 	end
 end
