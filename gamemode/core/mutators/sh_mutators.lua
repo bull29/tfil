@@ -5,12 +5,11 @@ local Mutators = Mutators or {}
 Mutators.Events = Mutators.Events or {}
 
 function Mutators.RegisterNewEvent(name, desc, startfunc, endfunc)
-	Mutators.Events[name] = {
-		["name"] = name,
-		["desc"] = desc,
-		["startfn"] = startfunc,
-		["endfn"] = endfunc
-	}
+	Mutators.Events[name] = Mutators.Events[name] or {}
+	Mutators.Events[name]["name"] = name
+	Mutators.Events[name]["desc"] = desc
+	Mutators.Events[name]["startfn"] = startfunc
+	Mutators.Events[name]["endfn"] = endfunc
 end
 
 function Mutators.StartEvent(event)
@@ -27,6 +26,7 @@ function Mutators.StartEvent(event)
 end
 
 function Mutators.RegisterHooks( eventname, tab )
+	Mutators.Events[eventname] = Mutators.Events[eventname] or {}
 	Mutators.Events[eventname].hooks = tab
 	local HookIndex = 1
 
