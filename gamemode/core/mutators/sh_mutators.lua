@@ -60,4 +60,16 @@ function Mutators.GetRandomPlayerForEvent( event )
 	end
 end
 
+function Mutators.DesignateSpecialPlayer( Player )
+	SetGlobalEntity("$currentmutantplayer", Player )
+end
+
+function Mutators.GetSpecialPlayer()
+	return IsValid( GetGlobalEntity("$currentmutantplayer", NULL ) ) and GetGlobalEntity("$currentmutantplayer")
+end
+
+function Mutators.ClearSpecialPlayer()
+	SetGlobalEntity("$currentmutantplayer", NULL )
+end
+
 _G.Mutators = Mutators
