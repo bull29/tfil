@@ -54,4 +54,10 @@ hook.Add("Lava.PostRound", "EndMutator", function()
 	end
 end)
 
+function Mutators.GetRandomPlayerForEvent( event )
+	if not hook.Call( "Lava.ChooseRandomPlayerForEvent", event ) then
+		return table.Random( player.GetAll() )
+	end
+end
+
 _G.Mutators = Mutators
