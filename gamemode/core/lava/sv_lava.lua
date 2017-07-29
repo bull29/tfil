@@ -13,7 +13,6 @@ local FrameTime = FrameTime
 local player_manager = player_manager
 local CurTime = CurTime
 local m_UnderDescentAmount = 128 * 1.5
-
 Rounds.NextSuperDecentTime = nil
 
 hook.Add("Think", "LavaSync", function()
@@ -21,6 +20,7 @@ hook.Add("Think", "LavaSync", function()
 		Lava.StartingLevel = Entity(0):GetModelRenderBounds().z
 		Lava.CurrentLevel = Lava.StartingLevel
 	end
+
 	if Lava.CurrentLevel ~= GetGlobalFloat("$lavalev", -10000) then
 		SetGlobalFloat("$lavalev", Lava.CurrentLevel)
 	end
@@ -31,10 +31,8 @@ hook.Add("Think", "LavaMainCycle", function()
 
 	if Rounds.CurrentState == "Preround" then
 		hook.Call("Lava.PreroundTick")
-
 	elseif Rounds.CurrentState == "Started" then
 		if hook.Call("Lava.RoundStartedTick") then return end
-
 		Rounds.NextSuperDecentTime = Rounds.NextSuperDecentTime or CurTime()
 
 		if Rounds.NextSuperDecentTime < CurTime() then
@@ -48,7 +46,7 @@ hook.Add("Think", "LavaMainCycle", function()
 
 			if tab[1] then
 				table.sort(tab, function(a, b) return a:GetPos().z < b:GetPos().z end)
-				local t = ((tab[1]:GetPos().z - m_UnderDescentAmount - Lava.GetLevel()) * FrameTime() ):max(FrameTime() * 3)
+				local t = ((tab[1]:GetPos().z - m_UnderDescentAmount - Lava.GetLevel()) * FrameTime()):max(FrameTime() * 3)
 				Lava.ShiftLevel(t)
 
 				if t <= FrameTime() * 10 then
@@ -65,37 +63,45 @@ hook.Add("Think", "LavaMainCycle", function()
 	end
 end)
 
+local SoundsList = {"vo/npc/male01/help01.wav", "ambient/voices/m_scream1.wav", "vo/npc/male01/myleg02.wav", "vo/npc/male01/myleg01.wav", "vo/npc/male01/ohno.wav", "vo/npc/male01/moan01.wav", "vo/npc/male01/moan03.wav", "vo/ravenholm/monk_helpme03.wav"}
+
 hook.Add("PlayerTick", "LavaHurt", function(Player)
 	if Player.m_Ragdoll and Player.m_Ragdoll:GetPos().z <= Lava.CurrentLevel then
-		Ragdoll.Disable( Player )
+		Ragdoll.Disable(Player)
 	end
 
 	if Player:Alive() and Rounds.CurrentState == "Started" and Player:GetPos().z <= Lava.CurrentLevel and hook.Call("Lava.ShouldTakeLavaDamage", nil, Player) ~= false then
 		Player:Ignite(0.1, 0)
-		Player:EmitSound("ambient/voices/m_scream1.wav")
+		Player.m_NextScreamSoundTime = Player.m_NextScreamSoundTime or CurTime()
+
+		if Player.m_NextScreamSoundTime <= CurTime() then
+			Player.m_NextScreamSoundTime = CurTime() + 1
+
+			if hook.Call("Lava.BurningScreamSound", nil, Player, SoundsList) == nil then
+				Player:EmitSound((table.Random(SoundsList)))
+			end
+		end
 	end
 end)
 
-
-
-hook.Add("DoPlayerDeath", "CreateRagdoll", function( Player, Entity )
+hook.Add("DoPlayerDeath", "CreateRagdoll", function(Player, Entity)
 	Player.m_LastKiller = Entity
 end)
 
-hook.Add("PostPlayerDeath", "CreateDeathRagdoll",function( Player )
-	if ( IsValid( Player.m_LastKiller ) and Player.m_LastKiller:GetClass() == "entityflame" ) or Player:GetPos().z <= Lava.GetLevel() then
+hook.Add("PostPlayerDeath", "CreateDeathRagdoll", function(Player)
+	if (IsValid(Player.m_LastKiller) and Player.m_LastKiller:GetClass() == "entityflame") or Player:GetPos().z <= Lava.GetLevel() then
 		local rag = Player:GetRagdollEntity()
 		rag:SetModel("models/player/charple.mdl")
-		rag:Ignite( 500, 0 )
+		rag:Ignite(500, 0)
 	end
-	hook.Call("Lava.PostPlayerDeath", nil, Player )
+
+	hook.Call("Lava.PostPlayerDeath", nil, Player)
 end)
 
-function GM:EntityTakeDamage( Entity, Damage )
-	if IsValid( Entity ) and IsValid( Damage:GetAttacker() ) and Entity:IsPlayer() and Damage:GetAttacker():GetClass() == "entityflame" then
-		Damage:ScaleDamage( math.random(7,15) )
+function GM:EntityTakeDamage(Entity, Damage)
+	if IsValid(Entity) and IsValid(Damage:GetAttacker()) and Entity:IsPlayer() and Damage:GetAttacker():GetClass() == "entityflame" then
+		Damage:ScaleDamage(math.random(7, 15))
 	end
-	if Damage:IsBulletDamage() and not hook.Call("Lava.ShouldBlockBulletDamage", nil, Entity, Damage ) then
-		return true
-	end
+
+	if Damage:IsBulletDamage() and not hook.Call("Lava.ShouldBlockBulletDamage", nil, Entity, Damage) then return true end
 end
