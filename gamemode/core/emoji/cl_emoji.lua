@@ -89,7 +89,7 @@ end
 
 
 hook.RunOnce("PreDrawHUD", function()
-	if true or not file.Exists("tfil/emoji.txt", "DATA") then
+	if not file.Exists("tfil/emoji.txt", "DATA") then
 		http.Fetch("http://twitter.github.io/twemoji/2/test/preview.html", function(body)
 			local tab = {}
 			local t = body:Split("<li>&#x")
