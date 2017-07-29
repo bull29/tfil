@@ -103,3 +103,13 @@ surface.CreateFont("lava_score_button_row", {
 	font = "Arial",
 	size = ScrH() / 40
 })
+
+surface.CreateFont("lava_notification_font", {
+	font = "Roboto Condensed",
+	size = ScrH() / 40
+})
+
+surface.CreateFont("lava_hud_state", {
+	font = "Roboto Bold",
+	size = ScrH() / 40
+})
