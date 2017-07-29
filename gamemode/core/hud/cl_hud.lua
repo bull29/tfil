@@ -1,9 +1,16 @@
 local draw = draw
 local WebElements = WebElements
 local pColor = pColor
+local color_white = color_white
 local rTab = {}
 local tonumber = tonumber
 local tPane
+
+local tTranslateTable = {
+	Preround = "Preparation",
+	Started = "In Progress",
+	Ended = "Postround"
+}
 
 hook.RunOnce("HUDPaint", function()
 	local g = InitializePanel("LavaMainCircleHUD", "DLabel")
@@ -52,7 +59,7 @@ hook.RunOnce("HUDPaint", function()
 	t:SetFont("lava_altimeter_panel")
 	t:SetText("III")
 	t:SetTextColor(Color(255, 255, 255))
-	t:SetPos(ScrH()/4 - ScrH() / 30, ScrH() - ScrH() / 10 - ScrH() / 50 * 7.6)
+	t:SetPos(ScrH() / 4 - ScrH() / 30, ScrH() - ScrH() / 10 - ScrH() / 50 * 7.6)
 
 	t.Paint = function(s, w, h)
 		local floor = (h / 20):floor()
@@ -82,10 +89,9 @@ hook.RunOnce("HUDPaint", function()
 	a:DockMargin((c:GetTall() / 25):floor() * 2, (c:GetTall() / 25):floor() * 2, (c:GetTall() / 25):floor() * 2, (c:GetTall() / 25):floor() * 2)
 
 	a.PaintCircle = function(s, w, h)
-		if not Abilities.Skills or not Abilities.Skills[ LocalPlayer():GetAbility() ] then return end
-
+		if not Abilities.Skills or not Abilities.Skills[LocalPlayer():GetAbility()] then return end
 		local floor = (h / 25):floor()
-		draw.WebImage( Emoji.Get( Abilities.Skills[LocalPlayer():GetAbility()][2] ), h / 2, h / 2, w - floor * 5, h - floor * 5, nil, CurTime():sin() * 5)
+		draw.WebImage(Emoji.Get(Abilities.Skills[LocalPlayer():GetAbility()][2]), h / 2, h / 2, w - floor * 5, h - floor * 5, nil, CurTime():sin() * 5)
 	end
 
 	--
@@ -106,7 +112,7 @@ hook.RunOnce("HUDPaint", function()
 		k:PaintManual()
 		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - 50)
 		draw.WebImage(WebElements.CircleOutline, floor, floor, w - floor * 2, h - floor * 2, pColor() - 20)
-		s:SetText(((LocalPlayer():GetPos().z - Lava.GetLevel()) / 52 ):Round(1) .. "m")
+		s:SetText(((LocalPlayer():GetPos().z - Lava.GetLevel()) / 52):Round(1) .. "m")
 	end
 
 	k.PaintCircle = function(s, w, h)
@@ -129,7 +135,7 @@ hook.RunOnce("HUDPaint", function()
 		local sec = Emoji.ParseNumber(x[2])
 		local size = h / 8
 
-		if tonumber( x[2] ) == 0 then
+		if tonumber(x[2]) == 0 then
 			chat.PlaySound()
 		end
 
@@ -145,6 +151,13 @@ hook.RunOnce("HUDPaint", function()
 		draw.WebImage(WebElements.CircleOutline, floor, floor, w - floor * 2, h - floor * 2, pColor() - 20)
 		draw.WebImage(WebElements.ClockHand, h / 2, h / 2, w * 1.2, h * 1.2, nil, -x[2] * 6)
 		draw.WebImage(WebElements.ClockHand, h / 2, h / 2, w * 0.8, h * 0.8, nil, -x[1] * 6 * 5 - (x[2] / 60 * 6) * 5) --- ( x[2]/60 ) ))
+
+		s:Declip(function()
+			local var = (h / 25):ceil()
+			draw.RoundedBox(8, 0, h * 1.05, w, h / 5, pColor() - 50)
+			draw.RoundedBox(8, var, var / 2 + h * 1.05, w - var * 2, h / 5 - var, pColor())
+			draw.SimpleText(tTranslateTable[GetGlobalString("$RoundState")]:upper(), "lava_hud_state", w / 2, h * 1.05 + h / 30, nil, 1, 0)
+		end)
 	end
 
 	rTab[d] = true
@@ -154,22 +167,24 @@ hook.RunOnce("HUDPaint", function()
 	rTab[c] = true
 	rTab[t] = true
 
- 	for Element in pairs(rTab) do
+	for Element in pairs(rTab) do
 		Element:SetPaintedManually(true)
-		Element:SetMouseInputEnabled( true )
+		Element:SetMouseInputEnabled(true)
 		Element.HaveStartedDrag = false
-		Element.DoClick = function( s )
-			if s.HaveStartedDrag then
 
-			end
+		Element.DoClick = function(s)
+			if s.HaveStartedDrag then end
 			s.HaveStartedDrag = not s.HaveStartedDrag
 		end
+
 		local v = Element:GenerateOverwrite("PaintOver")
-		Element.PaintOver = function( s, w, h )
-			v( s, w, h )
+
+		Element.PaintOver = function(s, w, h)
+			v(s, w, h)
+
 			if s.HaveStartedDrag and input.IsKeyDown(KEY_C) then
 				local x, y = gui.MousePos()
-				s:SetPos( x - w/2, y - h/2 )
+				s:SetPos(x - w / 2, y - h / 2)
 			end
 		end
 	end
@@ -180,15 +195,17 @@ hook.Add("HUDPaint", "RenderLavaElements", function()
 		if tPane then
 			tPane:PaintManual()
 		end
+
 		return
 	end
+
 	for Element in pairs(rTab) do
 		Element:PaintManual()
 	end
 end)
 
-local tDisable = m_Table( "CHudCrosshair", "CHudMenu", "CHudHealth", "CHudZoom" )
+local tDisable = m_Table("CHudCrosshair", "CHudMenu", "CHudHealth", "CHudZoom")
 
-function GM:HUDShouldDraw( n )
-	return not tDisable[ n ]
+function GM:HUDShouldDraw(n)
+	return not tDisable[n]
 end
