@@ -30,6 +30,9 @@ hook.RunOnce("HUDPaint", function()
 			surface.PlaySound( Sound )
 		end
 
+		local pC = pColor()
+		MsgC( pC, "[ NOTIFICATION ] ", -pC, Name, "\n")
+
 		Icon, Time = Icon or 2438, Time or 6
 		local x = t:Add("DLabel")
 		x:SetSize(FontFunctions.GetWide(Name, "lava_notification_font") + ScrH() / 20 * 2.1, ScrH() / 20)
