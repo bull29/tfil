@@ -1,10 +1,10 @@
-GM.Config = {}
+Config = {}
 
 local function NewConfig( name, default, cvar, typeof )
 	cvar = "lava_" .. cvar
 	CreateConVar( cvar, default, {FCVAR_REPLICATED, FCVAR_ARCHIVE} )
 
-	GM.Config[ "Get"..name ] = function( value )
+	Config[ "Get"..name ] = function( value )
 		local _ = GetConVar( cvar ):GetString()
 		if typeof == "BOOL" then
 			return tonumber( _ ) == 1
@@ -13,13 +13,13 @@ local function NewConfig( name, default, cvar, typeof )
 		end
 		return _
 	end
-	GM.Config[ "Set"..name ] = function( value )
+	Config[ "Set"..name ] = function( value )
 		GetConVar( cvar ):SetString( value )
 	end
 end
 
 function GM.GetConfig()
-	return GM.Config
+	return Config
 end
 
 NewConfig( "HaltMode", "0", "haltmode", "BOOL")
