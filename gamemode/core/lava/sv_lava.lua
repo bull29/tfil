@@ -46,11 +46,11 @@ hook.Add("Think", "LavaMainCycle", function()
 
 			if tab[1] then
 				table.sort(tab, function(a, b) return a:GetPos().z < b:GetPos().z end)
-				local t = ((tab[1]:GetPos().z - m_UnderDescentAmount - Lava.GetLevel()) * FrameTime()):max(FrameTime() * 3)
+				local t = ((tab[1]:GetPos().z - m_UnderDescentAmount - Lava.GetLevel()) * FrameTime() / 10):max(FrameTime() * 5)
 				Lava.ShiftLevel(t)
 
 				if t <= FrameTime() * 10 then
-					Rounds.NextSuperDecentTime = CurTime() + 30
+					Rounds.NextSuperDecentTime = CurTime() + 20
 					m_UnderDescentAmount = 64
 				end
 			end
