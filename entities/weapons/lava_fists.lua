@@ -231,7 +231,8 @@ if SERVER then
 					end
 
 					net.Start("egged")
-					net.Send(Player)
+					net.WriteEntity( Player )
+					net.Broadcast()
 					break
 				end
 			end
@@ -248,8 +249,21 @@ else
 	local White = color_white
 
 	net.Receive("egged", function()
-		m_EggRefract = 1
-		m_AmEgged = true
+		local Player = net.ReadEntity()
+
+		if Player == LocalPlayer() then
+			m_EggRefract = 1
+			m_AmEgged = true
+		end
+
+		Player:AddVCDSequenceToGestureSlot( GESTURE_SLOT_FLINCH, Player:LookupSequence("zombie_attack_frenzy"), 0, false )
+		Player:EmitSound("vo/npc/male01/ow02.wav")
+
+		timer.Simple( 3, function()
+			if IsValid( Player ) then
+				Player:AddVCDSequenceToGestureSlot( GESTURE_SLOT_FLINCH, Player:LookupSequence("zombie_attack_frenzy"), 0, true )
+			end
+		end)
 	end)
 
 	hook.Add("RenderScreenspaceEffects", "E G G E D", function()
