@@ -23,7 +23,6 @@ function Player:EmojiID()
 end
 
 local player = player
-local Values = Values
 local table = table
 
 function player.GetAlive()
