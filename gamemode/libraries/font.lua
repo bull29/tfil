@@ -8,9 +8,8 @@ end
 function FontFunctions.GetWide(text, font)
 	CurrentFont = font or CurrentFont
 	surface.SetFont(CurrentFont)
-	local w = surface.GetTextSize(text)
 
-	return w
+	return (surface.GetTextSize(text))
 end
 
 function FontFunctions.GetTall(text, font)
@@ -19,6 +18,12 @@ function FontFunctions.GetTall(text, font)
 	local _, h = surface.GetTextSize(text)
 
 	return h
+end
+
+function FontFunctions.GetSize(text, font)
+	CurrentFont = font or CurrentFont
+	surface.SetFont(CurrentFont)
+	return surface.GetTextSize(text)
 end
 
 function FontFunctions.GetDesiredHeight(text, width, font)
