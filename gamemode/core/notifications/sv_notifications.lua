@@ -48,6 +48,12 @@ Notification.CreateType("Leave", {
 	ICON = 346
 })
 
+Notification.CreateType("Winner", {
+	SOUND = "garrysmod/save_load3.wav",
+	TIME = 10,
+	ICON = 2188
+})
+
 gameevent.Listen("player_connect")
 gameevent.Listen("player_disconnect")
 
