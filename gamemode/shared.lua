@@ -8,12 +8,15 @@ local inc = include
 local sp = SortedPairs
 local ff = file.Find
 local string = string
+local hook = hook
 
 function IncludeDirectory(dir, cl, sv )
 	cl, sv = cl or "cl_", sv or "sv_"
 	local files, folders = ff(dir .. "/*", "LUA")
 
 	for _, file in sp(files) do
+		if hook.Call( "Lava.ShouldLoadFile", nil, dir, file ) == false then return end
+
 		if string.StartWith( file, cl ) then
 			acl( dir .. "/" .. file )
 			if CLIENT then
