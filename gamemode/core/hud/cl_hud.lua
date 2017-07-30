@@ -52,20 +52,19 @@ hook.RunOnce("HUDPaint", function()
 		draw.WebImage(WebElements.CircleOutline, floor, floor, w - floor * 2, h - floor * 2, pColor())
 	end
 
-	--;;
+	--;; -- This HUD element is a placeholder for an upcoming feature: Gadgets and Equipment.
 	local t = InitializePanel("LavaMainToolbar", "DLabel")
 	t:SetSize(ScrH() / 10, ScrH() / 10)
 	t:SetContentAlignment(5)
 	t:SetFont("lava_altimeter_panel")
-	t:SetText("III")
 	t:SetTextColor(Color(255, 255, 255))
 	t:SetPos(ScrH() / 4 - ScrH() / 30, ScrH() - ScrH() / 10 - ScrH() / 50 * 7.6)
-
+	t:SetText""
 	t.Paint = function(s, w, h)
 		local floor = (h / 20):floor()
 		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - 50)
 		draw.WebImage(WebElements.Circle, floor, floor, w - floor * 2, h - floor * 2, (pColor() - 100))
-		draw.WebImage(Emoji.Get(1946), h / 4.8, h / 4, w - h / 2.4, h - h / 2.4)
+		draw.WebImage(Emoji.Get( LocalPlayer().m_UniqueEmoji or 9 ), h / 4.8, h / 4, w - h / 2.4, h - h / 2.4)
 		draw.WebImage(WebElements.CircleOutline, floor, floor, w - floor * 2, h - floor * 2, pColor())
 	end
 
