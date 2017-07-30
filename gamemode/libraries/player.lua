@@ -1,4 +1,6 @@
 local Player = debug.getregistry().Player
+local Color = debug.getregistry().Color
+local setmetatable = setmetatable
 
 function Player:EyeEntity()
 	return self:GetEyeTrace().Entity
@@ -13,7 +15,7 @@ function Player:TeamColor()
 end
 
 function Player:PlayerColor()
-	return self:GetPlayerColor():ToColor()
+	return setmetatable( self:GetPlayerColor():ToColor(), Color )
 end
 
 local player = player
