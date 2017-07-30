@@ -24,12 +24,13 @@ end
 
 local player = player
 local pairs = pairs
+local table = table
 
 function player.GetAlive()
 	local tab = player.GetAll()
 	for Index, Player in pairs( tab ) do
 		if not Player:Alive() then
-			tab[ Index ] = nil
+			table.remove( tab, Index )
 		end
 	end
 	return tab
@@ -39,7 +40,7 @@ function player.GetSpectators()
 	local tab = player.GetAll()
 	for Index, Player in pairs( tab ) do
 		if Player:Alive() then
-			tab[ Index ] = nil
+			table.remove( tab, Index )
 		end
 	end
 	return tab
