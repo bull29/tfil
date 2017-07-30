@@ -27,20 +27,20 @@ local pairs = pairs
 local table = table
 
 function player.GetAlive()
-	local tab = player.GetAll()
-	for Index, Player in pairs( tab ) do
-		if not Player:Alive() then
-			table.remove( tab, Index )
+	local tab = {}
+	for Player in Values( player.GetAll() ) do
+		if Player:Alive() then
+			table.insert( tab, Player )
 		end
 	end
 	return tab
 end
 
 function player.GetSpectators()
-	local tab = player.GetAll()
-	for Index, Player in pairs( tab ) do
-		if Player:Alive() then
-			table.remove( tab, Index )
+	local tab = {}
+	for Player in Values( player.GetAll() ) do
+		if not Player:Alive() then
+			table.insert( tab, Player )
 		end
 	end
 	return tab
