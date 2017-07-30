@@ -133,6 +133,10 @@ function SWEP:SecondaryAttack()
 		egg:GetPhysicsObject():AddVelocity(self.Owner:GetAimVector() * (m_Vel or 1024))
 		egg.m_Velocity = egg:GetVelocity()
 
+		if not Mutators.IsActive("Eggplosive Annihilation") then
+			self.Owner:IncrementStat("Eggs Thrown")
+		end
+
 		if m_Vel == false then
 			egg:Remove()
 			return
@@ -223,6 +227,8 @@ if SERVER then
 			for Player in Values(player.GetAll()) do
 				if Player:EyePos():Distance(Object:GetPos()) < 28 then
 					if Object.m_EggParent ~= Player then
+						Object.m_EggParent:IncrementStat("Eggs Hit")
+
 						local Weapon = Object.m_EggParent:GetActiveWeapon()
 
 						if IsValid(Weapon) and Weapon:GetClass() == "lava_fists" then
