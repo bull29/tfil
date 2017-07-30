@@ -18,6 +18,10 @@ function Player:PlayerColor()
 	return setmetatable( self:GetPlayerColor():ToColor(), Color )
 end
 
+function Player:EmojiID()
+	return util.CRC((self:Nick() or 1566124349)) % #Emoji.Index
+end
+
 local player = player
 local pairs = pairs
 
