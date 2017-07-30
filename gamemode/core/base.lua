@@ -15,3 +15,10 @@ end
 function GM:PlayerCanPickupWeapon( Player, Weapon )
 	return Weapon:GetClass() == "lava_fists"
 end
+
+function GM:GetTeamColor( Entity )
+	if Entity.PlayerColor then
+		return Entity:PlayerColor()
+	end
+	return Color( 255, 255, 255 )
+end 
