@@ -22,3 +22,9 @@ function GM:PlayerSetModel( Player )
 	Player:SetPlayerColor(Vector((1):random(255) / 255, (1):random(255) / 255, (1):random(255) / 255))
 	Player:SetupHands()
 end
+
+function GM:PlayerInitialSpawn( Player )
+	if Rounds.CurrentState ~= "Preround" then
+		Player:KillSilent()
+	end
+end
