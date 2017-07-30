@@ -50,9 +50,8 @@ hook.RunOnce("HUDPaint", function()
 
 	local v = InitializePanel("LavaVoicePanel", "DIconLayout")
 	v:SetWide(ScrW() / 4)
-
 	v.PaintOver = function(s, w, h)
-		s:SetPos(ScrW() - w - w / 15, ScrH() - #s:GetChildren() * (ScrH() / 15) - w / 20)
+		s:SetPos(ScrW() - w - w / 15, ScrH() - ScrH()/7 - #s:GetChildren() * (ScrH() / 15) - w / 20)
 	end
 
 	v.Players = {}
@@ -61,14 +60,14 @@ hook.RunOnce("HUDPaint", function()
 
 	function v:AddPlayer(pl)
 		if self.Players[pl] then return end
-		local eID = util.CRC((pl:SteamID64() or "$a35")) % #Emoji.Index
+		pl.m_UniqueEmoji = pl.m_UniqueEmoji or util.CRC((pl:SteamID64() or 1566124349)) % #Emoji.Index
 		local x = v:Add("DLabel")
 		self.Players[pl] = x
 		x:Dock(TOP)
 		x:SetFont("lava_voice_panel")
 		x:SetTall(ScrH() / 15)
 		x:DockMargin(0, 0, 0, 2)
-		x:SetTextColor(pl:GetPlayerColor():ToColor())
+		x:SetTextColor(pl:PlayerColor())
 		x.SmoothVoice = pl:VoiceVolume()
 		x.PaintOver = function(s, w, h)
 			if not s.SetData or Mutators.IsActive("Mystery Men") then
@@ -85,7 +84,7 @@ hook.RunOnce("HUDPaint", function()
 
 			s.SmoothVoice = s.SmoothVoice:lerp(pl:VoiceVolume() * 1.56, FrameTime() * 20)
 			local var = w - s.SmoothVoice * w - h
-			draw.WebImage(Emoji.Get(eID), var, 3, h - 6, h - 6)
+			draw.WebImage(Emoji.Get(pl.m_UniqueEmoji), var, 3, h - 6, h - 6)
 			draw.WebImage(Emoji.Get(2646), var + h * 0.9, 3, w - var, h - 6)
 		end
 	end
