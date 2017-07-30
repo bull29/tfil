@@ -64,16 +64,6 @@ local function CreateAbilitiesPanel()
 	return x
 end
 
-hook.Add("PostPlayerDraw", "RenderAbilityIndicator", function(Player)
-	local x = Player:LookupBone("ValveBiped.Bip01_Neck1")
-	if not x then return end
-	local pos, ang = Player:GetBonePosition(x)
-
-	cam.Wrap3D2D(function()
-		draw.WebImage( Emoji.Get(util.CRC((Player:SteamID64() or Player:UniqueID())) % #Emoji.Index), -8, -8, 16, 16)
-	end, pos - ang:Forward() * ( 10 + ( Player:GetVelocity():Length2D() > Player:GetRunSpeed() * 0.95 and 5 or 0) ), ang:SetPitch( -45 ):SetRoll( -90 ) + Angle(-135, 90, 0), 1.25)
-end)
-
 hook.Add("Lava.PopulateWidgetMenu", "CreateAbilitiesWidget", function( Context )
 	Context.NewWidget("Abilities", 733, CreateAbilitiesPanel )
 end)
