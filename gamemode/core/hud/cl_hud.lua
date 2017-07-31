@@ -65,6 +65,7 @@ hook.RunOnce("HUDPaint", function()
 	t:SetPos(ScrH() / 4 - ScrH() / 30, ScrH() - ScrH() / 10 - ScrH() / 50 * 7.6)
 	t:SetText""
 	local iDex = 1
+
 	t.Paint = function(s, w, h)
 		local floor = (h / 20):floor()
 		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - 50)
@@ -86,15 +87,15 @@ hook.RunOnce("HUDPaint", function()
 
 		if iDex > 3 then
 			for i = 1, #ET do
-				draw.WebImage(Emoji.Get(ET[i]), h / ( 1 + #ET )  + (i - 1) * h / 3, h / 2, h / 3, h / 3, nil, 0)
+				draw.WebImage(Emoji.Get(ET[i]), h / (1 + #ET) + (i - 1) * h / 3, h / 2, h / 3, h / 3, nil, 0)
 			end
 		end
 	end
 
 	tt.PaintCircle = function(s, w, h)
 		if iDex < 4 then
-			draw.WebImage(Emoji.Get(495), h/2, h/2, h, h, nil, - CurTime():cos() * 25 )
-			draw.WebImage(Emoji.Get( iDex == 1 and 2188 or iDex == 2 and 2189 or 2190), h/2, h/2, h * 0.8, h * 0.8, nil, CurTime():cos() * 30)
+			draw.WebImage(Emoji.Get(495), h / 2, h / 2, h, h, nil, -CurTime():cos() * 25)
+			draw.WebImage(Emoji.Get(iDex == 1 and 2188 or iDex == 2 and 2189 or 2190), h / 2, h / 2, h * 0.8, h * 0.8, nil, CurTime():cos() * 30)
 		else
 			draw.WebImage(Emoji.Get(2189), h / 3, h / 3 * 2, h / 2, h / 2, nil, CurTime():sin() * 10)
 			draw.WebImage(Emoji.Get(2190), h / 3 * 2, h / 3 * 2, h / 2, h / 2, nil, CurTime():sin() * -10)
@@ -199,11 +200,10 @@ hook.RunOnce("HUDPaint", function()
 			end
 
 			if Mutators.GetActive() then
-				local var = (h / 25):ceil()
-				draw.RoundedBox(8, 0, h * 1.30, w, h / 5, pColor() - 50)
-				draw.RoundedBox(8, var, var / 2 + h * 1.30, w - var * 2, h / 5 - var, pColor())
-				draw.WebImage(Emoji.Get(2), var, var / 2 + h * 1.30, h / 6, h / 6)
-				draw.SimpleText(Mutators.GetActive():upper(), "lava_hud_state", h / 6 + var * 2, var / 2 + h * 1.30 + ScrH() / 250)
+				local width = FontFunctions.GetWide(Mutators.GetActive():upper(), "lava_hud_state")
+				draw.RoundedBox(8, w - width * 1.2, h * 1.3, width * 1.2, h/5, pColor() - 75)
+				draw.RoundedBox(8, var/2 + w - width * 1.2, var/2 + h * 1.3, width * 1.2- var, h/5 - var, pColor())
+				draw.SimpleText( Mutators.GetActive():upper(), "lava_hud_state", w - width - var * 2, h * 1.3 + h/10, nil, 0, 1 )
 			end
 		end)
 	end
