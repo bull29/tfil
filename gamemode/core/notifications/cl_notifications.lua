@@ -10,6 +10,8 @@ hook.RunOnce("HUDPaint", function()
 	t:SetSize(ScrW(), ScrH() * 0.35)
 	t:Center()
 	t:SetVerticalPos(ScrH() / 100)
+	t:SetMouseInputEnabled( false )
+	t:SetZPos( 32000 )
 	t.Paint = function(s, w, h)
 		for Index, Child in pairs(t:GetChildren()) do
 			if Child.m_BeingRemoved then continue end
