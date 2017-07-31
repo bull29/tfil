@@ -38,7 +38,7 @@ hook.RunOnce("HUDPaint", function()
 		draw.WebImage( Emoji.Get( 330 ), w - h/2, h/2, h * 0.85, h * 0.85, nil, 0 )
 		draw.SimpleText( game.GetMap(), "lava_score_title_sub", w - h * 1.2, h/2, nil, 2, 1 )
 
-		draw.SimpleText( (Config.GetMapSwitchTime() - GetGlobalInt("$NextMapTime", 0 ):max( 0 ) .. " Rounds until the next map. "), "lava_score_title_sub", w/2, h/2, nil, 1, 1 )
+		draw.SimpleText( (Config.GetMapSwitchTime() - GetGlobalInt("$NextMapTime", 0 ):max( 0 ) .. " Round(s) until the next map. "), "lava_score_title_sub", w/2, h/2, nil, 1, 1 )
 	end
 	local m = s:Add("DCirclePanel")
 	m:SetPos(ScrH() * 0.8 / 8 / 16, ScrH() * 0.8 / 8 / 16)
@@ -183,6 +183,7 @@ end)
 function GM:ScoreboardShow()
 	if s then
 		s:Show()
+		s.Canvas:Repopulate()
 		s:MakePopup()
 	end
 end
