@@ -127,3 +127,8 @@ surface.CreateFont("lava_help_title_subsub", {
 	font = "Roboto Bold Condensed",
 	size = ScrH() / 35
 })
+
+surface.CreateFont("lava_dmenu", {
+	font = "Roboto Condensed",
+	size = ScrH() / 45
+})
