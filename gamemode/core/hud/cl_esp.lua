@@ -35,7 +35,7 @@ hook.Add("RenderScreenspaceEffects", "DrawESP", function()
 
 	if not m_Activate then return end
 
-	m_ESPMeter = m_ESPMeter:Approach( 0, FrameTime() * 20 )
+	m_ESPMeter = hook.Call("Lava.ESPOverride", nil, LocalPlayer()) or m_ESPMeter:Approach( 0, FrameTime() * 20 )
 	if m_ESPMeter < 1 then
 		m_HaveUsedupMeter = true
 	end
