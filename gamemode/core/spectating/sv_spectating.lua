@@ -23,20 +23,28 @@ hook.Add("Lava.DeathThink", "LavaSpectating", function(Player)
 
 		if nP then
 			Player.m_NextSpectateToggle = CurTime() + FrameTime() * 2
-
+			local Tries = 0
 			if nP == 3 then
 				Player:Spectate(Player:GetObserverMode() % 3 + 4)
 			elseif nP == 2 and Player:GetObserverMode() ~= 0 then
 				Player.m_SpectateIndex = PreviousPlayer( Player.m_SpectateIndex )
 
-				while (player.GetCount() ~= 1 and player.GetAll()[Player.m_SpectateIndex] == Player) do
+				while (player.GetCount() ~= 1 and player.GetAll()[Player.m_SpectateIndex] == Player) or not player.GetAll()[Player.m_SpectateIndex]:Alive() do
 					Player.m_SpectateIndex = PreviousPlayer( Player.m_SpectateIndex )
+					Tries = Tries + 1
+					if Tries > player.GetCount() + 1 then
+						break
+					end
 				end
 			elseif nP == 1 and Player:GetObserverMode() ~= 0 then
 				Player.m_SpectateIndex = NextPlayer( Player.m_SpectateIndex )
 
-				while (player.GetCount() ~= 1 and player.GetAll()[Player.m_SpectateIndex] == Player) do
+				while (player.GetCount() ~= 1 and player.GetAll()[Player.m_SpectateIndex] == Player) or not player.GetAll()[Player.m_SpectateIndex]:Alive() do
 					Player.m_SpectateIndex = NextPlayer( Player.m_SpectateIndex )
+					Tries = Tries + 1
+					if Tries > player.GetCount() + 1 then
+						break
+					end
 				end
 			end
 
