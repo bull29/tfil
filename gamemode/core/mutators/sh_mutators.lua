@@ -99,10 +99,10 @@ end)
 if SERVER then
 	hook.Add("Lava.RoundStart", "ShouldStartaMutator", function()
 		FrameDelay( function()
-			local A = math.random( 1, 11 )
+			local A = math.random( 1, 6 )
 			Notification.SendType( "Chance", "Should we start a mutator? Let's roll!" )
 			timer.Simple( 3, function()
-				local B = math.random( 1, 11 )
+				local B = math.random( 1, 6 )
 				if A == B then
 					Notification.SendType( "Chance", ("We rolled ${1} and ${2}! Let's start us a mutator!"):fill( A, B ))
 					timer.Simple( 2, function()
