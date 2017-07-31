@@ -64,3 +64,9 @@ hook.Add("HUDPaint", "RenderZoom", function()
 	draw.WebImage( Emoji.Get( 1433 ), ScrW() / 2 - mWHM * 3, ScrH() - mWHM * 2.5, mWHM * 1.7, mWHM * 1.7, nil, ( m_ZDelta / 100 ):sin() * 3600, 0  )
 	draw.SimpleText( Text, "ChatFont", ScrW() / 2 - t_Wide / 2, ScrH() - mWHM * 2, pColor(), TEXT_ALIGN_CENTRE )
 end)
+
+hook.Add("Lava.ShouldBlockESP", "PreventESPZoom", function( Player )
+	if m_Case then
+		return true
+	end
+end)
