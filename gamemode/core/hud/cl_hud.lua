@@ -9,7 +9,8 @@ local tPane
 local tTranslateTable = {
 	preround = "Preparation",
 	started = "In Progress",
-	ended = "Postround"
+	ended = "Postround",
+	_ = "Unknown"
 }
 
 hook.RunOnce("HUDPaint", function()
@@ -159,8 +160,7 @@ hook.RunOnce("HUDPaint", function()
 			local var = (h / 25):ceil()
 			draw.RoundedBox(8, 0, h * 1.05, w, h / 5, pColor() - 50)
 			draw.RoundedBox(8, var, var / 2 + h * 1.05, w - var * 2, h / 5 - var, pColor())
-			print(GetGlobalString("$RoundState"))
-			draw.SimpleText(tTranslateTable[GetGlobalString("$RoundState"):lower()]:upper(), "lava_hud_state", w / 2, h * 1.05 + h / 30, nil, 1, 0)
+			draw.SimpleText(tTranslateTable[GetGlobalString("$RoundState", "_" ):lower()]:upper(), "lava_hud_state", w / 2, h * 1.05 + h / 30, nil, 1, 0)
 		end)
 	end
 
