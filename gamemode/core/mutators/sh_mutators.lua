@@ -48,15 +48,16 @@ end
 function Mutators.EndEvent()
 	local tab = Mutators.Events[Mutators.LastActiveMutator]
 
+	if tab and tab.endfn then
+		tab.endfn()
+	end
+
 	if not tab then
 		SetGlobalString("$activemutator", "")
 		Mutators.LastActiveMutator = nil
 		return
 	end
 
-	if tab.endfn then
-		tab.endfn()
-	end
 
 	if Mutators.Events[Mutators.LastActiveMutator] and Mutators.Events[Mutators.LastActiveMutator].hooks then
 		for Index, Hook in pairs(Mutators.Events[Mutators.LastActiveMutator].hooks) do
