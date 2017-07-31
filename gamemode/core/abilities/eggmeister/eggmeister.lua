@@ -14,5 +14,5 @@ end)
 
 Abilities.Register("Egg Meister", [[You have infinite Eggs and you 
 	whip them with much more power
-	like a straight bullet.]], 2014 )
+	like a straight bullet. Where the fuck are you getting these eggs from?]], 2014 )
 
