@@ -226,6 +226,6 @@ hook.Add("Lava.Preround", "ResetMeters", function()
 	end
 end)
 
-Abilities.Register("Chameleon", [[At the cost of slower movespeeds
+Abilities.Register("Chameleon", [[( NOTE: This Ability is present for showcase purposes and is currently in Beta. ) At the cost of slower movespeeds
 	You can climb any world brush and parkour!
 	Careful though!]], 2236)

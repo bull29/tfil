@@ -75,7 +75,7 @@ hook.Add( "CanPlayerSuicide", "PreventSuicide", function( Player )
 	end
 end)
 
-Abilities.Register("Limpy Larry", [[By pressing 'R',
+Abilities.Register("Limpy Larry", [[( Currently in Beta. ) By pressing 'R',
 	you have the ability to toggle becoming
 	a limp, lifeless ragdoll that
 	can squirm and move. You don't take fall
