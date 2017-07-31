@@ -12,7 +12,7 @@ Mutators.RegisterNewEvent("Mystery Men", "Everybody is under an comprehensive al
 		function chat.AddText( ... )
 			if Mutators.IsActive("Mystery Men") then
 				local args = { ... }
-				if args[1]:IsPlayer() then
+				if type( args[1] ) == "Player" then
 					table.insert( args, 1, args[1]:PlayerColor() )
 					args[2] = args[2]:Nick()
 					return chat.AddTextOld( unpack( args ))
