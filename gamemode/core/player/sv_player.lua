@@ -1,6 +1,7 @@
 
 function GM:PlayerSpawn(Player)
-	if Rounds.CurrentState ~= "Preround" then
+	if Player.m_ShouldSpawnAsSpectator then
+		Player.m_ShouldSpawnAsSpectator = nil
 		return Player:KillSilent()
 	end
 	hook.Call( "ChoosePlayerClass", GAMEMODE, Player )
@@ -27,4 +28,7 @@ function GM:PlayerSetModel( Player )
 end
 
 function GM:PlayerInitialSpawn( Player )
+	if Rounds.CurrentState ~= "Preround" then
+		Player.m_ShouldSpawnAsSpectator = true
+	end
 end
