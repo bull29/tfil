@@ -12,7 +12,7 @@ local LocalPlayer = LocalPlayer
 local surface = surface
 local v = Vector()
 local LavaTexture = WebElements.Lava
-local SmoothLevel = -1000
+local SmoothLevel = -32000
 local MapScale = 1
 local SkyboxScale = 1
 local ClipTab = {}
@@ -73,6 +73,10 @@ hook.Add("PostDrawTranslucentRenderables", "DrawLava", function(a, b)
 			surface.DrawTexturedRectUV(-MapScale / 2, -MapScale / 2, MapScale, MapScale, 0, 0, MapScale / 5000 * SkyboxScale, MapScale / 5000 * SkyboxScale)
 		end, GetGlobalVector("$skycampos") + (LavaLevel / SkyboxScale), Ang, 1)
 	end
+end)
+
+hook.Add("Lava.PreroundStart", "ResetLava", function()
+	SmoothLevel = Entity(0):GetModelRenderBounds().z
 end)
 
 hook.Add("RenderScreenspaceEffects", "DrawLavaOverlay", function()
