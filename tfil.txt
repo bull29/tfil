@@ -2,6 +2,7 @@
 {
 	"base"		"base"
 	"title"		"The Floor is Lava!"
-	"maps"		"*"
+	"maps"		"lava_*"
+	"menusystem"	"1"
 }
 // Created by Bull29 [76561198045139792]
