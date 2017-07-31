@@ -109,5 +109,3 @@ hook.RunOnce("HUDPaint", function()
 		end
 	end
 end)
-
-Mutators.StartEvent("Mystery Men")
