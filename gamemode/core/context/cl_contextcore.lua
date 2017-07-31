@@ -64,7 +64,7 @@ hook.RunOnce("HUDPaint", function()
 			local Panel = Properties[2]()
 			if not Panel then return end
 
-			Panel:EnsureCenterBounds( ScrW()/2, ScrH()*0.8 )
+			Panel:EnsureCenterBounds( ScrW()/3, ScrH()*0.8 )
 			local c = Panel:GenerateOverwrite( "Think" )
 			function Panel:Think()
 				c( self )
