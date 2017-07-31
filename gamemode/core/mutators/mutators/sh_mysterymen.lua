@@ -6,6 +6,21 @@ local vgui = vgui
 local pMeta = debug.getregistry().Player
 
 Mutators.RegisterNewEvent("Mystery Men", "Everybody is under an comprehensive alias. Trust nobody.", function()
+	if CLIENT then
+		chat.AddTextOld = chat.AddTextOld or chat.AddText
+
+		function chat.AddText( ... )
+			if Mutators.IsActive("Mystery Men") then
+				local args = { ... }
+				if args[1]:IsPlayer() then
+					table.insert( args, 1, args[1]:PlayerColor() )
+					args[2] = args[2]:Nick()
+					return chat.AddTextOld( unpack( args ))
+				end
+			end
+			return chat.AddTextOld( ... )
+		end
+	end
 	pMeta.NickOld = pMeta.NickOld or pMeta.Nick
 
 	function pMeta.Nick(self)
@@ -41,50 +56,53 @@ Mutators.RegisterNewEvent("Mystery Men", "Everybody is under an comprehensive al
 			end
 
 			return gui.OpenURLOld(str)
-		end -- Its' the little things that count.
-
-		if not vgui.GetControlTable("o_AvatarImage") then
-			local SetPlayer = debug.getregistry().Panel.SetPlayer
-
-			vgui.Register("o_AvatarImage", {
-				SetPlayer = function(self, ent, size)
-					self.Player = ent
-					SetPlayer(self, ent, size)
-				end,
-				PaintOver = function(s, w, h)
-					if s.Player and s.Player:IsValid() and Mutators.IsActive("Mystery Men") and s.Player:Alive() then
-						local url = s.Player:GetNWString("$mys_avatarurl", "")
-
-						if url ~= "" then
-							draw.WebImage(url, 0, 0, w, h)
-						end
-					end
-				end
-			}, "AvatarImage")
-		end
-
-		local sOfPrevention = false -- Stack overflow prevention
-
-		if not vgui.CreateOld then
-			vgui.CreateOld = vgui.CreateOld or vgui.Create
-
-			function vgui.Create(a, ...)
-				if a == "AvatarImage" and not sOfPrevention then
-					sOfPrevention = true
-
-					return vgui.CreateOld("o_AvatarImage", ...)
-				elseif sOfPrevention then
-					sOfPrevention = false
-				end
-
-				return vgui.CreateOld(a, ...)
-			end
 		end
 	end
 end, function()
-	pMeta.Name, pMeta.GetName, pMeta.Nick = pMeta.NickOld, pMeta.NickOld, pMeta.NickOld
+	-- Its' the little things that count.
+	--pMeta.Name, pMeta.GetName, pMeta.Nick = pMeta.NickOld, pMeta.NickOld, pMeta.NickOld
 
 	if CLIENT then
 		gui.OpenURL = gui.OpenURLOld
+	end
+end)
+
+hook.RunOnce("HUDPaint", function()
+	if not vgui.GetControlTable("o_AvatarImage") then
+		local SetPlayer = debug.getregistry().Panel.SetPlayer
+
+		vgui.Register("o_AvatarImage", {
+			SetPlayer = function(self, ent, size)
+				self.Player = ent
+				SetPlayer(self, ent, size)
+			end,
+			PaintOver = function(s, w, h)
+				if s.Player and s.Player:IsValid() and Mutators.IsActive("Mystery Men") and s.Player:Alive() then
+					local url = s.Player:GetNWString("$mys_avatarurl", "")
+
+					if url ~= "" then
+						draw.WebImage(url, 0, 0, w, h)
+					end
+				end
+			end
+		}, "AvatarImage")
+	end
+
+	local sOfPrevention = false -- Stack overflow prevention
+
+	if not vgui.CreateOld then
+		vgui.CreateOld = vgui.CreateOld or vgui.Create
+
+		function vgui.Create(a, ...)
+			if a == "AvatarImage" and not sOfPrevention then
+				sOfPrevention = true
+
+				return vgui.CreateOld("o_AvatarImage", ...)
+			elseif sOfPrevention then
+				sOfPrevention = false
+			end
+
+			return vgui.CreateOld(a, ...)
+		end
 	end
 end)
