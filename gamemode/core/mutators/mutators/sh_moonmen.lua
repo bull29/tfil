@@ -1,7 +1,9 @@
-DefaultGravity = DefaultGravity or GetConVar("sv_gravity"):GetInt()
-
 Mutators.RegisterNewEvent("Moon men", "Server Gravity is extremely low. All the high-jumping abilities become suddenly useful.", function()
-	RunConsoleCommand("sv_gravity", 200 )
+	if SERVER then
+		RunConsoleCommand("sv_gravity", 200 )
+	end
 end, function()
-	RunConsoleCommand("sv_gravity", DefaultGravity )
+	if SERVER then
+		RunConsoleCommand("sv_gravity", 600 )
+	end
 end)
