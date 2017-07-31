@@ -1,9 +1,18 @@
 --[[
 	Round Mutators - Shit to make each and every round more interesting
 ]]
+if SERVER then
+	util.AddNetworkString( "mutator_begin" )
+	util.AddNetworkString( "mutator_end" )
+end
+
 local Mutators = Mutators or {}
+if Mutators.CurrentlyActive then
+	Mutators.ClearSpecialPlayer()
+	Mutators.EndEvent( Mutators.CurrentlyActive )
+end
 Mutators.Events = Mutators.Events or {}
-Mutators.LastActiveMutator = ""
+Mutators.CurrentlyActive = nil
 
 function Mutators.RegisterNewEvent(name, desc, startfunc, endfunc)
 	Mutators.Events[name] = Mutators.Events[name] or {}
@@ -11,25 +20,6 @@ function Mutators.RegisterNewEvent(name, desc, startfunc, endfunc)
 	Mutators.Events[name]["desc"] = desc
 	Mutators.Events[name]["startfn"] = startfunc
 	Mutators.Events[name]["endfn"] = endfunc
-end
-
-function Mutators.StartEvent(event)
-	if hook.Call("Lava.MutatorStart", nil, event, Mutators.Events[event]) == false then return end
-	if not Mutators.Events[event] then return end
-	Mutators.LastActiveMutator = event
-	Mutators.Events[event].startfn()
-
-	if SERVER then
-		SetGlobalString("$activemutator", event)
-	end
-end
-
-if CLIENT then
-	hook.Add("Tick", "ClientMutatorActivateThink", function()
-		if Mutators.GetActive() and Mutators.GetActive() ~= Mutators.LastActiveMutator then
-			Mutators.StartEvent(GetGlobalString("$activemutator"))
-		end
-	end)
 end
 
 function Mutators.RegisterHooks(eventname, tab)
@@ -45,70 +35,115 @@ function Mutators.RegisterHooks(eventname, tab)
 	end
 end
 
-function Mutators.EndEvent()
-	local tab = Mutators.Events[Mutators.LastActiveMutator]
+function Mutators.StartEvent( event )
+	Mutators.EndEvent()
+	if not Mutators.Events[event] then return end
+	local tab = Mutators.Events[event]
 
-	if tab and tab.endfn then
-		tab.endfn()
+	Mutators.CurrentlyActive = event
+	if SERVER then
+		SetGlobalString("$activemutator", event )
+
+		net.Start("mutator_begin")
+		net.WriteString( event )
+		net.Broadcast()
+
+		Notification.SendType( "Mutator", "The " .. event .. " mutator has begun!" )
+		Notification.SendType( "Mutator", tab.desc:gsub("\t", "" ):gsub( "\n", "") )
+	end
+	if tab.startfn then
+		tab.startfn()
+	end
+end
+
+function Mutators.EndEvent( event )
+	event = event or Mutators.CurrentlyActive
+
+	if not Mutators.Events[event] then return end
+	local tab = Mutators.Events[event]
+
+	if SERVER then
+		net.Start("mutator_end")
+		net.WriteString( event )
+		net.Broadcast()
 	end
 
-	if not tab then
-		SetGlobalString("$activemutator", "")
-		Mutators.LastActiveMutator = nil
-		return
-	end
-
-
-	if Mutators.Events[Mutators.LastActiveMutator] and Mutators.Events[Mutators.LastActiveMutator].hooks then
-		for Index, Hook in pairs(Mutators.Events[Mutators.LastActiveMutator].hooks) do
+	if tab and tab.hooks then
+		for Index, Hook in pairs(tab.hooks) do
 			hook.Remove(Hook, "mutator_hook_" .. Index)
 		end
 	end
 
-	SetGlobalString("$activemutator", "")
-	Mutators.LastActiveMutator = nil
-end
+	if tab.endfn then
+		tab.endfn()
+	end
 
-function Mutators.IsActive(name)
-	if not name then return GetGlobalString("$activemutator") ~= "" end
-
-	return GetGlobalString("$activemutator") == name
+	if SERVER then
+		SetGlobalString("$activemutator", "" )
+	end
+	Mutators.CurrentlyActive = nil
 end
 
 function Mutators.GetActive()
-	return GetGlobalString("$activemutator", false)
+	return SERVER and Mutators.CurrentlyActive or ( GetGlobalString("$activemutator", "" ) ~= "" and GetGlobalString("$activemutator", "" ))
 end
 
-hook.RunOnce("HUDPaint", function()
-	if Mutators.IsActive() then
-		Mutators.StartEvent(GetGlobalString("$activemutator"))
+function Mutators.IsActive( name )
+	return Mutators.GetActive() == name
+end
+
+hook.Add("Lava.PreroundStart", "DisableMutators", function()
+	Mutators.EndEvent()
+end)
+
+if SERVER then
+	hook.Add("Lava.RoundStart", "ShouldStartaMutator", function()
+		FrameDelay( function()
+			local A = math.random( 1, 16 )
+			Notification.SendType( "Chance", "Should we start a mutator? Let's roll!" )
+			timer.Simple( 3, function()
+				local B = math.random( 1, 16 )
+				if A == B then
+					Notification.SendType( "Chance", ("We rolled ${1} and ${2}! Let's start us a mutator!"):fill( A, B ))
+					timer.Simple( 2, function()
+						local Table, Key = table.Random( Mutators.Events )
+						Mutators.StartEvent( Key )
+					end)
+				else
+					Notification.SendType( "Chance", ("We rolled ${1} and ${2}! Sorry chap! no mutator this round."):fill( A, B ))
+				end
+			end)
+		end)
+	end)
+end
+
+hook.Add("PlayerInitialSpawn", "BroadcastMutator", function( Player )
+	if Mutators.CurrentlyActive then
+		net.Start("mutator_begin")
+		net.WriteString( Mutators.CurrentlyActive )
+		net.Send( Player )
 	end
 end)
 
-hook.Add("Lava.PostRound", "EndMutator", function()
-	if Mutators.GetActive() then
-		Mutators.EndEvent()
-	end
-end)
+if CLIENT then
+	net.Receive( "mutator_begin",function()
+		local EVENT = net.ReadString()
+		Mutators.CurrentlyActive = EVENT
+		Mutators.StartEvent( EVENT )
+	end)
 
-hook.Add("Lava.PreroundStart", "EndMutator", function()
-	if Mutators.GetActive() then
-		Mutators.EndEvent()
-	end
-end)
 
-hook.Add("Lava.RoundStart", "Startamutator?", function()
-	FrameDelay( function()
-		if SERVER and math.random( 1, 5 ) == 3 then
-			local tab, key = table.Random(Mutators.Events)
-			if hook.Call( "Lava.StartMutator", nil, key ) == nil then
-				Mutators.StartEvent( key )
-				Notification.SendType( "Mutator", "The " .. key .. " mutator has begun!" )
-				Notification.SendType( "Mutator", tab.desc:gsub("\t", "" ):gsub( "\n", "") )
-			end
+	net.Receive( "mutator_end",function()
+		local EVENT = net.ReadString()
+		Mutators.EndEvent( EVENT )
+	end)
+
+	hook.RunOnce( "HUDPaint", function()
+		if Mutators.GetActive() then
+			Mutators.StartEvent( Mutators.GetActive() )
 		end
 	end)
-end)
+end
 
 function Mutators.GetRandomPlayerForEvent(event)
 	if not hook.Call("Lava.ChooseRandomPlayerForEvent", nil, event) then return table.Random(player.GetAll()) end
