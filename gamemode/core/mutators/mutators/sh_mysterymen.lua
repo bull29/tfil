@@ -20,6 +20,15 @@ Mutators.RegisterNewEvent("Mystery Men", "Everybody is under an comprehensive al
 			end
 			return chat.AddTextOld( ... )
 		end
+
+		pMeta.ShowProfileOld = pMeta.ShowProfileOld or pMeta.ShowProfile
+
+		function pMeta:ShowProfile()
+			if Mutators.IsActive("Mystery Men") then
+				return gui.OpenURL("https://steamcommunity.com/profiles/"..self:SteamID64())
+			end
+			return self:ShowProfileOld()
+		end
 	end
 	pMeta.NickOld = pMeta.NickOld or pMeta.Nick
 
@@ -45,7 +54,7 @@ Mutators.RegisterNewEvent("Mystery Men", "Everybody is under an comprehensive al
 	else
 		gui.OpenURLOld = gui.OpenURLOld or gui.OpenURL
 
-		function gui.OpenURL(str)
+		function gui.OpenURL(str) -- Its' the little things that count.
 			if Mutators.IsActive("Mystery Men") then
 				local x = str:match("76" .. ("%d"):rep(15))
 
@@ -59,12 +68,6 @@ Mutators.RegisterNewEvent("Mystery Men", "Everybody is under an comprehensive al
 		end
 	end
 end, function()
-	-- Its' the little things that count.
-	--pMeta.Name, pMeta.GetName, pMeta.Nick = pMeta.NickOld, pMeta.NickOld, pMeta.NickOld
-
-	if CLIENT then
-		gui.OpenURL = gui.OpenURLOld
-	end
 end)
 
 hook.RunOnce("HUDPaint", function()
@@ -106,3 +109,5 @@ hook.RunOnce("HUDPaint", function()
 		end
 	end
 end)
+
+Mutators.StartEvent("Mystery Men")
