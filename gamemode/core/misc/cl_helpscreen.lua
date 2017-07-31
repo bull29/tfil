@@ -29,8 +29,8 @@ hook.Add("PostRenderVGUI", "DrawHelperscreen", function()
 
 	draw.WebImage( Emoji.Get( 2625 ), ScrW()/2 + ScrH()/40, ScrH() * 0.125, ScrH()/15, ScrH()/15, nil, ( CurTime() * 5 ):sin() * -15 )
 	draw.WebImage( Emoji.Get( 2626 ), ScrW()/2 - ScrH()/40, ScrH() * 0.125, ScrH()/15, ScrH()/15, nil, ( CurTime() * 5 ):sin() * 15 )
-	draw.SimpleText( "HELP SCREEN", "lava_help_title", ScrW()/2, ScrH() * 0.2, pColor() + 25, 1, 1 )
-	draw.SimpleText( "Press F2 at any time to close/view this screen again.", "lava_help_title_sub", ScrW()/2, ScrH() * 0.8, sCol, 1, 1 )
+	draw.SimpleText( "HELP SCREEN", "lava_help_title", ScrW()/2, ScrH() * 0.2, sCol + 50, 1, 1 )
+	draw.SimpleText( "Press F2 at any time to close/view this screen again.", "lava_help_title_sub", ScrW()/2, ScrH() * 0.35, sCol, 1, 1 )
 
 	draw.SimpleText( "<<< Your current ability (Use C to change it)", "lava_help_title_subsub", ScrW()/4.9, ScrH() * 0.91, sCol, 0, 1 )
 
@@ -45,6 +45,9 @@ hook.Add("PostRenderVGUI", "DrawHelperscreen", function()
 
 
 	draw.SimpleText( "<<< Your current elevation from the Lava in meters", "lava_help_title_subsub", ScrW()/7, ScrH() * 0.72, sCol, 0, 1 )
+
+
+	draw.SimpleText( "<<< Your current ranking relative to other players based on your height from the lava.", "lava_help_title_subsub", ScrW()/5.5, ScrH() * 0.79, sCol, 0, 1 )
 
 
 	draw.SimpleText( "Your health percentage", "lava_help_title_subsub", ScrW()/50, ScrH() * 0.63, sCol, 0, 1 )
