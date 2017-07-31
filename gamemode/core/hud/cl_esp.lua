@@ -19,7 +19,7 @@ local tab = {
 }
 
 hook.Add("RenderScreenspaceEffects", "DrawESP", function()
-	m_Activate = m_Activate and not m_HaveUsedupMeter and not hook.Call("Lava.ShouldBlockESP", nil, LocalPlayer() )
+	m_Activate = m_Activate and not m_HaveUsedupMeter and not hook.Call("Lava.ShouldBlockESP", nil, LocalPlayer() ) and LocalPlayer():Alive()
 
 	if not m_Activate then
 		tab["$pp_colour_colour"] = tab["$pp_colour_colour"]:lerp( 1 )
