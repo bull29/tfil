@@ -87,45 +87,41 @@ hook.RunOnce("HUDPaint", function()
 				end
 				draw.SimpleText( Player:Nick(), "lava_score_player_row", h * 2+ h/20, h/2, nil, 0, 1 )
 
-				if s.DoExpand then
-					s:SetTall( s:GetTall():lerp( s.InitialHeight* 5 ) )
-				elseif s:GetTall() ~= s.InitialHeight then
-					s:SetTall( s:GetTall():lerp( s.InitialHeight ) )
-				end
-
 				draw.Rect(0, h, w, a_Height - h, tab[1] - 10)
 			end
+			local dm
 			p.DoClick = function( s )
-				s.DoExpand = not s.DoExpand
-				if s.DoExpand and not s.ExpandedPane then
-					s.ExpandedPane = s:Add("DPanel")
-					local e = s.ExpandedPane
-					e:Dock( FILL )
-					e:DockMargin( 0, ScrH()/25, 0, 0)
-					e.Paint = nil
-
-					local s2 = e:Add("lava_scroller")
-					s2:Dock( RIGHT )
-					s2:SetWide( ScrW()/7 )
-
-					for Datapoint in Values( Datapoints ) do
-						local v = s2:Add("DButton")
-						v:Dock( TOP )
-						v:SetTextColor( color_white )
-						v:SetContentAlignment( 4 )
-						v:SetTextInset( ScrH()/25, 0 )
-						v:SetText( Datapoint[2] )
-						v:SetFont( "lava_score_button_row")
-						local th = v:GenerateColorShift( "caC", Player:PlayerColor()* 0.75, Player:PlayerColor(), 512 )
-						v.Paint = function( s, w, h )
-							th[1], th[2] = Player:PlayerColor()* 0.75, Player:PlayerColor()
-							draw.Rect( 0, 0, w, h, s.caC )
-							draw.WebImage( Emoji.Get( Datapoint[1] ), h/2, h/2, h * 0.8, h * 0.8, nil, s.Hovered and CurTime():sin() * 20 or 0 )
-						end
-						v.DoClick = function( s )
-							Datapoint[3]( Player, s )
-						end
+				if dm and IsValid( dm ) then
+					dm:Remove()
+					dm = nil
+				end
+				dm = vgui.Create("DMenu")
+				dm:SetDrawBackground( false )
+				for k, v in pairs( Datapoints ) do
+					local x = dm:AddOption( v[2], function()
+						v[3]( Player, dm )
+					end)
+					x:SetTextColor( color_white )
+					x:SetFont("lava_dmenu")
+					x:GenerateColorShift( "hVar", Player:PlayerColor() - 25, Player:PlayerColor() + 25, 255 )
+					x.Paint = function( s, w, h )
+						draw.Rect( 0, 0, w, h, s.hVar)
+						draw.WebImage( Emoji.Get( v[1] ), h/2, h/2, h * 0.7, h * 0.7, nil, s.Hovered and CurTime():cos() * 15 or 0 )
 					end
+				end
+				dm:Open()
+				dm.Think = function( s, w, h )
+					if not input.IsKeyDown( KEY_TAB ) then
+						s:Remove()
+					end
+				end
+				dm.Paint = function( s, w, h )
+					if not IsValid( Player ) then
+						s:Remove()
+						dm = nil
+						return
+					end
+					draw.Rect( 0, 0, w, h, Player:PlayerColor() )
 				end
 			end
 
@@ -160,19 +156,23 @@ hook.RunOnce("HUDPaint", function()
 			AddPlayer(Player, "P")
 		end
 
-		local bHeader = l:Add("DLabel")
-		bHeader:Dock(TOP)
-		bHeader:SetTall(ScrH() / 25)
-		bHeader:SetFont("lava_score_header")
-		bHeader:SetText("Spectators")
-		bHeader:SetTextInset(ScrW() / 100, 0)
 
-		bHeader.Paint = function(s, w, h)
-			draw.Rect(0, 0, w, h, pColor() - 75)
-		end
+		if #player.GetDead() ~= 0 then
+			local bHeader = l:Add("DLabel")
+			bHeader:Dock(TOP)
+			bHeader:SetTall(ScrH() / 25)
+			bHeader:SetFont("lava_score_header")
+			bHeader:SetText("Spectators")
+			bHeader:SetTextColor( color_white )
+			bHeader:SetTextInset(ScrW() / 100, 0)
 
-		for Player in Values(player.GetDead()) do
-			AddPlayer(Player, "S")
+			bHeader.Paint = function(s, w, h)
+				draw.Rect(0, 0, w, h, pColor() - 75)
+			end
+
+			for Player in Values(player.GetDead()) do
+				AddPlayer(Player, "S")
+			end
 		end
 	end
 
@@ -198,9 +198,8 @@ hook.Add("Lava.PopulateScoreboardPlayerButtons", "AddDefaultButtons", function( 
 	func( 2620, "Show Profile", function( Player )
 		Player:ShowProfile()
 	end)
-	func( 1427, "Mute", function( Player, Panel )
+	func( 1427, "Toggle Mute", function( Player, Panel )
 		Player:SetMuted( not Player:IsMuted() )
-		Panel:SetText( Player:IsMuted() and "Unmute" or "Mute")
 		chat.AddText( ("Player ${1} has been ${2}."):fill( Player:Nick(), Player:IsMuted() and "Muted" or "Unmuted") )
 	end)
 	func( 1453, "Copy SteamID", function( Player )
