@@ -5,12 +5,12 @@ local color_white = color_white
 local rTab = {}
 local tonumber = tonumber
 local tPane
+local m_HavePlayedSound
 
 local tTranslateTable = {
 	preround = "Preparation",
 	started = "In Progress",
-	ended = "Postround",
-	_ = "Unknown"
+	ended = "Postround"
 }
 
 hook.RunOnce("HUDPaint", function()
@@ -55,22 +55,51 @@ hook.RunOnce("HUDPaint", function()
 
 	--;; -- This HUD element is a placeholder for an upcoming feature: Gadgets and Equipment.
 	local t = InitializePanel("LavaMainToolbar", "DLabel")
+	local tt = t:Add("DCirclePanel")
+	tt:SetPaintedManually(true)
+	tt:Dock(FILL)
+	tt:DockMargin(WebElements.Edge * 2, WebElements.Edge * 2, WebElements.Edge * 2, WebElements.Edge * 2)
 	t:SetSize(ScrH() / 10, ScrH() / 10)
 	t:SetContentAlignment(5)
 	t:SetFont("ChatFont")
 	t:SetPos(ScrH() / 4 - ScrH() / 30, ScrH() - ScrH() / 10 - ScrH() / 50 * 7.6)
 	t:SetText""
+	local iDex = 1
 	t.Paint = function(s, w, h)
 		local floor = (h / 20):floor()
 		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - 50)
 		draw.WebImage(WebElements.Circle, floor, floor, w - floor * 2, h - floor * 2, (pColor() - 100))
-		if Mutators.IsActive() then
-			s:SetText( Mutators.GetActive() )
-			draw.WebImage(Emoji.Get( 2 ), h / 4.8, h / 4, w - h / 2.4, h - h / 2.4)
-		else
-			s:SetText( "" )
-		end
 		draw.WebImage(WebElements.CircleOutline, floor, floor, w - floor * 2, h - floor * 2, pColor())
+		tt:PaintManual()
+		local tab = player.GetAlive()
+		table.sort(tab, function(a, b) return (a:GetPos().z - Lava.GetLevel()) > (b:GetPos().z - Lava.GetLevel()) end)
+		iDex = 1
+
+		for Index, Player in pairs(tab) do
+			if Player == LocalPlayer() then
+				iDex = Index
+				break
+			end
+		end
+
+		local ET = Emoji.ParseNumber(iDex)
+
+		if iDex > 3 then
+			for i = 1, #ET do
+				draw.WebImage(Emoji.Get(ET[i]), h / ( 1 + #ET )  + (i - 1) * h / 3, h / 2, h / 3, h / 3, nil, 0)
+			end
+		end
+	end
+
+	tt.PaintCircle = function(s, w, h)
+		if iDex < 4 then
+			draw.WebImage(Emoji.Get(495), h/2, h/2, h, h, nil, - CurTime():cos() * 25 )
+			draw.WebImage(Emoji.Get( iDex == 1 and 2188 or iDex == 2 and 2189 or 2190), h/2, h/2, h * 0.8, h * 0.8, nil, CurTime():cos() * 30)
+		else
+			draw.WebImage(Emoji.Get(2189), h / 3, h / 3 * 2, h / 2, h / 2, nil, CurTime():sin() * 10)
+			draw.WebImage(Emoji.Get(2190), h / 3 * 2, h / 3 * 2, h / 2, h / 2, nil, CurTime():sin() * -10)
+			draw.WebImage(Emoji.Get(2188), h / 2, h / 3, h / 2, h / 2, nil, 0)
+		end
 	end
 
 	--
@@ -134,13 +163,17 @@ hook.RunOnce("HUDPaint", function()
 
 	o.Paint = function(s, w, h)
 		local floor = (h / 25):floor()
-		local x = GetGlobalString("$RoundTime"):Split(":")
+		local x = GetGlobalString("$RoundTime", "00:00"):Split(":")
+		if not x or not x[1] or not x[2] then return end
 		local min = Emoji.ParseNumber(x[1])
 		local sec = Emoji.ParseNumber(x[2])
 		local size = h / 8
 
-		if tonumber(x[2]) == 0 then
-			chat.PlaySound()
+		if tonumber(x[2]) == 0 and not m_HavePlayedSound then
+			m_HavePlayedSound = true
+			surface.PlaySound("ambient/alarms/warningbell1.wav")
+		elseif m_HavePlayedSound then
+			m_HavePlayedSound = nil
 		end
 
 		for i = 1, #min do
@@ -160,7 +193,18 @@ hook.RunOnce("HUDPaint", function()
 			local var = (h / 25):ceil()
 			draw.RoundedBox(8, 0, h * 1.05, w, h / 5, pColor() - 50)
 			draw.RoundedBox(8, var, var / 2 + h * 1.05, w - var * 2, h / 5 - var, pColor())
-			draw.SimpleText(tTranslateTable[GetGlobalString("$RoundState", "_" ):lower()]:upper(), "lava_hud_state", w / 2, h * 1.05 + h / 30, nil, 1, 0)
+
+			if tTranslateTable[GetGlobalString("$RoundState", "_"):lower()] then
+				draw.SimpleText(tTranslateTable[GetGlobalString("$RoundState", "_"):lower()]:upper(), "lava_hud_state", w / 2, h * 1.05 + h / 30, nil, 1, 0)
+			end
+
+			if Mutators.GetActive() then
+				local var = (h / 25):ceil()
+				draw.RoundedBox(8, 0, h * 1.30, w, h / 5, pColor() - 50)
+				draw.RoundedBox(8, var, var / 2 + h * 1.30, w - var * 2, h / 5 - var, pColor())
+				draw.WebImage(Emoji.Get(2), var, var / 2 + h * 1.30, h / 6, h / 6)
+				draw.SimpleText(Mutators.GetActive():upper(), "lava_hud_state", h / 6 + var * 2, var / 2 + h * 1.30 + ScrH() / 250)
+			end
 		end)
 	end
 
