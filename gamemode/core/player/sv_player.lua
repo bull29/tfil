@@ -1,5 +1,8 @@
 
 function GM:PlayerSpawn(Player)
+	if Rounds.CurrentState ~= "Preround" then
+		return Player:KillSilent()
+	end
 	hook.Call( "ChoosePlayerClass", GAMEMODE, Player )
 	player_manager.OnPlayerSpawn( Player )
 	player_manager.RunClass( Player, "Spawn" )
@@ -24,7 +27,4 @@ function GM:PlayerSetModel( Player )
 end
 
 function GM:PlayerInitialSpawn( Player )
-	if Rounds.CurrentState ~= "Preround" then
-		Player:KillSilent()
-	end
 end
