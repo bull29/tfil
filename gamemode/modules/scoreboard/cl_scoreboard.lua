@@ -43,10 +43,22 @@ hook.RunOnce("HUDPaint", function()
 	local m = s:Add("DCirclePanel")
 	m:SetPos(ScrH() * 0.8 / 8 / 16, ScrH() * 0.8 / 8 / 16)
 	m:SetSize(ScrH() * 0.8 / 8, ScrH() * 0.8 / 8)
-
+	m.Shift = false
 	m.PaintCircle = function(s, w, h)
 		draw.WebImage(Emoji.Get(328), w / 2, h / 2, w, h, nil, CurTime():cos() * -15)
-		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - 50)
+		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - ( not m.Shift and 50 or -50 ) )
+	end
+
+
+	local as = m:Add("DLabel")
+	as:Dock( FILL )
+	as:SetText""
+	as:SetMouseInputEnabled( true )
+	as.Paint = function( s, w, h )
+		m.Shift = s.Hovered
+	end
+	as.DoClick = function( s )
+		gui.OpenURL("https://steamcommunity.com/groups/thisfloorislava")
 	end
 
 	local l = s:Add("lava_scroller")
