@@ -7,9 +7,9 @@ local tonumber = tonumber
 local tPane
 
 local tTranslateTable = {
-	Preround = "Preparation",
-	Started = "In Progress",
-	Ended = "Postround"
+	preround = "Preparation",
+	started = "In Progress",
+	ended = "Postround"
 }
 
 hook.RunOnce("HUDPaint", function()
@@ -56,15 +56,19 @@ hook.RunOnce("HUDPaint", function()
 	local t = InitializePanel("LavaMainToolbar", "DLabel")
 	t:SetSize(ScrH() / 10, ScrH() / 10)
 	t:SetContentAlignment(5)
-	t:SetFont("lava_altimeter_panel")
-	t:SetTextColor(Color(255, 255, 255))
+	t:SetFont("ChatFont")
 	t:SetPos(ScrH() / 4 - ScrH() / 30, ScrH() - ScrH() / 10 - ScrH() / 50 * 7.6)
 	t:SetText""
 	t.Paint = function(s, w, h)
 		local floor = (h / 20):floor()
 		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - 50)
 		draw.WebImage(WebElements.Circle, floor, floor, w - floor * 2, h - floor * 2, (pColor() - 100))
-		draw.WebImage(Emoji.Get( LocalPlayer().m_UniqueEmoji or 9 ), h / 4.8, h / 4, w - h / 2.4, h - h / 2.4)
+		if Mutators.IsActive() then
+			s:SetText( Mutators.GetActive() )
+			draw.WebImage(Emoji.Get( 2 ), h / 4.8, h / 4, w - h / 2.4, h - h / 2.4)
+		else
+			s:SetText( "" )
+		end
 		draw.WebImage(WebElements.CircleOutline, floor, floor, w - floor * 2, h - floor * 2, pColor())
 	end
 
@@ -155,7 +159,8 @@ hook.RunOnce("HUDPaint", function()
 			local var = (h / 25):ceil()
 			draw.RoundedBox(8, 0, h * 1.05, w, h / 5, pColor() - 50)
 			draw.RoundedBox(8, var, var / 2 + h * 1.05, w - var * 2, h / 5 - var, pColor())
-			draw.SimpleText(tTranslateTable[GetGlobalString("$RoundState")]:upper(), "lava_hud_state", w / 2, h * 1.05 + h / 30, nil, 1, 0)
+			print(GetGlobalString("$RoundState"))
+			draw.SimpleText(tTranslateTable[GetGlobalString("$RoundState"):lower()]:upper(), "lava_hud_state", w / 2, h * 1.05 + h / 30, nil, 1, 0)
 		end)
 	end
 
