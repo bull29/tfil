@@ -10,6 +10,7 @@ local draw = draw
 local mWHM = WebElements.Edge * 5
 local ScrH = ScrH
 local ScrW = ScrW
+local input = input
 local FontFunctions = FontFunctions
 local hook = hook
 
@@ -18,7 +19,7 @@ hook.Add("CalcView", "RenderBetterzoom", function( Player, Origin, Angles, FOV )
 
 	m_Case = LocalPlayer():KeyDown( IN_ZOOM ) and LocalPlayer():Alive()
 	m_In = LocalPlayer():KeyDown( IN_USE )
-	m_Out = LocalPlayer():KeyDown( IN_RELOAD )
+	m_Out = input.IsKeyDown( KEY_Q )
 
 	if not m_ZDelta then
 		m_ZDelta = FOV
@@ -56,7 +57,7 @@ hook.Add("HUDPaint", "RenderZoom", function()
 	local t_Wide = FontFunctions.GetWide( Text, "ChatFont" )
 
 	draw.WebImage( Emoji.Get( 96 ), ScrW() / 2 + mWHM * 2, ScrH() - mWHM * 2.1, mWHM, mWHM, m_In and White or White - 100, 0 )
-	draw.WebImage( Emoji.Get( 233 ), ScrW() / 2 + mWHM * 2, ScrH() - mWHM, mWHM, mWHM, m_Out and White or White - 100, 0 )
+	draw.WebImage( Emoji.Get( 227 ), ScrW() / 2 + mWHM * 2, ScrH() - mWHM, mWHM, mWHM, m_Out and White or White - 100, 0 )
 
 
 	draw.WebImage( Emoji.Get( 317 ), ScrW() / 2 - mWHM * 3, ScrH() - mWHM * 2.5, mWHM * 1.7, mWHM * 1.7 )
