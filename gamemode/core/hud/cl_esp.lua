@@ -44,12 +44,14 @@ hook.Add("RenderScreenspaceEffects", "DrawESP", function()
 		render.SuppressEngineLighting(true)
 
 		for k, v in pairs(player.GetAll()) do
-			if v == LocalPlayer() then continue end
+			if v == LocalPlayer() or not v:Alive() then continue end
 			local Col = v:PlayerColor()
 			render.MaterialOverride(wMat)
 			render.SetColorModulation(Col.r / 255, Col.g / 255, Col.b / 255)
 			v:DrawModel()
-			PlayerPosTab[v] = v:GetBonePosition(v:LookupBone("ValveBiped.Bip01_Head1")):ToScreen()
+			if v:LookupBone("ValveBiped.Bip01_Head1") then
+				PlayerPosTab[v] = v:GetBonePosition(v:LookupBone("ValveBiped.Bip01_Head1")):ToScreen()
+			end
 		end
 
 		cam.IgnoreZ(false)
@@ -60,8 +62,10 @@ end)
 hook.Add("PostRenderVGUI", "RenderEmojis", function()
 	if m_Activate then
 		for Player, Vec in pairs(PlayerPosTab) do
-			if Vec.visible and IsValid(Player) then
+			if Vec.visible and IsValid(Player) and Player:Alive() then
 				draw.WebImage(Emoji.Get(Player:EmojiID()), Vec.x, Vec.y, ScrH() / 25, ScrH() / 25, White:Alpha( m_IconAlpha ), ( CurTime() * ( #Player:Nick()/3 ):max( 1 ) ):sin() * 30 * ( #Player:Nick()%2 == 0 and -1 or 1) )
+			elseif not IsValid( Player ) then
+				PlayerPosTab[ Player ] = nil
 			end
 		end
 	end
