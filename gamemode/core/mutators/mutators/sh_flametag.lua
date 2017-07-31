@@ -7,7 +7,7 @@ local AddHook = Mutators.RegisterHooks("Flametag", {
 Mutators.RegisterNewEvent("Flametag", "A Randomly chosen player is flaming. If he comes near you, you catch on fire too. Just give him a hug!", function()
 	if SERVER then
 		local Player = Mutators.GetRandomPlayerForEvent("Flametag")
-		if not Player then return end
+		if not IsValid( Player ) then return end
 		Mutators.DesignateSpecialPlayer(Player)
 
 		if Mutators.GetSpecialPlayer() then
@@ -15,6 +15,7 @@ Mutators.RegisterNewEvent("Flametag", "A Randomly chosen player is flaming. If h
 			sPlayer:SetModel("models/player/charple.mdl")
 			sPlayer:SetWalkSpeed( 100 )
 			sPlayer:SetRunSpeed( 200 )
+			Notification.SendType( "Mutator", sPlayer:Nick() .. " is the Flamer! Go give him a peepee touch!" )
 			if SERVER then
 				sPlayer:Ignite(500, 128)
 				sPlayer.PreferedAbility = sPlayer:GetAbility()
