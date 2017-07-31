@@ -15,7 +15,7 @@ hook.Add("GetFallDamage", "AvoidFallDamageTT", function(Player)
 end)
 
 Abilities.Register("Thunder Thighs", [[Due to intense and
-	frequent repetitive physical
+	frequent repetitive physical thrust-like
 	exertions you're immune to Lava
 	up to your pelvis. 
 	Guess why. You also take
