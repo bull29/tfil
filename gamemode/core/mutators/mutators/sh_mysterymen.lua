@@ -88,5 +88,3 @@ end, function()
 		gui.OpenURL = gui.OpenURLOld
 	end
 end)
-
-Mutators.StartEvent("Mystery Men")

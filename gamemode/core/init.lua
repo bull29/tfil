@@ -3,7 +3,14 @@
 --[[-------------------------------------------------------------------------
 		Since we're not relying on any base gamemodes
 ---------------------------------------------------------------------------]]
+DEVMODE = false
 
-for Hook in pairs( hook.GetTable() ) do
-	hook.Flush( Hook )
+if DEVMODE then
+	for Hook in pairs( hook.GetTable() ) do
+		hook.Flush( Hook )
+	end
+
+	function GM:PlayerNoClip()
+		return true
+	end
 end

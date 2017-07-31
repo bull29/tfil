@@ -33,7 +33,3 @@ end
 
 hook.Add("NetworkEntityCreated", "HookOntoPlayerRender", RenderHook )
 hook.Add("NetworkEntityCreated", "HookOntoPlayerRender", OnEntityCreated )
-
-function GM:PlayerNoClip()
-	return true
-end
