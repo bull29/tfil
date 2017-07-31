@@ -203,7 +203,7 @@ hook.RunOnce("HUDPaint", function()
 				local width = FontFunctions.GetWide(Mutators.GetActive():upper(), "lava_hud_state")
 				draw.RoundedBox(8, w - width * 1.2, h * 1.3, width * 1.2, h/5, pColor() - 75)
 				draw.RoundedBox(8, var/2 + w - width * 1.2, var/2 + h * 1.3, width * 1.2- var, h/5 - var, pColor())
-				draw.SimpleText( Mutators.GetActive():upper(), "lava_hud_state", w - var*2, h * 1.3 + h/10, nil, 2, 1 )
+				draw.SimpleText( Mutators.GetActive():upper(), "lava_hud_state", w - var, h * 1.3 + h/10, nil, 2, 1 )
 			end
 		end)
 	end
