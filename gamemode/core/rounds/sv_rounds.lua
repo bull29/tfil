@@ -1,6 +1,8 @@
 local Config = GM.GetConfig()
 local Rounds = {}
 Rounds.CurrentState = Rounds.CurrentState or "Preround"
+NextMapTime = NextMapTime or 0
+SetGlobalInt( "$NextMapTime", NextMapTime )
 
 local function SetRoundState(st)
 	Rounds.CurrentState = st
@@ -19,6 +21,12 @@ end
 
 
 function Rounds.Preround()
+	if NextMapTime > Config.GetMapSwitchTime() then
+		if hook.Call("Lava.GetNextMap") == nil then
+			game.LoadNextMap()
+		end
+	end
+
 	hook.Call("Lava.PreroundStart")
 
 	RunConsoleCommand("lava_fog_sky_effects", "0")
@@ -38,7 +46,7 @@ function Rounds.Start()
 	hook.Call("Lava.RoundStart")
 
 	RunConsoleCommand("lava_fog_sky_effects", "1")
-	--GAMEMODE.CreateNotification( "Round Started!\nThe Floor is Lava!\nEscape and Survive!", 5 )
+
 	for Player in Values(player.GetAll()) do
 		if not Player:Alive() then
 			Player:Spawn()
@@ -48,12 +56,17 @@ function Rounds.Start()
 
 	SetRoundState("Started")
 	SetTimer(os.time() + Config.GetRoundTime())
+
+	Notification.Create("The Round has Started! The Floor is Lava!", { SOUND = "ambient/water/drip2.wav", TIME = 5, ICON = 328 })
 end
 
 function Rounds.PostRound()
 	hook.Call("Lava.PostRound" )
 	SetRoundState("Ended")
 	SetTimer(os.time() + Config.GetPostRoundTime())
+
+	NextMapTime = NextMapTime + 1
+	SetGlobalInt( "$NextMapTime", NextMapTime )
 end
 
 hook.Add("Think", "SyncRoundTime", function()
@@ -87,9 +100,14 @@ function Rounds.CheckShouldRestart()
 			end
 		end
 
+		if hook.Call( "Lava.SelectRoundWinner") == true then return end
+
 		if #player.GetAlive() == 1 then
-			if player.GetCount() ~= 1 then
+			if player.GetCount() == 1 then
+				ShouldRestart = false
+			else
 				ShouldRestart = true
+				Notification.SendType( "Winner", player.GetAlive()[1]:Nick() .. " has won!")
 			end
 		end
 
@@ -100,7 +118,14 @@ function Rounds.CheckShouldRestart()
 end
 
 gameevent.Listen( "player_disconnect" )
-hook.Add("PostPlayerDeath", "CheckAllDead", Rounds.CheckShouldRestart )
+hook.Add("PostPlayerDeath", "CheckAllDead", function()
+	if Rounds.CurrentState == "Started" then
+		if player.GetCount() == 1 then
+			Notification.SendType( "Winner", player.GetAll()[1]:Nick() .. " has won by default!")
+		end
+		Rounds.CheckShouldRestart()
+	end
+end)
 hook.Add( "player_disconnect", "CheckAllDead", function()
 	FrameDelay( function()
 		Rounds.CheckShouldRestart()
@@ -120,5 +145,3 @@ hook.Add("PlayerInitialSpawn", "CheckLone",function()
 end)
 
 _G.Rounds = Rounds
-
-Rounds.Start()
