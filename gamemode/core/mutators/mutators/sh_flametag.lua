@@ -38,7 +38,7 @@ Mutators.RegisterNewEvent("Flametag", "A Randomly chosen player is flaming. If h
 	AddHook( function( Player )
 		local Special = Mutators.GetSpecialPlayer()
 		if Player ~= Special and IsValid( Special ) then
-			if Player:GetPos():Distance( Special:GetPos() ) < 75 then
+			if SERVER and Player:GetPos():Distance( Special:GetPos() ) < 75 then
 				Player:Ignite( 0.1, 0 )
 			end
 		end
