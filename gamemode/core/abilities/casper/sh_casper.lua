@@ -14,9 +14,9 @@ hook.Add("Lava.PostPlayerSpawn", "CASPER", function( Player )
 end)
 
 function GM:ShouldCollide( A, B )
-	if ( A:IsPlayer() or B:IsPlayer() ) and ( A:HasAbility("Casper") or B:HasAbility("Casper") ) then
+	if A:IsPlayer() and B:IsPlayer() and ( A:HasAbility("Casper") or B:HasAbility("Casper") ) then
 		return false
-	end 
+	end
 end
 
 Abilities.Register("Casper", [[You don't collide with players and move slightly faster than others. Extremely beneficial on maps with narrow pathways.]], 1200 )
