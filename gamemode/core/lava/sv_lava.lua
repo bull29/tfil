@@ -93,8 +93,9 @@ hook.Add("PostPlayerDeath", "CreateDeathRagdoll", function(Player)
 
 	if (IsValid(Player.m_LastKiller) and Player.m_LastKiller:GetClass() == "entityflame") or Player:GetPos().z <= Lava.GetLevel() then
 		local rag = Player:GetRagdollEntity()
-		rag:SetModel("models/player/charple.mdl")
-		rag:Ignite(500, 0)
+			rag:SetModel("models/player/charple.mdl")
+			rag:Ignite(500, 0)
+		end
 	end
 
 	hook.Call("Lava.PostPlayerDeath", nil, Player)
