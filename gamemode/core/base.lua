@@ -1,4 +1,12 @@
 local math = math
+local m_NextfTick = CurTime()
+
+function GM:Tick()
+	if m_NextfTick <= CurTime() then
+		m_NextfTick = CurTime() + 1
+		hook.Call( "Lava.FullTick" )
+	end
+end
 
 function GM:OnGamemodeLoaded()
 	GAMEMODE, GM = gmod.GetGamemode(), gmod.GetGamemode()
