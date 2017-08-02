@@ -82,4 +82,8 @@ hook.RunOnce("HUDPaint", function()
 			t:Show()
 		end
 	end)
+
+	net.Receive("lava_chatalert",function()
+		chat.AddText( pColor(), net.ReadString() )
+	end)
 end)

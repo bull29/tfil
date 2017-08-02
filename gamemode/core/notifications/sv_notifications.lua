@@ -4,6 +4,7 @@ local ServerLog = ServerLog
 local util = util
 Notification.Presets = {}
 util.AddNetworkString("lava_notification")
+util.AddNetworkString("lava_chatalert")
 
 function Notification.Create(Text, Table, Player)
 	if hook.Call("Lava.NotificationDispatch", nil, Text, Table, Player) == false then return end
@@ -20,6 +21,12 @@ function Notification.SendType(Type, Text, Player)
 	net.Start("lava_notification")
 	net.WriteTable(Notification.Presets[Type])
 	net.WriteString(Text)
+	net.Send(IsValid( Player ) and Player or player.GetAll())
+end
+
+function Notification.ChatAlert( Text, Player )
+	net.Start("lava_chatalert")
+	net.WriteString( Text )
 	net.Send(IsValid( Player ) and Player or player.GetAll())
 end
 
