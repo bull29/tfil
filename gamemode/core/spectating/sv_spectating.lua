@@ -22,7 +22,7 @@ hook.Add("Lava.DeathThink", "LavaSpectating", function(Player)
 		local nP = Player:KeyDown(1) and 1 or Player:KeyDown(2048) and 2 or Player:KeyDown(8192) and 3
 
 		if nP then
-			Player.m_NextSpectateToggle = CurTime() + FrameTime() * 2
+			Player.m_NextSpectateToggle = CurTime() + 0.25
 			local Tries = 0
 			if nP == 3 then
 				Player:Spectate(Player:GetObserverMode() % 3 + 4)
