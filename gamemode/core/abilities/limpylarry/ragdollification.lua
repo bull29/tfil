@@ -14,7 +14,8 @@ function Ragdoll.Enable( Player )
 	Player.m_RagdollData = {
 		Angles = Player:EyeAngles(),
 		Model = Player:GetModel(),
-		pColor = Player:GetPlayerColor()
+		pColor = Player:GetPlayerColor(),
+		Eggs = Player:GetActiveWeapon():IsValid() and Player:GetActiveWeapon():GetClass() == "lava_fists" and Player:GetActiveWeapon():GetEggs()
 	}
 
 	local ragdoll = ents.Create( "prop_ragdoll" )
@@ -61,6 +62,9 @@ function Ragdoll.Disable( Player, h_DisableSpawn )
 		Player:Extinguish()
 		Player.m_Ragdoll:Remove()
 		Player.m_Ragdoll = nil
+		if Player.m_RagdollData.Eggs then
+			Player:GetActiveWeapon():SetEggs( Player.m_RagdollData.Eggs )
+		end
 	end)
 
 	if not h_DisableSpawn then
