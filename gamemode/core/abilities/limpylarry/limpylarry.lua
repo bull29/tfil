@@ -32,9 +32,9 @@ if SERVER then
 				if not IsValid( Head ) then return end
 				Head:ApplyForceCenter( Vector( 0, 0, 4000 ))
 
-				if m_R.Feet.L:GetMass() ~= 200 then
-					m_R.Feet.L:SetMass( 200 )
-					m_R.Feet.R:SetMass( 200 )
+				if m_R.Feet.L:GetMass() ~= 2000 then
+					m_R.Feet.L:SetMass( 2000 )
+					m_R.Feet.R:SetMass( 2000 )
 
 					m_R.Feet.R:EnableGravity( true )
 					m_R.Feet.L:EnableGravity( true )
