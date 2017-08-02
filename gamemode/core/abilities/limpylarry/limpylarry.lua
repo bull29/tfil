@@ -30,11 +30,11 @@ if SERVER then
 			if Data:KeyDown( 2 ) then
 				local Head = m_R:GetPhysicsBone("ValveBiped.Bip01_Head1")
 				if not IsValid( Head ) then return end
-				Head:ApplyForceCenter( Vector( 0, 0, 4000 ))
+				Head:ApplyForceCenter( Vector( 0, 0, FrameTime()*65536 ))
 
-				if m_R.Feet.L:GetMass() ~= 2000 then
-					m_R.Feet.L:SetMass( 2000 )
-					m_R.Feet.R:SetMass( 2000 )
+				if m_R.Feet.L:GetMass() ~= 200 then
+					m_R.Feet.L:SetMass( 200 )
+					m_R.Feet.R:SetMass( 200 )
 
 					m_R.Feet.R:EnableGravity( true )
 					m_R.Feet.L:EnableGravity( true )
