@@ -19,7 +19,7 @@ hook.Add("DrawOverlay", "DrawContextCusror", function()
 		local x, y = gui.MousePos()
 		draw.WebImage(Emoji.Get(input.IsMouseDown(107) and 1563 or 1560), x - 16, y, 32, 32)
 
-		if vgui.GetHoveredPanel() then
+		if vgui.GetHoveredPanel() and system.IsWindows() then
 			vgui.GetHoveredPanel():SetCursor"blank"
 		end
 
@@ -79,7 +79,9 @@ end)
 function GM:OnContextMenuOpen()
 	_cEU = true
 	gui.EnableScreenClicker(true)
-	vgui.GetWorldPanel():SetCursor"blank"
+	if system.IsWindows() then
+		vgui.GetWorldPanel():SetCursor"blank"
+	end
 end
 
 function GM:OnContextMenuClose()
