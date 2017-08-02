@@ -2,6 +2,7 @@ if SERVER then return end
 
 local cam = cam
 local render = render
+local windows = system.IsWindows()
 
 function cam.Wrap2D( func, ... )
 	cam.Start2D( ... )
@@ -22,6 +23,9 @@ function cam.Wrap3D2D( func, ... )
 end
 
 function render.Clip( tab, func )
+	if not windows then
+		return func()
+	end
 	render.EnableClipping( true )
 	for i = 1, #tab do
 		render.PushCustomClipPlane( tab[i][1], tab[i][2])
