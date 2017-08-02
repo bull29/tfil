@@ -1,4 +1,13 @@
 AddCSLuaFile()
+
+if SERVER then
+	resource.AddFile( "materials/models/hands/hands_color.vmt")
+	resource.AddFile( "materials/models/hands/hands_color_jive.vmt")
+	resource.AddFile( "materials/models/hands/pimp_body_color.vmt")
+	resource.AddFile( "materials/models/hands/sleeves.vmt")
+	resource.AddFile( "models/v_me_fists.mdl")
+end
+
 SWEP.PrintName = "Fists"
 SWEP.Author = "Kilburn, robotboy655, MaxOfS2D & Tenrys"
 SWEP.Purpose = "Well we sure as hell didn't use guns! We would just wrestle Hunters to the ground with our bare hands! I used to kill ten, twenty a day, just using my fists."
