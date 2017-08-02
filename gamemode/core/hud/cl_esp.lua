@@ -47,13 +47,14 @@ hook.Add("RenderScreenspaceEffects", "DrawESP", function()
 			if v == LocalPlayer() or not v:Alive() then continue end
 
 			local Col = v:PlayerColor()
-			v = v.m_Ragdoll or v
+
+			v = IsValid( v.m_Ragdoll ) and v.m_Ragdoll or v
 
 			render.MaterialOverride(wMat)
 			render.SetColorModulation(Col.r / 255, Col.g / 255, Col.b / 255)
 			v:DrawModel()
 			if v:LookupBone("ValveBiped.Bip01_Head1") then
-				PlayerPosTab[v.m_Player or v] = v:GetBonePosition(v:LookupBone("ValveBiped.Bip01_Head1")):ToScreen()
+				PlayerPosTab[ IsValid( v.m_Player ) and v.m_Player or v ] = v:GetBonePosition(v:LookupBone("ValveBiped.Bip01_Head1")):ToScreen()
 			end
 		end
 
