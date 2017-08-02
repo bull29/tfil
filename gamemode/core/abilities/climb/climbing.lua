@@ -113,17 +113,17 @@ hook.Add("SetupMove", "Climbing", function(Player, MoveData, Command)
 
 		if MoveData:KeyDown(8) then
 			if Player:OnGround() then
-				MoveData:SetOrigin(MoveData:GetOrigin() + Vector(0, 0, 32))
+				MoveData:SetOrigin(MoveData:GetOrigin() + Vector(0, 0, 42))
 			end
 
 			cNetString = cNetString .. "1 " .. (MoveData:GetSideSpeed() / 10000 / 2)
 
-			if SERVER and util.IsInWorld(Player:EyePos() + Vector(0, 0, Player:GetRunSpeed() / 40)) or CLIENT then
-				MoveData:SetOrigin(MoveData:GetOrigin() + Vector(0, 0, Player:GetRunSpeed() / 40))
+			if SERVER and util.IsInWorld(Player:EyePos() + Vector(0, 0, FrameTime() * 48)) or CLIENT then
+				MoveData:SetOrigin(MoveData:GetOrigin() + Vector(0, 0, FrameTime() * 48))
 			end
 		elseif MoveData:KeyDown(16) then
 			cNetString = cNetString .. "-1 " .. (-MoveData:GetSideSpeed() / 10000 / 2)
-			MoveData:SetOrigin(MoveData:GetOrigin() + Vector(0, 0, -Player:GetRunSpeed() / 40))
+			MoveData:SetOrigin(MoveData:GetOrigin() + Vector(0, 0, -FrameTime() * 48))
 		else
 			cNetString = cNetString .. "0 " .. (MoveData:GetSideSpeed() / 10000)
 		end
