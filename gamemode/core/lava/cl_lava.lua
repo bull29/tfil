@@ -50,7 +50,7 @@ hook.Add("PostDrawTranslucentRenderables", "DrawLava", function(a, b)
 	local LavaLevel = v:SetZ(SmoothLevel)
 	local Ang = Angle(0, CurTime(), 0)
 
-	render.Clip(ClipTab, function()
+	local function drawLava()
 		local x = 220 + (CurTime():sin() * 35):abs()
 		surface.SetDrawColor(x, x, x)
 		surface.SetMaterial(draw.fetch_asset(LavaTexture, "noclamp"))
@@ -66,7 +66,13 @@ hook.Add("PostDrawTranslucentRenderables", "DrawLava", function(a, b)
 				end, LavaLevel, Ang + Angle( 180, 0, 0 ), 1)
 			end
 		end
-	end)
+	end
+
+	if system.IsWindows() then
+		render.Clip(ClipTab, drawLava)
+	else
+		drawLava()
+	end
 
 	if b then
 		cam.Wrap3D2D(function()
