@@ -1,6 +1,5 @@
 local Player = debug.getregistry().Player
 local Color = debug.getregistry().Color
-local util = util
 local setmetatable = setmetatable
 
 function Player:EyeEntity()
@@ -13,22 +12,6 @@ end
 
 function Player:TeamColor()
 	return team.GetColor( self:Team() )
-end
-
-function Player:CheckHullCollision()
-	local tR = util.TraceHull{
-		filter = self,
-		start = self:GetPos(),
-		endpos = self:GetPos(),
-		mins = self:OBBMins(),
-		maxs = self:OBBMaxs(),
-	}
-
-	if tR.Entity and (tR.Entity:IsWorld() or tR.Entity:IsValid()) then
-		return tR
-	end
-
-	return false
 end
 
 function Player:PlayerColor()
