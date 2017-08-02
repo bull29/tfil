@@ -20,11 +20,11 @@ if SERVER then
 			if not IsValid( bEnt ) then return end
 
 			if Data:GetForwardMove() ~= 0 then
-				bEnt:ApplyForceCenter(Data:GetForwardMove():absolutize() * Player:GetForward() * (Data:KeyDown(IN_SPEED) and 1250 or 1000))
+				bEnt:ApplyForceCenter(Data:GetForwardMove():absolutize() * Player:GetForward() * (Data:KeyDown(IN_SPEED) and 1250 * FrameTime() * 16 or 1000 * FrameTime() * 16))
 			end
 
 			if Data:GetSideMove() ~= 0 then
-				bEnt:ApplyForceCenter(Data:GetSideMove():absolutize() * Player:GetRight() * (Data:KeyDown(IN_SPEED) and 1250 or 1000))
+				bEnt:ApplyForceCenter(Data:GetSideMove():absolutize() * Player:GetRight() * (Data:KeyDown(IN_SPEED) and 1250 * FrameTime() * 16 or 1000 * FrameTime() * 16))
 			end
 
 			if Data:KeyDown( 2 ) then
