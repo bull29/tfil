@@ -4,6 +4,10 @@ Rounds.CurrentState = Rounds.CurrentState or "Preround"
 NextMapTime = NextMapTime or 0
 SetGlobalInt( "$NextMapTime", NextMapTime )
 
+hook.Add("Initialize", "ResetmapTime", function()
+	NextMapTime = 0
+end)
+
 local function SetRoundState(st)
 	Rounds.CurrentState = st
 	SetGlobalString("$RoundState", st)
