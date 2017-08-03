@@ -71,6 +71,8 @@ function SWEP:PrimaryAttack(NoForce)
 	self.Owner:SetNW2Int("$fist_attack_index", self.Owner:GetNW2Int("$fist_attack_index") + 1)
 
 	if not NoForce then
+		if Rounds.CurrentState == "Preround" then return end
+
 		local tR_v = util.TraceLine({
 			start = self.Owner:GetShootPos(),
 			endpos = self.Owner:GetShootPos() + self.Owner:GetAimVector() * self.HitDistance,
