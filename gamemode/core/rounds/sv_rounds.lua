@@ -21,7 +21,7 @@ end
 
 
 function Rounds.Preround()
-	if NextMapTime > Config.GetMapSwitchTime() then
+	if NextMapTime >= Config.GetMapSwitchTime() then
 		if hook.Call("Lava.GetNextMap") == nil then
 			game.LoadNextMap()
 		end
