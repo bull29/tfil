@@ -132,3 +132,8 @@ surface.CreateFont("lava_dmenu", {
 	font = "Roboto Condensed",
 	size = ScrH() / 45
 })
+
+surface.CreateFont("lava_mapvote", {
+	font = "Roboto Bold Italic",
+	size = ScrH() / 20
+})
