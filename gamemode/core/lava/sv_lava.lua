@@ -36,16 +36,10 @@ hook.Add("Think", "LavaMainCycle", function()
 		Rounds.NextSuperDecentTime = Rounds.NextSuperDecentTime or CurTime()
 
 		if Rounds.NextSuperDecentTime < CurTime() then
-			local tab = player.GetAll()
-
-			for k, v in pairs(tab) do
-				if not v:Alive() then
-					table.remove(tab, k)
-				end
-			end
+			local tab = player.GetAlive()
+			table.sort(tab, function(a, b) return a:GetPos().z < b:GetPos().z end)
 
 			if tab[1] then
-				table.sort(tab, function(a, b) return a:GetPos().z < b:GetPos().z end)
 				local t = ((tab[1]:GetPos().z - m_UnderDescentAmount - Lava.GetLevel()) * FrameTime() / 10):max(FrameTime() * 5)
 				Lava.ShiftLevel(t)
 
