@@ -2,8 +2,8 @@
 local Abilities = {}
 Abilities.Skills = {}
 
-function Abilities.Register( name, desc, icon )
-	Abilities.Skills[ name ] = { desc, icon }
+function Abilities.Register( name, desc, icon, onequip, onunequip )
+	Abilities.Skills[ name ] = { desc, icon, onequip, onunequip }
 end
 
 debug.getregistry().Player.HasAbility = function( self, ability )
