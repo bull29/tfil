@@ -3,8 +3,11 @@ local Values = Values
 
 hook.Add("Lava.FullTick", "CachePlayerPositions", function()
 	for Player in Values( player.GetAll() ) do
-		if not Player:CheckHullCollision() then
+		local Stuck = Player:CheckHullCollision()
+		if not Stuck then
 			Player.m_LastValidPosition = Player:GetPos()
+		elseif Player:Alive() and Stuck then
+			Player:SetPos( Player.m_LastValidPosition )
 		end
 	end
 end)
