@@ -2,7 +2,7 @@
 
 hook.Add("Lava.PlayerPushPlayer", "Iron Fist", function( Attacker, Victim )
 	if Attacker:HasAbility("Iron Fist") and not Victim:HasAbility("Stoneman") then
-		Victim:SetVelocity(Attacker:GetForward():SetZ(0) * 2000)
+		Victim:SetVelocity(Attacker:GetForward():SetZ(-0.2) * 1500)
 		return true
 	end
 end)
