@@ -55,6 +55,8 @@ function Rounds.Start()
 		if not Player:Alive() then
 			Player:Spawn()
 			Player:SetObserverMode( OBS_MODE_NONE )
+		elseif Player:Health() ~= 100 then
+			Player:SetHealth( Player:HasAbility("Skippy Feet") and 35 or 100 )
 		end
 	end
 
