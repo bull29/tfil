@@ -58,6 +58,9 @@ function Rounds.Start()
 		elseif Player:Health() ~= 100 then
 			Player:SetHealth( Player:HasAbility("Skippy Feet") and 35 or 100 )
 		end
+		if Player:GetActiveWeapon():IsValid() and Player:GetActiveWeapon():GetClass() == "lava_fists" then
+			Player:GetActiveWeapon():SetEggs( 6 )
+		end
 	end
 
 	SetRoundState("Started")
