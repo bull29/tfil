@@ -15,7 +15,7 @@ net.Receive("Lava.SelectAbility", function( _, Player )
 	local desired = net.ReadString()
 	if not Abilities.Skills[ desired ] then return end
 	if Abilities.Skills[ desired ][4] and Player:GetAbility() ~= "" then
-		Abilities.Skills[ desired ][4]( Player )
+		Abilities.Skills[ Player:GetAbility() ][4]( Player )
 	end
 
 	Player.PreferedAbility = desired
