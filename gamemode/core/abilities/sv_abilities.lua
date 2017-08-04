@@ -14,12 +14,13 @@ end)
 net.Receive("Lava.SelectAbility", function( _, Player )
 	local desired = net.ReadString()
 	if not Abilities.Skills[ desired ] then return end
-	if Player:GetAbility() ~= "" and Abilities.Skills[ Player:GetAbility() ] and Abilities.Skills[ Player:GetAbility() ][4] then
-		Abilities.Skills[ Player:GetAbility() ][4]( Player )
-	end
 
 	Player.PreferedAbility = desired
 	if Rounds.CurrentState == "Preround" then
+		if Player:GetAbility() ~= "" and Abilities.Skills[ Player:GetAbility() ] and Abilities.Skills[ Player:GetAbility() ][4] then
+			Abilities.Skills[ Player:GetAbility() ][4]( Player )
+		end
+
 		Player:SetAbility( Player.PreferedAbility )
 		if Abilities.Skills[ desired ][ 3 ] then
 			Abilities.Skills[ desired ][ 3 ]( Player )
