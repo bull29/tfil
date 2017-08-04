@@ -66,7 +66,7 @@ end)
 local SoundsList = {"vo/npc/male01/help01.wav", "ambient/voices/m_scream1.wav", "vo/npc/male01/myleg02.wav", "vo/npc/male01/myleg01.wav", "vo/npc/male01/ohno.wav", "vo/npc/male01/moan01.wav", "vo/npc/male01/moan03.wav", "vo/ravenholm/monk_helpme03.wav"}
 
 hook.Add("PlayerTick", "LavaHurt", function(Player)
-	if Player.m_Ragdoll and Player.m_Ragdoll:GetPos().z <= Lava.CurrentLevel then
+	if Player.m_Ragdoll and Player.m_Ragdoll:LocalToWorld( Player.m_Ragdoll:OBBMins() ).z <= Lava.CurrentLevel then
 		Ragdoll.Disable(Player)
 	end
 
