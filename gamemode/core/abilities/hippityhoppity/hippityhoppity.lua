@@ -5,13 +5,13 @@ hook.Add("GetFallDamage", "AvoidFallDamageHH", function(Player, Speed )
 		if not Player:Crouching() then
 			Player:SetVelocity( ( Player:GetAimVector() * 0.35 ):SetZ( 1.2 ) * ( Speed*0.75 ) )
 		end
-		return ( CalculateBaseFallDamage( Speed ) * 0.75 ):min( 15 )
+		return ( CalculateBaseFallDamage( Speed ) * 0.75 ):min( 5 )
 	end
 end)
 
 Abilities.Register("Hippity Hoppity", [[When you hit the ground
 	at a high velocity, you hop
-	extremely high, taking a flat maximum of 15
+	extremely high, taking a flat maximum of 5
 	fall damage no matter the height. 
 	Similar to Skippy feet. Extremely useful for
 	vertical-oriented maps. 
