@@ -44,4 +44,4 @@ hook.Add("Lava.PostPlayerSpawn", "SetDefaults", SetDefaultValues )
 
 Abilities.Register("Weasel", [[You have the ability to become tiny
 	to fit into otherwise unreachable spaces.
-	Press R.]], 1517)
+	Press R.]], 1517, nil, SetDefaultValues )

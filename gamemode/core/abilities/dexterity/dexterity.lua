@@ -12,4 +12,13 @@ end)
 
 Abilities.Register("Dexterity", [[Your running speed
 	and jumping power is doubled,
-	and you take ~60% less fall damage.]], 2106 )
+	and you take ~60% less fall damage.]], 2106,
+	function( Player )
+		Player:SetRunSpeed( 400 )
+		Player:SetWalkSpeed( 300 )
+		Player:SetJumpPower( 400 )
+	end, function( Player )
+		Player:SetRunSpeed( 225 )
+		Player:SetWalkSpeed( 175 )
+		Player:SetJumpPower( 250 )
+	end )

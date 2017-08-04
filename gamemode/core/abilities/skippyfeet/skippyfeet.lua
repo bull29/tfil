@@ -27,4 +27,11 @@ Abilities.Register("Skippy Feet", [[This is probably the most
 	functionally useful ability.
 	Ever wanted to have a quick way out in a pinch?
 	Everytime you hit lava, you fly away!
-	You don't take fall damage either; at the cost of 1/2 Starting HP.]], 2434 )
+	You don't take fall damage either; at the cost of 1/2 Starting HP.]], 2434, function( Player )
+		Player:SetMaxHealth( 30 )
+		Player:SetHealth( 30 )
+	end,
+	function( Player )
+		Player:SetMaxHealth( 100 )
+		Player:SetHealth( 100 )
+	end)

@@ -19,4 +19,16 @@ function GM:ShouldCollide( A, B )
 	end
 end
 
-Abilities.Register("Casper", [[You don't collide with players and move slightly faster than others. Extremely beneficial on maps with narrow pathways.]], 1200 )
+Abilities.Register("Casper", [[You don't collide with players and move slightly faster than others. Extremely beneficial on maps with narrow pathways.]], 1200,
+function( Player )
+	Player:SetCustomCollisionCheck( true )
+	Player:CollisionRulesChanged()
+	Player:SetRunSpeed( 225 * 1.3 )
+	Player:SetWalkSpeed( 175 * 1.3 )
+end,
+function( Player )
+	Player:SetCustomCollisionCheck( false )
+	Player:CollisionRulesChanged()
+	Player:SetRunSpeed( 225 )
+	Player:SetWalkSpeed( 175 )
+end)
