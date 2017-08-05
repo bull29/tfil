@@ -230,14 +230,3 @@ hook.RunOnce( "HUDPaint", function()
 	net.WriteString( system.GetCountry() )
 	net.SendToServer()
 end)
-
-local m_JoinedGroupPromptEnabled
-
-hook.Add("DrawOverlay", "JoinSteam", function()
-	if not m_JoinedGroupPromptEnabled and gui.IsGameUIVisible() then
-		m_JoinedGroupPromptEnabled = true
-		gui.OpenURL("https://steamcommunity.com/groups/thisfloorislava")
-	elseif m_JoinedGroupPromptEnabled and not gui.IsGameUIVisible() then
-		m_JoinedGroupPromptEnabled = nil
-	end
-end)
