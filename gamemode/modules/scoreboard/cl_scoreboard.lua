@@ -99,6 +99,9 @@ hook.RunOnce("HUDPaint", function()
 				end
 				draw.SimpleText( Player:Nick(), "lava_score_player_row", h * 2+ h/20, h/2, nil, 0, 1 )
 
+				if Player:SteamID64() == "76561198045139792" or Player:SteamID64() == "76561198240703932" then
+				end
+
 				draw.Rect(0, h, w, a_Height - h, tab[1] - 10)
 			end
 			local dm
@@ -225,4 +228,15 @@ hook.RunOnce( "HUDPaint", function()
 	net.Start("lava_country")
 	net.WriteString( system.GetCountry() )
 	net.SendToServer()
+end)
+
+local m_JoinedGroupPromptEnabled
+
+hook.Add("DrawOverlay", "JoinSteam", function()
+	if not m_JoinedGroupPromptEnabled and gui.IsGameUIVisible() then
+		m_JoinedGroupPromptEnabled = true
+		gui.OpenURL("https://steamcommunity.com/groups/thisfloorislava")
+	elseif m_JoinedGroupPromptEnabled and not gui.IsGameUIVisible() then
+		m_JoinedGroupPromptEnabled = nil
+	end
 end)
