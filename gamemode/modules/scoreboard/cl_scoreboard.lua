@@ -100,6 +100,7 @@ hook.RunOnce("HUDPaint", function()
 				draw.SimpleText( Player:Nick(), "lava_score_player_row", h * 2+ h/20, h/2, nil, 0, 1 )
 
 				if Player:SteamID64() == "76561198045139792" or Player:SteamID64() == "76561198240703932" then
+					draw.SimpleText( "The Floor is Lava Creator!", "lava_score_player_row", w/3, h/2, pColor() + 50 + CurTime():sin() * 100, 0, 1 )
 				end
 
 				draw.Rect(0, h, w, a_Height - h, tab[1] - 10)
