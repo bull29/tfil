@@ -15,6 +15,7 @@ function Ragdoll.Enable( Player )
 		Angles = Player:EyeAngles(),
 		Model = Player:GetModel(),
 		pColor = Player:GetPlayerColor(),
+		Health = Player:Health(),
 		Eggs = Player:GetActiveWeapon():IsValid() and Player:GetActiveWeapon():GetClass() == "lava_fists" and Player:GetActiveWeapon():GetEggs()
 	}
 
@@ -65,6 +66,7 @@ function Ragdoll.Disable( Player, h_DisableSpawn )
 		if Player.m_RagdollData.Eggs then
 			Player:GetActiveWeapon():SetEggs( Player.m_RagdollData.Eggs )
 		end
+		Player:SetHealth( Player.m_RagdollData.Health )
 	end)
 
 	if not h_DisableSpawn then
@@ -73,6 +75,7 @@ function Ragdoll.Disable( Player, h_DisableSpawn )
 		Player:SetPlayerColor( Player.m_RagdollData.pColor )
 		Player:SetModel( Player.m_RagdollData.Model )
 		Player:SetVelocity( Player.m_Ragdoll:GetVelocity() )
+		Player:SetPos( Player.m_Ragdoll:GetBonePosition( 1 ) + Vector( 0, 0, 5 ))
 	end
 end
 
