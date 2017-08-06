@@ -95,8 +95,6 @@ function PANEL:Init()
 	self.mapList:SetPadding(4)
 	self.mapList:EnableHorizontal(true)
 	self.mapList:EnableVerticalScrollbar()
-
-
 	self.Voters = {}
 end
 
@@ -107,7 +105,7 @@ function PANEL:PerformLayout()
 	local extra = math.Clamp(300, 0, ScrW() - 640)
 	self.Canvas:StretchToParent(0, 0, 0, 0)
 	self.Canvas:SetWide(640 + extra)
-	self.Canvas:SetTall( ScrH() * 0.8 )
+	self.Canvas:SetTall(ScrH() * 0.8)
 	self.Canvas:SetPos(0, 0)
 	self.Canvas:CenterHorizontal()
 	self.Canvas:SetZPos(0)
@@ -214,7 +212,7 @@ function PANEL:SetMaps(maps)
 
 			button.Paint = function(s, w, h)
 				t[1], t[2] = pColor():Alpha(50) - 50, pColor():Alpha(150) - 25
-				draw.RoundedBox(4, 0, 0, w, h, s.Selected and Color( 255, 0, 0 ) or s.sma)
+				draw.RoundedBox(4, 0, 0, w, h, s.Selected and Color(255, 0, 0) or s.sma)
 				Paint(s, w, h)
 			end
 

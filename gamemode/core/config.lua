@@ -29,5 +29,6 @@ NewConfig( "PreroundTime", "45", "rounds_preroundtime", "NUM")
 NewConfig( "RoundTime", "600", "rounds_roundtime", "NUM")
 NewConfig( "PostRoundTime", "25", "rounds_postroundtime", "NUM")
 NewConfig( "MapSwitchTime", "6", "rounds_mapswitchtime", "NUM")
+NewConfig( "DisableDefaultMapVote", "0", "disable_default_mapvote", "BOOL")
 
 GM.Config = Config
