@@ -19,7 +19,7 @@ local tab = {
 }
 
 hook.Add("RenderScreenspaceEffects", "DrawESP", function()
-	m_Activate = m_Activate and not m_HaveUsedupMeter and not hook.Call("Lava.ShouldBlockESP", nil, LocalPlayer() ) and LocalPlayer():Alive()
+	m_Activate = m_Activate and not m_HaveUsedupMeter and not hook.Call("Lava.ShouldBlockESP", nil, LocalPlayer() )
 
 	if not m_Activate then
 		tab["$pp_colour_colour"] = tab["$pp_colour_colour"]:lerp( 1 )
@@ -72,6 +72,11 @@ hook.Add("PostRenderVGUI", "RenderEmojis", function()
 				PlayerPosTab[ Player ] = nil
 			end
 		end
+	end
+
+	if not LocalPlayer():Alive() then
+		m_ESPMeter = 100
+		return
 	end
 
 	if m_ESPMeter < 100 then
