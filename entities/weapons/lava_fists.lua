@@ -100,7 +100,9 @@ function SWEP:PrimaryAttack(NoForce)
 
 			local Entity = tR_v.Entity
 			if not IsValid(Entity) then return end
-
+			if Entity:IsPlayer() and Entity:GetMoveType() == 9 then
+				Entity:SetMoveType( 2 )
+			end
 			if not Entity:IsPlayer() then
 				if Entity:GetPhysicsObject():IsValid() then
 					Entity:GetPhysicsObject():AddVelocity(self.Owner:GetAimVector() * (10000 * Entity:GetPhysicsObject():GetMass():Clamp(1, 100)))
