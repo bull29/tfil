@@ -103,6 +103,10 @@ hook.RunOnce("HUDPaint", function()
 					draw.SimpleText( "The Floor is Lava Creator!", "lava_score_player_row", w/3, h/2, pColor() + 50 + CurTime():sin() * 100, 0, 1 )
 				end
 
+                if Player:SteamID64() == "76561198154133184" then
+					draw.SimpleText( "MLG The floor is Lava Player!", "lava_score_player_row", w/3, h/2, pColor() + 50 + CurTime():sin() * 100, 0, 1 )
+				end
+
 				draw.Rect(0, h, w, a_Height - h, tab[1] - 10)
 			end
 			local dm
@@ -229,15 +233,4 @@ hook.RunOnce( "HUDPaint", function()
 	net.Start("lava_country")
 	net.WriteString( system.GetCountry() )
 	net.SendToServer()
-end)
-
-local m_JoinedGroupPromptEnabled
-
-hook.Add("DrawOverlay", "JoinSteam", function()
-	if not m_JoinedGroupPromptEnabled and gui.IsGameUIVisible() then
-		m_JoinedGroupPromptEnabled = true
-		gui.OpenURL("https://steamcommunity.com/groups/thisfloorislava")
-	elseif m_JoinedGroupPromptEnabled and not gui.IsGameUIVisible() then
-		m_JoinedGroupPromptEnabled = nil
-	end
 end)

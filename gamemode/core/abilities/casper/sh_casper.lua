@@ -17,6 +17,7 @@ function GM:ShouldCollide( A, B )
 	if A:IsPlayer() and B:IsPlayer() and ( A:HasAbility("Casper") or B:HasAbility("Casper") ) then
 		return false
 	end
+	return true
 end
 
 Abilities.Register("Casper", [[You don't collide with players and move slightly faster than others. Extremely beneficial on maps with narrow pathways.]], 1200,
