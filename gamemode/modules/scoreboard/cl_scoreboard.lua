@@ -155,6 +155,7 @@ hook.RunOnce("HUDPaint", function()
 			e:SetSize(ScrH() / 25 - WebElements.Edge/2, ScrH() / 25 - WebElements.Edge/2)
 			e:SetPos(WebElements.Edge / 4, WebElements.Edge / 4)
 			e.PaintCircle = function( s, w, h )
+				if not IsValid( Player ) then return end
 				draw.WebImage( Emoji.Get( Player:EmojiID() ), 0, 0, w, h )
 				draw.WebImage( WebElements.CircleOutline, 0, 0, w, h, Player:PlayerColor() )
 			end
