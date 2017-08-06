@@ -135,6 +135,43 @@ hook.RunOnce("HUDPaint", function()
 		draw.WebImage( Emoji.Get( Abilities.Skills[Player:GetAbility()][2] ), h / 2, h / 2, w - floor * 5, h - floor * 5, nil, CurTime():sin() * 5)
 	end)
 
+	local iDex = 1
+	AddHelper(function(CurPlayer, s, w, h)
+		local floor = (h / 20):floor()
+		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - 50)
+		draw.WebImage(WebElements.Circle, floor, floor, w - floor * 2, h - floor * 2, (pColor() - 100))
+		draw.WebImage(WebElements.CircleOutline, floor, floor, w - floor * 2, h - floor * 2, pColor())
+
+		local tab = player.GetAlive()
+		table.sort(tab, function(a, b) return (a:GetPos().z - Lava.GetLevel()) > (b:GetPos().z - Lava.GetLevel()) end)
+		iDex = 1
+
+		for Index, Player in pairs(tab) do
+			if Player == CurPlayer then
+				iDex = Index
+				break
+			end
+		end
+
+		if iDex < 4 then
+			draw.WebImage(Emoji.Get(495), h / 2, h / 2, h, h, nil, -CurTime():cos() * 25)
+			draw.WebImage(Emoji.Get(iDex == 1 and 2188 or iDex == 2 and 2189 or 2190), h / 2, h / 2, h * 0.8, h * 0.8, nil, CurTime():cos() * 30)
+		else
+			draw.WebImage(Emoji.Get(2189), h / 3, h / 3 * 2, h / 2, h / 2, nil, CurTime():sin() * 10)
+			draw.WebImage(Emoji.Get(2190), h / 3 * 2, h / 3 * 2, h / 2, h / 2, nil, CurTime():sin() * -10)
+			draw.WebImage(Emoji.Get(2188), h / 2, h / 3, h / 2, h / 2, nil, 0)
+		end
+
+
+		local ET = Emoji.ParseNumber(iDex)
+
+		if iDex > 3 then
+			for i = 1, #ET do
+				draw.WebImage(Emoji.Get(ET[i]), h / (1 + #ET) + (i - 1) * h / 3, h / 2, h / 3, h / 3, nil, 0)
+			end
+		end
+	end, true)
+
 	AddHelper(function(Player, s, w, h)
 		local floor = (h / 25):floor()
 		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - 50)
@@ -159,7 +196,7 @@ hook.Add("HUDPaint", "RenderSpectateControls", function()
 		tH:Hide()
 	end
 
-	if SpectatingPlayer() and not IsValid(LocalPlayer().m_Ragdoll) and tVH and not tShouldDisable then
+	if SpectatingPlayer() and SpectatingPlayer():Alive() and not IsValid(LocalPlayer().m_Ragdoll) and tVH and not tShouldDisable then
 		if not tVH:IsVisible() then
 			tVH:Show()
 		end
