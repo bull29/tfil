@@ -70,7 +70,7 @@ Mutators.RegisterNewEvent("Mystery Men", "Everybody is under an comprehensive al
 end, function()
 end)
 
-hook.RunOnce("HUDPaint", function()
+hook.RunOnce("Initialize", function()
 	if not vgui.GetControlTable("o_AvatarImage") then
 		local SetPlayer = debug.getregistry().Panel.SetPlayer
 
