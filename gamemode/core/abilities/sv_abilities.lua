@@ -2,7 +2,7 @@
 util.AddNetworkString("Lava.SelectAbility")
 
 hook.Add("PlayerInitialSpawn", "Abilities.SelectRandom", function( Player )
-	Player:SetAbility( table.Random( table.GetKeys( Abilities.Skills ) ) )
+	Player:SetAbility( Player:GetPData("$ability", false ) or table.Random( table.GetKeys( Abilities.Skills ) ) )
 end)
 
 hook.Add("PlayerSpawn", "Abilities.SetAbility", function( Player )
@@ -16,6 +16,7 @@ net.Receive("Lava.SelectAbility", function( _, Player )
 	if not Abilities.Skills[ desired ] then return end
 
 	Player.PreferedAbility = desired
+	Player:SetPData("$ability", desired )
 	if Rounds.CurrentState == "Preround" then
 		if Player:GetAbility() ~= "" and Abilities.Skills[ Player:GetAbility() ] and Abilities.Skills[ Player:GetAbility() ][4] then
 			Abilities.Skills[ Player:GetAbility() ][4]( Player )
