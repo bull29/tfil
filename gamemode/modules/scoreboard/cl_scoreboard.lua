@@ -7,14 +7,12 @@ local draw = draw
 local pColor = pColor
 local Config = Config
 
-local function AddDatapoint( icon, name, func )
-	table.insert( Datapoints, { icon, name, func }  )
+local function AddDatapoint(icon, name, func)
+	table.insert(Datapoints, {icon, name, func})
 end
 
-
 hook.RunOnce("HUDPaint", function()
-	hook.Call( "Lava.PopulateScoreboardPlayerButtons", nil, AddDatapoint )
-
+	hook.Call("Lava.PopulateScoreboardPlayerButtons", nil, AddDatapoint)
 	s = InitializePanel("LavaScore", "DPanel")
 	s:SetSize(ScrW() * 0.6, ScrH() * 0.8)
 	s:Center()
@@ -28,36 +26,38 @@ hook.RunOnce("HUDPaint", function()
 	end
 
 	local b = s:Add("DPanel")
-	b:Dock( BOTTOM )
-	b:SetTall( ScrH()/25 )
-	b.Paint = function( s, w, h )
-		draw.Rect( 0, 0, w, h, pColor() - 100 )
-		draw.WebImage( Emoji.Get( 835 ), h/2, h/2, h * 0.9, h * 0.9, nil, 0 )
-		draw.SimpleText( player.GetCount() .. "/" .. game.MaxPlayers(), "lava_score_title_sub", h * 1.2, h/2, nil, 0, 1 )
+	b:Dock(BOTTOM)
+	b:SetTall(ScrH() / 25)
 
-		draw.WebImage( Emoji.Get( 330 ), w - h/2, h/2, h * 0.85, h * 0.85, nil, 0 )
-		draw.SimpleText( game.GetMap(), "lava_score_title_sub", w - h * 1.2, h/2, nil, 2, 1 )
-
-		draw.SimpleText( ((Config.GetMapSwitchTime() - GetGlobalInt("$NextMapTime", 0 ) ):max( 0 ) .. " Round(s) until the next map. "), "lava_score_title_sub", w/2, h/2, nil, 1, 1 )
+	b.Paint = function(s, w, h)
+		draw.Rect(0, 0, w, h, pColor() - 100)
+		draw.WebImage(Emoji.Get(835), h / 2, h / 2, h * 0.9, h * 0.9, nil, 0)
+		draw.SimpleText(player.GetCount() .. "/" .. game.MaxPlayers(), "lava_score_title_sub", h * 1.2, h / 2, nil, 0, 1)
+		draw.WebImage(Emoji.Get(330), w - h / 2, h / 2, h * 0.85, h * 0.85, nil, 0)
+		draw.SimpleText(game.GetMap(), "lava_score_title_sub", w - h * 1.2, h / 2, nil, 2, 1)
+		draw.SimpleText(((Config.GetMapSwitchTime() - GetGlobalInt("$NextMapTime", 0)):max(0) .. " Round(s) until the next map. "), "lava_score_title_sub", w / 2, h / 2, nil, 1, 1)
 	end
+
 	local m = s:Add("DCirclePanel")
 	m:SetPos(ScrH() * 0.8 / 8 / 16, ScrH() * 0.8 / 8 / 16)
 	m:SetSize(ScrH() * 0.8 / 8, ScrH() * 0.8 / 8)
 	m.Shift = false
+
 	m.PaintCircle = function(s, w, h)
 		draw.WebImage(Emoji.Get(328), w / 2, h / 2, w, h, nil, CurTime():cos() * -15)
-		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - ( not m.Shift and 50 or -50 ) )
+		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - (not m.Shift and 50 or -50))
 	end
-
 
 	local as = m:Add("DLabel")
-	as:Dock( FILL )
+	as:Dock(FILL)
 	as:SetText""
-	as:SetMouseInputEnabled( true )
-	as.Paint = function( s, w, h )
+	as:SetMouseInputEnabled(true)
+
+	as.Paint = function(s, w, h)
 		m.Shift = s.Hovered
 	end
-	as.DoClick = function( s )
+
+	as.DoClick = function(s)
 		gui.OpenURL("https://steamcommunity.com/groups/thisfloorislava")
 	end
 
@@ -69,95 +69,111 @@ hook.RunOnce("HUDPaint", function()
 	function l:Repopulate()
 		self:GetCanvas():RemoveChildren()
 
-		local function AddPlayer(Player, Section )
+		local function AddPlayer(Player, Section)
 			local p = l:Add("DLabel")
 			p:Dock(TOP)
-			p:SetMouseInputEnabled( true )
+			p:SetMouseInputEnabled(true)
 			p:SetTall(ScrH() / 25)
 			p:SetText("")
 			p.InitialHeight = p:GetTall()
 			local tab = p:GenerateColorShift("sMA", Player:PlayerColor() * 0.75, Player:PlayerColor(), 128)
+
 			p.Paint = function(s, w, h)
 				local a_Height = h
 				h = s.InitialHeight
-				if not IsValid( Player ) then
+
+				if not IsValid(Player) then
 					s:Remove()
+
 					return
 				end
+
 				if Section == "P" and not Player:Alive() then
 					s:Remove()
-					AddPlayer( Player, "S" )
+					AddPlayer(Player, "S")
+
 					return
 				end
-				tab[1], tab[2] = Player:PlayerColor()* 0.75, Player:PlayerColor(),
-				draw.Rect(0, 0, w, h, s.sMA)
 
-				draw.SimpleText( Player:Ping(), "lava_score_player_row", w - h * 1.5, h/2, nil, 1, 1 )
+				tab[1], tab[2] = Player:PlayerColor() * 0.75, Player:PlayerColor()
+				draw.SimpleText(Player:Ping(), "lava_score_player_row", w - h * 1.5, h / 2, nil, 1, 1)
 
-				if Player:GetNWString("$country", false ) then
-					draw.WebImage( Flag:fill( Player:GetNWString("$country") ), w - h * 0.6, h / 2, h * 0.7, h * 0.7 * 0.6875 - 1, nil, 0 )
-				end
-				draw.SimpleText( Player:Nick(), "lava_score_player_row", h * 2+ h/20, h/2, nil, 0, 1 )
-
-				if Player:SteamID64() == "76561198045139792" or Player:SteamID64() == "76561198240703932" then
-					draw.SimpleText( "The Floor is Lava Creator!", "lava_score_player_row", w/3, h/2, pColor() + 50 + CurTime():sin() * 100, 0, 1 )
+				if Player:GetNWString("$country", false) then
+					draw.WebImage(Flag:fill(Player:GetNWString("$country")), w - h * 0.6, h / 2, h * 0.7, h * 0.7 * 0.6875 - 1, nil, 0)
 				end
 
-                if Player:SteamID64() == "76561198154133184" then
-					draw.SimpleText( "MLG The floor is Lava Player!", "lava_score_player_row", w/3, h/2, pColor() + 50 + CurTime():sin() * 100, 0, 1 )
+				draw.SimpleText(Player:Nick(), "lava_score_player_row", h * 2 + h / 20, h / 2, nil, 0, 1)
+
+				if Player:IsLavaCreator() then
+					draw.SimpleText("The Floor is Lava Creator!", "lava_score_player_row", w / 3, h / 2, pColor() + 50 + CurTime():sin() * 100, 0, 1)
+				end
+
+				if Player:SteamID64() == "76561198154133184" then
+					draw.SimpleText("MLG The floor is Lava Player!", "lava_score_player_row", w / 3, h / 2, pColor() + 50 + CurTime():sin() * 100, 0, 1)
 				end
 
 				draw.Rect(0, h, w, a_Height - h, tab[1] - 10)
 			end
+
 			local dm
-			p.DoClick = function( s )
-				if dm and IsValid( dm ) then
+
+			p.DoClick = function(s)
+				if dm and IsValid(dm) then
 					dm:Remove()
 					dm = nil
 				end
+
 				dm = vgui.Create("DMenu")
-				dm:SetDrawBackground( false )
-				for k, v in pairs( Datapoints ) do
-					local x = dm:AddOption( v[2], function()
-						v[3]( Player, dm )
+				dm:SetDrawBackground(false)
+
+				for k, v in pairs(Datapoints) do
+					local x = dm:AddOption(v[2], function()
+						v[3](Player, dm)
 					end)
-					x:SetTextColor( color_white )
+
+					x:SetTextColor(color_white)
 					x:SetFont("lava_dmenu")
-					x:GenerateColorShift( "hVar", Player:PlayerColor() - 25, Player:PlayerColor() + 25, 255 )
-					x.Paint = function( s, w, h )
-						draw.Rect( 0, 0, w, h, s.hVar)
-						draw.WebImage( Emoji.Get( v[1] ), h/2, h/2, h * 0.7, h * 0.7, nil, s.Hovered and CurTime():cos() * 15 or 0 )
+					x:GenerateColorShift("hVar", Player:PlayerColor() - 25, Player:PlayerColor() + 25, 255)
+
+					x.Paint = function(s, w, h)
+						draw.Rect(0, 0, w, h, s.hVar)
+						draw.WebImage(Emoji.Get(v[1]), h / 2, h / 2, h * 0.7, h * 0.7, nil, s.Hovered and CurTime():cos() * 15 or 0)
 					end
 				end
+
 				dm:Open()
-				dm.Think = function( s, w, h )
-					if not input.IsKeyDown( KEY_TAB ) then
+
+				dm.Think = function(s, w, h)
+					if not input.IsKeyDown(KEY_TAB) then
 						s:Remove()
 					end
 				end
-				dm.Paint = function( s, w, h )
-					if not IsValid( Player ) then
+
+				dm.Paint = function(s, w, h)
+					if not IsValid(Player) then
 						s:Remove()
 						dm = nil
+
 						return
 					end
-					draw.Rect( 0, 0, w, h, Player:PlayerColor() )
+
+					draw.Rect(0, 0, w, h, Player:PlayerColor())
 				end
 			end
 
 			local v = p:Add("AvatarImage")
-			v:SetSize(ScrH() / 25 - WebElements.Edge/2, ScrH() / 25 - WebElements.Edge/2)
-			v:SetPos( ScrH()/25 + WebElements.Edge / 4, WebElements.Edge / 4)
+			v:SetSize(ScrH() / 25 - WebElements.Edge / 2, ScrH() / 25 - WebElements.Edge / 2)
+			v:SetPos(ScrH() / 25 + WebElements.Edge / 4, WebElements.Edge / 4)
 			v:SetPlayer(Player, 184)
-			v:MakeBorder( WebElements.Edge/2, Player:GetPlayerColor():ToColor() - 50 )
-
+			v:MakeBorder(WebElements.Edge / 2, Player:GetPlayerColor():ToColor() - 50)
 			local e = p:Add("DCirclePanel")
-			e:SetSize(ScrH() / 25 - WebElements.Edge/2, ScrH() / 25 - WebElements.Edge/2)
+			e:SetSize(ScrH() / 25 - WebElements.Edge / 2, ScrH() / 25 - WebElements.Edge / 2)
 			e:SetPos(WebElements.Edge / 4, WebElements.Edge / 4)
-			e.PaintCircle = function( s, w, h )
-				if not IsValid( Player ) then return end
-				draw.WebImage( Emoji.Get( Player:EmojiID() ), 0, 0, w, h )
-				draw.WebImage( WebElements.CircleOutline, 0, 0, w, h, Player:PlayerColor() )
+
+			e.PaintCircle = function(s, w, h)
+				if not IsValid(Player) then return end
+				draw.WebImage(Emoji.Get(Player:EmojiID()), 0, 0, w, h)
+				draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, Player:PlayerColor())
 			end
 		end
 
@@ -168,15 +184,15 @@ hook.RunOnce("HUDPaint", function()
 		aHeader:SetText("Players")
 		aHeader:SetTextColor(color_white)
 		aHeader:SetTextInset(ScrW() / 100, 0)
+
 		aHeader.Paint = function(s, w, h)
 			draw.Rect(0, 0, w, h, pColor() - 75)
-			draw.WebImage( Emoji.Get( 1411 ), w - h * 1.9, h * 0.1, h * 0.8, h* 0.8 )
+			draw.WebImage(Emoji.Get(1411), w - h * 1.9, h * 0.1, h * 0.8, h * 0.8)
 		end
 
 		for Player in Values(player.GetAlive()) do
 			AddPlayer(Player, "P")
 		end
-
 
 		if #player.GetDead() ~= 0 then
 			local bHeader = l:Add("DLabel")
@@ -184,7 +200,7 @@ hook.RunOnce("HUDPaint", function()
 			bHeader:SetTall(ScrH() / 25)
 			bHeader:SetFont("lava_score_header")
 			bHeader:SetText("Spectators")
-			bHeader:SetTextColor( color_white )
+			bHeader:SetTextColor(color_white)
 			bHeader:SetTextInset(ScrW() / 100, 0)
 
 			bHeader.Paint = function(s, w, h)
@@ -215,23 +231,26 @@ function GM:ScoreboardHide()
 	end
 end
 
-hook.Add("Lava.PopulateScoreboardPlayerButtons", "AddDefaultButtons", function( func )
-	func( 2620, "Show Profile", function( Player )
+hook.Add("Lava.PopulateScoreboardPlayerButtons", "AddDefaultButtons", function(func)
+	func(2620, "Show Profile", function(Player)
 		Player:ShowProfile()
 	end)
-	func( 1427, "Toggle Mute", function( Player, Panel )
-		Player:SetMuted( not Player:IsMuted() )
-		chat.AddText( ("Player ${1} has been ${2}."):fill( Player:Nick(), Player:IsMuted() and "Muted" or "Unmuted") )
+
+	func(1427, "Toggle Mute", function(Player, Panel)
+		Player:SetMuted(not Player:IsMuted())
+		chat.AddText(("Player ${1} has been ${2}."):fill(Player:Nick(), Player:IsMuted() and "Muted" or "Unmuted"))
 	end)
-	func( 1453, "Copy SteamID", function( Player )
-		SetClipboardText( Player:SteamID64() )
-		chat.AddText( ("${1}'s SteamID ${2} has been copied to clipboard."):fill( Player:Nick(), Player:SteamID64()) )
+
+	func(1453, "Copy SteamID", function(Player)
+		SetClipboardText(Player:SteamID64())
+		chat.AddText(("${1}'s SteamID ${2} has been copied to clipboard."):fill(Player:Nick(), Player:SteamID64()))
 	end)
-	func( 2424, "?????", function() end)
+
+	func(2424, "?????", function() end)
 end)
 
-hook.RunOnce( "HUDPaint", function() 
+hook.RunOnce("HUDPaint", function()
 	net.Start("lava_country")
-	net.WriteString( system.GetCountry() )
+	net.WriteString(system.GetCountry())
 	net.SendToServer()
 end)

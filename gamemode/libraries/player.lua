@@ -31,6 +31,10 @@ function Player:CheckHullCollision()
 	return false
 end
 
+function Player:IsLavaCreator()
+	return self:SteamID64() == "76561198045139792" or self:SteamID64() == "76561198240703932"
+end
+
 function Player:PlayerColor()
 	return setmetatable( self:GetPlayerColor():ToColor(), Color )
 end
