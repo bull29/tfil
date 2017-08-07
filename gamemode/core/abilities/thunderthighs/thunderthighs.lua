@@ -1,7 +1,7 @@
 
 
 local function func( Player )
-	if Player:HasAbility("Thunder Thighs") and Player:LookupBone("ValveBiped.Bip01_R_Thigh") then
+	if Player:IsValid() and Player:HasAbility("Thunder Thighs") and Player:LookupBone("ValveBiped.Bip01_R_Thigh") then
 		if ( Player:GetBonePosition( Player:LookupBone("ValveBiped.Bip01_R_Thigh")).z ) > Lava.GetLevel() then
 			return false
 		end
