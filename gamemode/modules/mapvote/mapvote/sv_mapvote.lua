@@ -38,7 +38,7 @@ else
 end
 
 function MapVote.Start(length, current, limit, prefix, callback)
-	if not Config.GetDisableDefaultMapVote then return end
+	if Config.GetDisableDefaultMapVote then return end
 	current = current or MapVote.Config.AllowCurrentMap or false
 	length = length or MapVote.Config.TimeLimit or 28
 	limit = limit or MapVote.Config.MapLimit or 24
