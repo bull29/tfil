@@ -86,6 +86,7 @@ hook.Add("NetworkEntityCreated", "ExposeRagdoll", function( ent )
 		ent:DestroyShadow()
 		ent:SnatchModelInstance( ent.m_Player )
 		ent.GetPlayerColor = function( self )
+			if not self:IsValid() then return end
 			return self.m_Player:GetPlayerColor()
 		end
 	end
