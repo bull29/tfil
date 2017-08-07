@@ -8,6 +8,13 @@ function GM:Tick()
 	end
 end
 
+function GM:ShouldCollide( A, B )
+	if A:IsPlayer() and B:IsPlayer() and ( A:GetMoveType() == 9 or B:GetMoveType() == 9 ) then
+		return false
+	end
+	return true
+end
+
 function GM:OnGamemodeLoaded()
 	GAMEMODE, GM = gmod.GetGamemode(), gmod.GetGamemode()
 end
