@@ -24,7 +24,7 @@ function Player:CheckHullCollision()
 		maxs = self:OBBMaxs(),
 	}
 
-	if tR.Entity and (tR.Entity:IsWorld() or IsValid(tR.Entity) or tR.StartSolid or tR.AllSolid ) then
+	if self:GetMoveType() ~= 9 and not self:HasAbility("Casper") and tR.Entity and (tR.Entity:IsWorld() or IsValid(tR.Entity) or tR.StartSolid or tR.AllSolid ) then
 		return tR
 	end
 
