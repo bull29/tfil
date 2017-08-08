@@ -11,6 +11,7 @@ function GM:PlayerSpawn(Player)
 	hook.Call( "PlayerLoadout", GAMEMODE, Player )
 	hook.Call("Lava.PostPlayerSpawn", nil, Player )
 	Player:Extinguish()
+	Player:SetCustomCollisionCheck( true )
 	Player:CollisionRulesChanged()
 end
 
