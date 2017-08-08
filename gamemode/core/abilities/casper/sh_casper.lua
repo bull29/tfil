@@ -22,7 +22,11 @@ hook.Add("SetupMove", "CASPER", function(Player, Movedata, Command)
 
 		if Command:KeyDown(IN_RELOAD) and Movedata:GetVelocity().z > -25 and not Player.m_HasUsedupCasperMeter and not Player:OnGround() then
 			Player:SetGroundEntity(Entity(0))
+			Movedata:RemoveKey(2)
+			Movedata:RemoveKey(4)
 
+			Command:RemoveKey(2)
+			Command:RemoveKey(4)
 			if SERVER then
 				Player:SetNW2Bool("$casper", true)
 				Player.m_CasperMeter = (Player.m_CasperMeter - (FrameTime()) * 15):max(0)
