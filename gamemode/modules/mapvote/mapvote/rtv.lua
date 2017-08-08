@@ -14,7 +14,7 @@ function RTV.RemoveVote()
 end
 
 function RTV.Start()
-	if Config.GetDisableDefaultMapVote then return end
+	if Config.GetDisableDefaultMapVote() then return end
 
 	if GAMEMODE_NAME == "terrortown" then
 		net.Start("RTV_Delay")
@@ -40,7 +40,7 @@ function RTV.Start()
 end
 
 function RTV.AddVote(ply)
-	if Config.GetDisableDefaultMapVote then return end
+	if Config.GetDisableDefaultMapVote() then return end
 
 	if RTV.CanVote(ply) then
 		RTV.TotalVotes = RTV.TotalVotes + 1
