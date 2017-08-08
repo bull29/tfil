@@ -6,7 +6,7 @@ hook.Add("Lava.FullTick", "CachePlayerPositions", function()
 		local Stuck = Player:CheckHullCollision()
 		if not Stuck then
 			Player.m_LastValidPosition = Player:GetPos()
-		elseif Player:Alive() and Stuck then
+		elseif Player:GetMoveType() ~= 8 and Player:Alive() and Stuck then
 			Player:SetPos( Player.m_LastValidPosition )
 		end
 	end
