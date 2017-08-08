@@ -26,6 +26,7 @@ net.Receive("Lava.SelectAbility", function( _, Player )
 		if Abilities.Skills[ desired ][ 3 ] then
 			Abilities.Skills[ desired ][ 3 ]( Player )
 		end
+		Player:Spawn()
 	end
 end)
 
