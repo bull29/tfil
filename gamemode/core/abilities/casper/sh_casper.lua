@@ -13,11 +13,14 @@ hook.Add("ShouldCollide", "DisableCasperCollisions", function(A, B)
 end)
 
 hook.Add("SetupMove", "CASPER", function(Player, Movedata, Command)
-	if Player:HasAbility("Casper") and not Player:OnGround() then
+	if Player:HasAbility("Casper") then
+		if not Player:Alive() then
+			Player.m_CasperMeter = 100
+			return
+		end
 		Player.m_CasperMeter = Player.m_CasperMeter or 100
 
-		if Command:KeyDown(IN_RELOAD) and Movedata:GetVelocity().z > -25 and not Player.m_HasUsedupCasperMeter then
-			Command:RemoveKey( 2 )
+		if Command:KeyDown(IN_RELOAD) and Movedata:GetVelocity().z > -25 and not Player.m_HasUsedupCasperMeter and not Player:OnGround() then
 			Player:SetGroundEntity(Entity(0))
 
 			if SERVER then
@@ -48,7 +51,7 @@ local m_HasPlayerUsedupMeter
 
 hook.Add("HUDPaint", "CasperMeter", function()
 	m_Meter = LocalPlayer():GetNW2Int("$caspermeter", 100)
-	if m_Meter == 100 or not LocalPlayer():HasAbility("Casper") or not LocalPlayer():GetNW2Int("$caspermeter", 100) then return end
+	if m_Meter == 100 or not LocalPlayer():HasAbility("Casper") or not LocalPlayer():Alive() then return end
 	draw.WebImage(Emoji.Get(1200), ScrW() / 2, ScrH() - ScrH() / 10, ScrH() / 7, ScrH() / 7, pColor():Alpha(100), 0)
 	draw.WebImage(Emoji.Get(1200), ScrW() / 2, ScrH() - ScrH() / 10, m_Meter / 100 * ScrH() / 7, m_Meter / 100 * ScrH() / 7, White:Alpha(m_HasPlayerUsedupMeter and 100 or 255), 0)
 
