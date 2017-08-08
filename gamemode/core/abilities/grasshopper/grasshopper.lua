@@ -20,7 +20,7 @@ hook.Add("SetupMove", "Grasshopper", function( Player, Movedata )
 	end
 end)
 
-hook.Add("GetFallDamage", "AvoidFallDamageGrass", function(Player)
+hook.Add("GetFallDamage", "AvoidFallDamageGrass", function(Player, Speed)
 	if Player:HasAbility("Grasshopper") then return CalculateBaseFallDamage( Speed )/4 end
 end)
 
