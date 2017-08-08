@@ -20,4 +20,9 @@ hook.Add("SetupMove", "Grasshopper", function( Player, Movedata )
 	end
 end)
 
-Abilities.Register("Grasshopper", [[You sexually identify as an grasshopper and as a result, you can triple jump. You have a slightly higher jump-power than others.]], 2245 )
+hook.Add("GetFallDamage", "AvoidFallDamageGrass", function(Player)
+	if Player:HasAbility("Grasshopper") then return CalculateBaseFallDamage( Speed )/4 end
+end)
+
+
+Abilities.Register("Grasshopper", [[You sexually identify as an grasshopper and as a result, you can triple jump. You have a slightly higher jump-power than others, taking 75% less fall damage.]], 2245 )
