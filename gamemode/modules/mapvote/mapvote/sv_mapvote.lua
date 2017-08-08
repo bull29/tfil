@@ -38,12 +38,11 @@ else
 end
 
 function MapVote.Start(length, current, limit, prefix, callback)
-	if Config.GetDisableDefaultMapVote() then return end
 	current = current or MapVote.Config.AllowCurrentMap or false
 	length = length or MapVote.Config.TimeLimit or 28
 	limit = limit or MapVote.Config.MapLimit or 24
 	cooldown = MapVote.Config.EnableCooldown or MapVote.Config.EnableCooldown == nil and true
-	prefix = {"ttt_", "gm_"}
+	prefix = {"ttt_", "gm_", "zs", "hns"}
 	local is_expression = false
 
 	if not prefix then
