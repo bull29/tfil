@@ -27,7 +27,11 @@ function Ragdoll.Enable( Player )
 	ragdoll:DrawShadow(false )
 	ragdoll:SetNW2Entity( "m_PlayerParent", Player )
 	ragdoll:Activate()
-
+	hook.Add("Tick", ragdoll, function()
+		if not IsValid( Player ) then
+			ragdoll:Remove()
+		end
+	end)
 	Player:SetParent( ragdoll )
 
 	local velocity = Player:GetVelocity()
