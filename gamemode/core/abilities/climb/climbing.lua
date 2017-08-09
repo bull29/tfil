@@ -82,7 +82,7 @@ hook.Add("SetupMove", "Climbing", function(Player, MoveData, Command)
 		Player.m_HaveUsedupClimbAbility = nil
 	end
 
-	if Command:KeyDown( 2 ) and not Player.m_HaveUsedupClimbAbility and Player.m_ClimbAbilityMeter > 0 and tr.Hit and not tr.HitSky and x.p:floor() == 0 and x.r == 0 then
+	if Command:KeyDown( 2 ) and not Command:KeyDown( 4 ) and not Player.m_HaveUsedupClimbAbility and Player.m_ClimbAbilityMeter > 0 and tr.Hit and not tr.HitSky and x.p:floor() == 0 and x.r == 0 then
 		if SERVER and not Player:IsInWorld() then return end
 		if hook.Call("Lava.CanClimb", nil, Player, tr.HitTexture) == false then return end
 		Player.m_HasClimbedLast = true
@@ -101,10 +101,6 @@ hook.Add("SetupMove", "Climbing", function(Player, MoveData, Command)
 
 		if CLIENT then
 			_cEnabled = true
-		end
-
-		if MoveData:KeyDown(6) then
-			MoveData:RemoveKey(6)
 		end
 
 		MoveData:SetMoveAngles(Angle(0, x.y + 180, 0))
