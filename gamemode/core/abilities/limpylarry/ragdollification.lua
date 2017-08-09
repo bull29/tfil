@@ -32,6 +32,18 @@ function Ragdoll.Enable( Player )
 			ragdoll:Remove()
 		end
 	end)
+	for i = 0, Player:GetBoneCount() - 1 do
+		local bone = ragdoll:GetPhysicsObjectNum( i )
+		
+		if IsValid( bone ) then
+			local pos, ang = Player:GetBonePosition( ragdoll:TranslatePhysBoneToBone( i ) )
+			
+			if pos and ang then
+				bone:SetPos( pos )
+				bone:SetAngles( ang )
+			end
+		end
+	end
 	Player:SetParent( ragdoll )
 
 	local velocity = Player:GetVelocity()

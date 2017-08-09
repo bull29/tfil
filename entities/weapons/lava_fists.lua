@@ -109,6 +109,7 @@ function SWEP:PrimaryAttack(NoForce)
 				end
 			elseif hook.Call( "Lava.PlayerPushPlayer", nil, self.Owner, Entity ) == nil then
 				Entity:SetVelocity(self.Owner:GetForward():SetZ(Entity:OnGround() and 0.2 or -0.2) * 1000)
+				Entity.m_LastShovedBy = self.Owner
 			end
 		end
 	end
@@ -119,7 +120,14 @@ function SWEP:Reload()
 	if not self.Owner:HasAbility("Limpy Larry") then return end
 	self.NextRagdollTime = self.NextRagdollTime or CurTime() + 1
 
-	if SERVER and self.NextRagdollTime < CurTime() then
+	local pos = self.Owner:GetBonePosition(self.Owner:LookupBone("ValveBiped.Bip01_Head1"))
+	local trace = util.TraceLine({
+		start = pos,
+		endpos = Vector(pos.x, pos.y, self.Owner:GetBonePosition(self.Owner:LookupBone("ValveBiped.Bip01_R_Foot")).z),
+		filter = player.GetAll()
+	})
+
+	if SERVER and self.NextRagdollTime < CurTime() and not trace.Hit then
 		Ragdoll.Enable(self.Owner)
 		self.Owner:Flashlight(false)
 		self.Owner.m_NextRagdollifcationTime = CurTime() + 1

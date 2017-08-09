@@ -55,8 +55,9 @@ function Rounds.Start()
 		if not Player:Alive() then
 			Player:Spawn()
 			Player:SetObserverMode( OBS_MODE_NONE )
-		elseif Player:Health() ~= 100 then
+		elseif Player:Health() ~= 100 or ( Player.m_Ragdoll and Player.m_RagdollData.Health ~= 100 ) then
 			Player:SetHealth( Player:HasAbility("Skippy Feet") and 35 or 100 )
+			if Player.m_Ragdoll then Player.m_RagdollData.Health = 100 end
 		end
 		if Player:GetActiveWeapon():IsValid() and Player:GetActiveWeapon():GetClass() == "lava_fists" then
 			Player:GetActiveWeapon():SetEggs( 6 )
