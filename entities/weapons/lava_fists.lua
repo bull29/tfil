@@ -109,6 +109,7 @@ function SWEP:PrimaryAttack(NoForce)
 				end
 			elseif hook.Call( "Lava.PlayerPushPlayer", nil, self.Owner, Entity ) == nil then
 				Entity:SetVelocity(self.Owner:GetForward():SetZ(Entity:OnGround() and 0.2 or -0.2) * 1000)
+				Entity.m_LastShovedBy = self.Owner
 			end
 		end
 	end
