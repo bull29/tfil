@@ -8,9 +8,9 @@ local Vectors = {
 
 hook.Add("Lava.PostPlayerSpawn", "Eggheads", function(Player)
 	Player:OnBoneExisting("ValveBiped.Bip01_Head1", function(bid)
-		if Mutators.IsActive("Eggheads") and Player:GetManipulateBoneScale(bid) ~= Vectors.Big then
+		if Mutators.IsActive("Eggheads") then
 			Player:ManipulateBoneScale(bid, Vectors.Big)
-		elseif not Mutators.IsActive("Eggheads") and Player:GetManipulateBoneScale(bid) ~= Vectors.Normal then
+		elseif not Mutators.IsActive("Eggheads") then
 			Player:ManipulateBoneScale(bid, Vectors.Normal)
 		end
 	end)
