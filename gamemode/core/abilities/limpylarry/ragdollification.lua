@@ -11,6 +11,8 @@ function Ragdoll.Enable( Player )
 		Player.m_Ragdoll = nil
 	end
 
+	if hook.Call( "Lava.PrePlayerRagdolled", nil, Player, ragdoll ) == false then return end
+
 	Player.m_RagdollData = {
 		Angles = Player:EyeAngles(),
 		Model = Player:GetModel(),
@@ -65,6 +67,8 @@ function Ragdoll.Enable( Player )
 	Player:SpectateEntity( ragdoll )
 	Player:StripWeapons() -- Otherwise they can still use the weapons.
 	Player.m_Ragdoll = ragdoll
+
+	hook.Call( "Lava.PostPlayerRagdolled", nil, Player, ragdoll )
 end
 
 
