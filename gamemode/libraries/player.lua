@@ -2,6 +2,7 @@ local Player = debug.getregistry().Player
 local Color = debug.getregistry().Color
 local util = util
 local setmetatable = setmetatable
+local CurTime = CurTime
 
 function Player:EyeEntity()
 	return self:GetEyeTrace().Entity
@@ -41,6 +42,32 @@ end
 
 function Player:EmojiID()
 	return util.CRC((self:Nick() or 1566124349)) % #Emoji.Index
+end
+
+function Player:KeyHoldNoSpam( key, mcdata, delay )
+	delay = delay or 0.5
+	self[ "m_LastKeyHoldTime" .. key ] = self[ "m_LastKeyHoldTime" .. key ] or CurTime()
+	if self[ "m_LastKeyHoldTime" .. key ] < CurTime() and mcdata:KeyDown( key ) then
+		self[ "m_WasKeyDown" .. key ] = true
+		return true
+	elseif not mcdata:KeyDown( key ) and self[ "m_WasKeyDown" .. key ] then
+		self[ "m_LastKeyHoldTime" .. key ] = CurTime() + delay
+		self[ "m_WasKeyDown" .. key ] = nil
+	end
+	return false
+end
+
+function Player:KeyPressedNoSpam( key, mcdata, delay )
+	delay = delay or 0.5
+	self[ "m_LastKeyPressTime" .. key ] = self[ "m_LastKeyPressTime" .. key ] or CurTime()
+	if not self[ "m_HasPressedKeyLast" .. key ] and self[ "m_LastKeyPressTime" .. key ] < CurTime() and mcdata:KeyDown( key ) then
+		self[ "m_LastKeyPressTime" .. key ] = CurTime() + delay
+		self[ "m_HasPressedKeyLast" .. key ] = true
+		return true
+	elseif not mcdata:KeyDown( key ) then
+		self[ "m_HasPressedKeyLast" .. key ] = nil
+	end
+	return false
 end
 
 local player = player

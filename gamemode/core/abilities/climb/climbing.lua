@@ -57,15 +57,8 @@ end)
 
 hook.Add("SetupMove", "Climbing", function(Player, MoveData, Command)
 	if not CanClimb(Player) then return end
-
-	if not Player:Alive() then
-		Player.m_ClimbAbilityMeter = 100
-		Player:SetNW2Float("$climbabilitymeter", Player.m_ClimbAbilityMeter)
-
-		return
-	end
-
-	Player.m_ClimbAbilityMeter = (SERVER and (Player.m_ClimbAbilityMeter or 100)) or (CLIENT and Player:GetNW2Float("$climbabilitymeter", 0))
+	Player:UpdateAbilityMeter()
+	if not Player:Alive() then return end
 
 	local tr = util.TraceLine({
 		start = Player:GetShootPos(),
@@ -76,32 +69,19 @@ hook.Add("SetupMove", "Climbing", function(Player, MoveData, Command)
 
 	local x = tr.HitNormal:Angle()
 
-	if CLIENT and Player.m_ClimbAbilityMeter == 0 then
-		Player.m_HaveUsedupClimbAbility = true
-	elseif CLIENT and Player.m_ClimbAbilityMeter == 100 then
-		Player.m_HaveUsedupClimbAbility = nil
-	end
-
-	if Command:KeyDown( 2 ) and not Command:KeyDown( 4 ) and not Player.m_HaveUsedupClimbAbility and Player.m_ClimbAbilityMeter > 0 and tr.Hit and not tr.HitSky and x.p:floor() == 0 and x.r == 0 then
+	if Player:KeyHoldNoSpam( IN_JUMP, MoveData ) and Player:CanUseAbility() and tr.Hit and not tr.HitSky and x.p:floor() == 0 and x.r == 0 then
 		if SERVER and not Player:IsInWorld() then return end
 		if hook.Call("Lava.CanClimb", nil, Player, tr.HitTexture) == false then return end
 		Player.m_HasClimbedLast = true
 
-		if SERVER then
-			Player.m_ClimbAbilityMeter = (Player.m_ClimbAbilityMeter - FrameTime() * 10):max(0)
-			Player:SetNW2Float("$climbabilitymeter", Player.m_ClimbAbilityMeter)
-
-			if Player.m_ClimbAbilityMeter == 0 then
-				Player.m_HaveUsedupClimbAbility = true
-			end
-		end
-
-		Command:ClearMovement()
-		Command:ClearButtons()
+		Player:ShiftAbilityMeter(-FrameTime() * 10)
 
 		if CLIENT then
 			_cEnabled = true
 		end
+
+		Command:RemoveKey( IN_DUCK )
+		MoveData:RemoveKey( IN_DUCK )
 
 		MoveData:SetMoveAngles(Angle(0, x.y + 180, 0))
 		MoveData:SetForwardSpeed(1000)
@@ -157,15 +137,11 @@ hook.Add("SetupMove", "Climbing", function(Player, MoveData, Command)
 	elseif SERVER then
 		Player:SetProperVar("String", "$climbquery", "")
 
-		if Player.m_ClimbAbilityMeter ~= 100 then
-			Player.m_ClimbAbilityMeter = (Player.m_ClimbAbilityMeter + FrameTime() * 3):min(100)
-			Player:SetNW2Float("$climbabilitymeter", Player.m_ClimbAbilityMeter)
-		else
-			Player.m_HaveUsedupClimbAbility = nil
-		end
+		Player:ShiftAbilityMeter(FrameTime() * 2)
+
 	elseif CLIENT then
 		_cEnabled = false
-	end --[[ and Command:KeyDown(2)--]]
+	end
 end)
 
 hook.RunOnce("HUDPaint", function()
@@ -175,18 +151,18 @@ hook.RunOnce("HUDPaint", function()
 	c:SetPaintedManually(true)
 	c:SetVerticalPos(ScrH() - ScrH() / 25 * 1.5)
 	c.Meter = 100
-
 	c.Paint = function(s, w, h)
-		draw.RoundedBox(0, 0, 0, w, h, DarkColor)
-		draw.RoundedBox(0, h * 0.1, h * 0.1, w - h * 0.2, h * 0.8, pColor():Alpha(50))
-		draw.RoundedBox(0, h * 0.1, h * 0.1, (s.Meter / 100) * (w - h * 0.2), h * 0.8, LocalPlayer().m_HaveUsedupClimbAbility and (pColor() - 50):Alpha(100) or pColor())
+		draw.Rect( 0, 0, w, h, DarkColor)
+		draw.Rect( h * 0.1, h * 0.1, w - h * 0.2, h * 0.8, pColor():Alpha(50))
+		draw.Rect(h * 0.1, h * 0.1, (s.Meter / 100) * (w - h * 0.2), h * 0.8, LocalPlayer():HasUsedUpAbility() and (pColor() - 50):Alpha(100) or pColor())
+		draw.WebImage( Emoji.Get( 2236 ), h * 0.1 + (s.Meter / 100) * (w - h * 0.2), h/2, h, h, nil, CurTime():cos() * 360 )
 	end
 end)
 
 local LerpedMeter = 100
 
 hook.Add("HUDPaint", "DrawClimbMeter", function()
-	local cMeter = LocalPlayer():GetNW2Float("$climbabilitymeter", 100)
+	local cMeter = LocalPlayer():GetAbilityMeter()
 
 	if cMeter ~= 100 and ClimbMeterDisplay and CanClimb(LocalPlayer()) then
 		LerpedMeter = LerpedMeter:lerp(cMeter, FrameTime() * 20)
@@ -216,12 +192,7 @@ hook.Add("ShouldDrawLocalPlayer", "DrawPreview", function()
 	if ShouldDrawLP then return true end
 end)
 
-hook.Add("Lava.Preround", "ResetMeters", function()
-	for Player in Values(player.GetAll()) do
-		Player.m_ClimbAbilityMeter = 100
-	end
-end)
 
 Abilities.Register("Chameleon", [[( NOTE: This Ability is present for showcase purposes and is currently in Beta. ) At the cost of slower movespeeds
-	You can climb any world brush and parkour!
+	You can climb any world brush and parkour! Hold Space while facing a flat wall!
 	Careful though!]], 2236)
