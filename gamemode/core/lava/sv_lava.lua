@@ -97,13 +97,11 @@ hook.Add("PostPlayerDeath", "CreateDeathRagdoll", function(Player)
 end)
 
 function GM:EntityTakeDamage(Entity, Damage)
-	if IsValid(Entity) and IsValid(Damage:GetInflictor()) and Damage:GetInflictor():GetClass() == "prop_physics" then
+	if IsValid(Entity) and IsValid(Damage:GetInflictor()) and ( Damage:GetInflictor():GetClass() == "prop_physics" or Damage:GetInflictor():GetClass() == "prop_ragdoll") then
 		Damage:ScaleDamage( 0 )
 	end
 
 	if IsValid(Entity) and IsValid(Damage:GetAttacker()) and Entity:IsPlayer() and Damage:GetAttacker():GetClass() == "entityflame" then
 		Damage:ScaleDamage(math.random(7, 15))
 	end
-
-	if Damage:IsBulletDamage() and not hook.Call("Lava.ShouldBlockBulletDamage", nil, Entity, Damage) then return true end
 end
