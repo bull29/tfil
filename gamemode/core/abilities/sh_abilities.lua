@@ -51,6 +51,7 @@ function Player:UpdateAbilityMeter()
 end
 
 function Player:ShiftAbilityMeter( n )
+	if CLIENT then return end
 	self.m_CurrentAbilityMeter = ( self.m_CurrentAbilityMeter + n ):min( 100 ):max( 0 )
 	self:UpdateAbilityMeter()
 end
