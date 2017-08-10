@@ -73,6 +73,8 @@ hook.Add("PostDrawTranslucentRenderables", "DrawLava", function(a, b)
 			surface.DrawTexturedRectUV(-MapScale / 2, -MapScale / 2, MapScale, MapScale, 0, 0, MapScale / 5000 * SkyboxScale, MapScale / 5000 * SkyboxScale)
 		end, GetGlobalVector("$skycampos") + (LavaLevel / SkyboxScale), Ang, 1)
 	end
+
+	hook.Call( "Lava.PostLavaRender", nil, a, b )
 end)
 
 hook.Add("Lava.PreroundStart", "ResetLava", function()
