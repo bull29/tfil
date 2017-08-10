@@ -26,6 +26,13 @@ function ENT:DumpBones()
 	end
 end
 
+function ENT:OnBoneExisting( bonename, func )
+	local id = self:LookupBone( bonename )
+	if id then
+		func( id, self )
+	end
+end
+
 if SERVER then return end
 
 function SpectatingPlayer()
