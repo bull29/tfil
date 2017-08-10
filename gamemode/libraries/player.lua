@@ -2,6 +2,7 @@ local Player = debug.getregistry().Player
 local Color = debug.getregistry().Color
 local util = util
 local setmetatable = setmetatable
+local CurTime = CurTime
 
 function Player:EyeEntity()
 	return self:GetEyeTrace().Entity
