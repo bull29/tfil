@@ -11,6 +11,7 @@ local pairs = pairs
 local m_Activate
 local m_HaveUsedupMeter
 local m_NextUsetime = CurTime()
+local m_IsMutatorActive
 
 local tab = {
 	["$pp_colour_brightness"] = 0,
@@ -19,7 +20,8 @@ local tab = {
 }
 
 hook.Add("RenderScreenspaceEffects", "DrawESP", function()
-	m_Activate = m_Activate and not m_HaveUsedupMeter and not hook.Call("Lava.ShouldBlockESP", nil, LocalPlayer() )
+	m_IsMutatorActive = Mutators.IsActive("EmojiEyes")
+	m_Activate = m_IsMutatorActive or ( m_Activate and not m_HaveUsedupMeter and not hook.Call("Lava.ShouldBlockESP", nil, LocalPlayer() ) )
 
 	if not m_Activate then
 		tab["$pp_colour_colour"] = tab["$pp_colour_colour"]:lerp( 1 )
@@ -79,7 +81,7 @@ hook.Add("PostRenderVGUI", "RenderEmojis", function()
 		return
 	end
 
-	if m_ESPMeter < 100 then
+	if m_ESPMeter < 100 and not m_IsMutatorActive then
 		draw.WebImage(Emoji.Get( 734 ), ScrW()/2, ScrH() - ScrH()/10, ScrH()/7, ScrH()/7, pColor():Alpha( 100 ), 0 )
 		draw.WebImage(Emoji.Get( 734 ), ScrW()/2, ScrH() - ScrH()/10, m_ESPMeter/100*ScrH()/7, m_ESPMeter/100*ScrH()/7, White:Alpha( m_HaveUsedupMeter and 100 or 255 ), 0 )
 		if not m_Activate then
@@ -91,7 +93,7 @@ hook.Add("PostRenderVGUI", "RenderEmojis", function()
 end)
 
 hook.Add("HUDShouldDraw", "DisableElements", function(name)
-	if m_Activate and name == "CHudGMod" then return false end
+	if (m_Activate and not m_IsMutatorActive ) and name == "CHudGMod" then return false end
 end)
 
 
