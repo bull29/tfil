@@ -24,7 +24,7 @@ hook.Add("HUDPaint", "DrawJiffy", function()
 				maxs = Vector(16, 16, 71)
 			}
 
-			if tR2.Hit then
+			if tR2.Hit or LocalPlayer():GetMoveType() == 9 then
 				JiffyPointer:SetColor(Color(255, 0, 0))
 			else
 				JiffyPointer:SetColor(Color(0, 255, 0))
@@ -65,7 +65,7 @@ hook.Add("SetupMove", "JiffyJerry", function(Player, Movedata)
 				maxs = Vector(16, 16, 71)
 			}
 
-			if not tR2.Hit then
+			if not tR2.Hit and Player:GetMoveType() ~= 9 then
 				Player:EmitSound("vo/npc/Barney/ba_ohyeah.wav")
 				Player:ShiftAbilityMeter(-100)
 				Movedata:SetOrigin(tR.HitPos)
