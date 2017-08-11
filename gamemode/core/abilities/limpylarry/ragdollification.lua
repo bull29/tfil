@@ -74,6 +74,16 @@ end
 
 function Ragdoll.Disable( Player, h_DisableSpawn )
 	if not Player.m_Ragdoll then return end
+
+	local pos = Player.m_Ragdoll:GetBonePosition(1)
+	local trace = util.TraceLine({
+		start = Vector(pos.x, pos.y, pos.z + 65),
+		endpos = Vector(pos.x, pos.y, pos.z + 5),
+		mask = MASK_PLAYERSOLID_BRUSHONLY
+	})
+
+	if trace.Hit then return end
+
 	Player.m_RagdollData.Angles = Player:EyeAngles()
 	Player:SetParent()
 	Player:UnSpectate()
