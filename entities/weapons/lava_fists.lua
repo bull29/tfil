@@ -341,6 +341,7 @@ local draw = draw
 local c_CValue = 1
 local pColor = pColor
 local vgui = vgui
+local CrosshairPos = {}
 
 function SWEP:DrawHUD()
 	if vgui.CursorVisible() then return end
@@ -371,4 +372,8 @@ function SWEP:DrawHUD()
 	for i = 1, self:GetEggs() do
 		draw.WebImage(Emoji.Get(2204), ScrW() - Size * (0.3 * i) - Size, ScrH() - Size * 1.5, Size, Size, nil, i == self:GetEggs() and (CurTime() * 5):sin() * 15 or -15, true)
 	end
+
+	CrosshairPos[1], CrosshairPos[2] = tosc.x, tosc.y
 end
+
+_G.LavaCrosshairPos = CrosshairPos
