@@ -35,13 +35,20 @@ hook.Add("HUDPaint", "DrawJiffy", function()
 			JiffyPointer:SetNoDraw(true)
 		end
 
-		if LocalPlayer():GetAbilityMeter() ~= 100 or LocalPlayer():KeyDown(IN_SPEED) then
+		if LocalPlayer():GetAbilityMeter() ~= 100 then
 			draw.WebImage(Emoji.Get(1325), ScrW() / 2, ScrH() - ScrH() / 5, ScrH() / 6, ScrH() / 6, pColor():Alpha(150), 0)
 			draw.WebImage(Emoji.Get(1325), ScrW() / 2, ScrH() - ScrH() / 5, (LocalPlayer():GetAbilityMeter() / 100) * ScrH() / 6, (LocalPlayer():GetAbilityMeter() / 100) * ScrH() / 6, nil, 0)
 		end
 	elseif IsValid(JiffyPointer) then
 		JiffyPointer:Remove()
 		JiffyPointer = nil
+	end
+end)
+
+
+hook.Add("Lava.ShouldDrawCrosshair", "JiffyJerry", function( Player )
+	if Player:Alive() and Player:HasAbility("Jiffy Jerry") and Player:KeyDown( IN_SPEED ) then
+		return false
 	end
 end)
 
