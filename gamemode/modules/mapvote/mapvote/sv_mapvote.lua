@@ -42,7 +42,7 @@ function MapVote.Start(length, current, limit, prefix, callback)
 	length = length or MapVote.Config.TimeLimit or 28
 	limit = limit or MapVote.Config.MapLimit or 24
 	cooldown = MapVote.Config.EnableCooldown or MapVote.Config.EnableCooldown == nil and true
-	prefix = {"ttt_", "gm_", "zs", "hns"}
+	prefix = {"lava", "ttt_", "gm_", "zs", "hns"}
 	local is_expression = false
 
 	if not prefix then
