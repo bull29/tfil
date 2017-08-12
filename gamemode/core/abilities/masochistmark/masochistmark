@@ -1,0 +1,22 @@
+function GM:PlayerHurt(Victim,Attacker)
+	if Victim:HasAbility("Masochist Mark") then
+		Victim:SetWalkSpeed(250+((Victim:GetMaxHealth()-Victim:Health())*12))
+		Victim:SetRunSpeed(500+((Victim:GetMaxHealth()-Victim:Health())*12))
+		Victim:SetMaxSpeed(Player:GetRunSpeed())
+		Victim:SetJumpPower( Player:GetRunSpeed() )
+		return true
+	end
+end
+
+hook.Add("Lava.RoundStart","Masochist Mark",function()
+	for Player in Values(player.GetAll()) do
+		if Player:HasAbility("Masochist Mark") then
+			Player:SetRunSpeed(225)
+			Player:SetWalkSpeed(170)
+			Player:SetMaxSpeed(225)
+			Player:SetJumpPower(250)
+		end
+	end
+end)
+
+Abilities.Register("Masochist Mark", [[You enjoy being hurt way too much. The more you are hurt, the faster you go.]], 1210)
