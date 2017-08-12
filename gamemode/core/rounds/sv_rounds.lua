@@ -3,6 +3,7 @@ local Rounds = {}
 Rounds.CurrentState = Rounds.CurrentState or "Preround"
 NextMapTime = NextMapTime or 0
 SetGlobalInt( "$NextMapTime", NextMapTime )
+local playerRanking = {}
 
 hook.Add("Initialize", "ResetmapTime", function()
 	NextMapTime = 0
@@ -64,6 +65,8 @@ function Rounds.Start()
 		end
 	end
 
+	playerRanking = {}
+
 	SetRoundState("Started")
 	SetTimer(os.time() + Config.GetRoundTime())
 
@@ -118,6 +121,17 @@ function Rounds.CheckShouldRestart()
 			else
 				ShouldRestart = true
 				Notification.SendType( "Winner", player.GetAlive()[1]:Nick() .. " has won!")
+
+				table.insert(playerRanking, player.GetAlive()[1])
+
+				local tbl = {}
+				for k, v in pairs(table.Reverse(playerRanking)) do
+					if IsValid(v) and v:IsPlayer() then
+						table.insert(tbl, v)
+					end
+				end
+
+				hook.Call("Lava.PlayerRankings", nil, tbl)
 			end
 		end
 
@@ -152,6 +166,10 @@ hook.Add("PlayerInitialSpawn", "CheckLone",function()
 	if #player.GetAll() == 1 then
 		Rounds.Preround()
 	end
+end)
+
+hook.Add("PlayerDeath", "SelectPlayerRanking", function(ply)
+	table.insert(playerRanking, ply)
 end)
 
 _G.Rounds = Rounds
