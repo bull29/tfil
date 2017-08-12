@@ -1,7 +1,5 @@
 local Gray = Color(0, 0, 0, 150)
 local s
-local Datapoints = {}
-local Flag = "https://steamcommunity-a.akamaihd.net/public/images/countryflags/${1}.gif"
 local game = game
 local draw = draw
 local pColor = pColor
@@ -22,26 +20,22 @@ local numberEmoji = {
 
 local anims = {
 	[1] = {
-		"gesture_bow",
-		"gesture_salute",
-		"gesture_wave",
+		"gesture_bow_original",
+		"gesture_salute_original",
+		"gesture_wave_original",
+		"gesture_agree_original",
 		"taunt_laugh",
 		"taunt_cheer",
 		"taunt_dance",
 		"taunt_robot",
-		"gesture_agree"
 	}, [2] = {
-		"gesture_item_give",
-		"gesture_disagree"
+		"taunt_persistence_base"
 	}, [3] = {
-		"gesture_item_give",
-		"gesture_disagree"
+		"taunt_muscle_base",
+		"gesture_disagree_original"
 	}
 }
 
-local function AddDatapoint( icon, name, func )
-	table.insert( Datapoints, { icon, name, func }  )
-end
 
 hook.RunOnce("HUDPaint", function()
 	s = InitializePanel("LavaWinscreen", "DPanel")
@@ -61,7 +55,7 @@ hook.RunOnce("HUDPaint", function()
 	s.Canvas = l
 
 	local t = s:Add("DPanel")
-	t:SetSize(ScrW() * 0.6, ScrH() * 0.4)
+	t:SetSize(ScrW() * 0.6, ScrH() * 0.8/2 + ScrH()/50)
 	
 	local playerPanel = {}
 	for i = 1, 3 do
@@ -70,7 +64,7 @@ hook.RunOnce("HUDPaint", function()
 		if i == 2 then
 			x, y = ScrW() * 0.15, ScrH() * 0.2
 		elseif i == 3 then
-			x, y = ScrW() * 0.45, ScrH() * 0.25
+			x, y = ScrW() * 0.45, ScrH() * 0.23
 		end
 		
 		local s = ScrH() * 0.2
@@ -78,7 +72,13 @@ hook.RunOnce("HUDPaint", function()
 		local ply = t:Add("DModelPanel")
 		ply:SetPos(x - s/2, y - s/2)
 		ply:SetSize(s, s)
-		
+		ply:SetFOV( 5 )
+		function ply:PreDrawModel()
+			cam.IgnoreZ( true )
+		end
+		function ply:PostDrawModel()
+			cam.IgnoreZ( false )
+		end
 		playerPanel[i] = ply
 	end
 	
@@ -86,49 +86,78 @@ hook.RunOnce("HUDPaint", function()
 		self:GetCanvas():RemoveChildren()
 
 		local camPos, camAng = ranking[1]:EyePos(), ranking[1]:EyeAngles()
-		local randPos, randAng = Vector((math.min(math.random(), 0.4) - 0.7) * 12, (math.min(math.random(), 0.4) - 0.5) * 12, (math.min(math.random(), 0.4) - 0.7) * 4), (math.min(math.random(), 0.4) - 0.7) * 8
+		local randPos, randAng = Vector((math.min(math.random(), 0.4) - 0.7) * 12, (math.min(math.random(), 0.4) - 0.5) * 12, (math.min(math.random(), 0.4) - 0.7) * -4), (math.min(math.random(), 0.4) - 0.7) * 8
 
 		s.Paint = function(s, w, h)
 			draw.Rect(0, 0, w, h, Gray)
 			draw.Rect(0, h / 2, w, 1, pColor() - 50)
-			
+			local x, y = s:LocalToScreen( 0, 0 )
 			render.RenderView({
 				drawviewmodel = false,
 				origin = camPos,
 				angles = camAng,
-				x = ScrW() * 0.2,
-				y = ScrH() * 0.1,
+				aspectratio = (w)/(h/2),
+				x = x,
+				y = y,
 				w = w,
-				h = h / 2
+				h = h / 2 + ScrH()/25
 			})
-			
+
+			if ranking[1] then
+				draw.Rect( w/2.5, 0, w / 5, h / 2 + ScrH()/25, ranking[1]:PlayerColor():Alpha( 125 ) )
+			end
+			if ranking[2] then
+				draw.Rect( w/6.5, 0, w / 5, h / 2 + ScrH()/25, ranking[2]:PlayerColor():Alpha( 125 ) )
+			end
+			if ranking[3] then
+				draw.Rect( w*0.65, 0, w / 5, h / 2 + ScrH()/25, ranking[3]:PlayerColor():Alpha( 125 ) )
+			end
+
+
+
 			camPos = camPos + Vector(randPos.x * math.cos(math.rad(camAng.yaw)) * FrameTime(), randPos.y * math.sin(math.rad(camAng.yaw)) * FrameTime(), randPos.z * FrameTime())
 			camAng = camAng + Angle(0, randAng * FrameTime(), 0)
 		end
 
-		t.Paint = function()
+		t.Paint = function( s, w, h )
 			local s = ScrH() * 0.2
 			
 			local x, y = ScrW() * 0.3, ScrH() * 0.05
-			draw.SimpleText(ranking[1]:Nick(), "lava_score_player_row", x, y, nil, 1, 1)
 			draw.WebImage(Emoji.Get(629), x, y + s*1.6, s*0.3, s*1.45, nil, 180)
-			draw.WebImage(Emoji.Get(2188), x, y + s*1.1, s*0.25, s*0.25, nil, math.cos(math.sin(math.rad(CurTime())) * 90) * 18)
-			
+			draw.WebImage(Emoji.Get(2188), x, y + s*1.1, s*0.25, s*0.25, nil, 0)
+			draw.Rect( w/2.5, h * 0.91, w/5, h / 10, ranking[1]:PlayerColor() )
+
+
+			draw.SimpleText(ranking[1]:Nick(), "lava_score_player_row", w/2, h * 0.92, nil, 1, 2)
+
+--[[ 			draw.WebImage( WebElements.Circle, w/2, h*0.15, h/5, h/5, ranking[1]:PlayerColor() + 50, 0 )
+			draw.WebImage( Emoji.Get( ranking[1]:EmojiID() ), w/2, h*0.15, h/5, h/5, nil, 0 )--]] 
 			if #ranking < 2 then return end
 			
 			x, y = ScrW() * 0.15, ScrH() * 0.1
-			draw.SimpleText(ranking[2]:Nick(), "lava_score_player_row", x, y, nil, 1, 1)
 			draw.WebImage(Emoji.Get(629), x, y + s*1.6, s*0.3, s*1.45, nil, 180)
-			draw.WebImage(Emoji.Get(2189), x, y + s*1.1, s*0.25, s*0.25, nil, math.cos(math.sin(math.rad(CurTime())) * 90 + 20) * 18)
-			
+			draw.WebImage(Emoji.Get(2189), x, y + s*1.1, s*0.25, s*0.25, nil, 0)
+			draw.Rect( w/6.5, h * 0.91, w/5, h / 10, ranking[2]:PlayerColor() )
+
+
+			draw.SimpleText(ranking[2]:Nick(), "lava_score_player_row", w/4, h * 0.92, nil, 1, 2)
+
+--[[ 
+			draw.WebImage( WebElements.Circle, w/4, h*0.25, h/5, h/5, ranking[2]:PlayerColor() + 50, 0 )
+			draw.WebImage( Emoji.Get( ranking[2]:EmojiID() ), w/4, h*0.25, h/5, h/5, nil, 0 )--]] 
 			if #ranking < 3 then return end
 			
 			x, y = ScrW() * 0.45, ScrH() * 0.15
-			draw.SimpleText(ranking[3]:Nick(), "lava_score_player_row", x, y, nil, 1, 1)
-			draw.WebImage(Emoji.Get(629), x, y + s*1.6, s*0.3, s*1.45, nil, 180)
-			draw.WebImage(Emoji.Get(2190), x, y + s*1.1, s*0.25, s*0.25, nil, math.cos(math.sin(math.rad(CurTime() + 45)) * 90) * 18)
-		end
+			draw.WebImage(Emoji.Get(629), x, y + s*1.5, s*0.3, s*1.45, nil, 180)
+			draw.WebImage(Emoji.Get(2190), x, y + s*1, s*0.25, s*0.25, nil, 0)
+			draw.Rect( w*0.65, h * 0.91, w/5, h / 10, ranking[3]:PlayerColor() )
+			draw.SimpleText(ranking[3]:Nick(), "lava_score_player_row", w*0.75, h * 0.92, nil, 1, 2)
 
+--[[ 
+			draw.WebImage( WebElements.Circle, w*0.75, h*0.3, h/5, h/5, ranking[3]:PlayerColor() + 50, 0 )
+			draw.WebImage( Emoji.Get( ranking[3]:EmojiID() ), w*0.75, h*0.3, h/5, h/5, nil, 0 )--]] 
+		end
+		local Offset = math.random( 1, 1000 )
 		local function AddPlayer(Player, rank)
 			if rank <= 3 then
 				local ply = playerPanel[rank]
@@ -138,14 +167,17 @@ hook.RunOnce("HUDPaint", function()
 				function ply.Entity:GetPlayerColor() return Player:GetPlayerColor() end
 				function ply:LayoutEntity(ent)
 					ply:RunAnimation()
-					
+					self:SetCamPos( ent:GetForward() * 900)
 					ent:SetAngles(Angle(0, 45, 0))
 				end
 				
 				local anim = ply.Entity:LookupSequence(anims[rank][math.random(1, #anims[rank])])
 				ply.Entity:SetSequence(anim)
+				
 				timer.Simple(ply.Entity:SequenceDuration(anim), function()
-					ply.Entity:SetSequence(ply.Entity:LookupSequence("idle_all_01"))
+					if IsValid( ply ) and IsValid( ply.Entity ) then
+						ply.Entity:SetSequence(ply.Entity:LookupSequence("pose_standing_0"..(( rank + Offset )%5 ):Clamp( 1, 4) ))
+					end
 				end)
 				
 				return
@@ -178,36 +210,6 @@ hook.RunOnce("HUDPaint", function()
 
 				draw.Rect(0, h, w, a_Height - h, tab[1] - 10)
 			end
-			local dm
-			p.DoClick = function( s )
-				if dm and IsValid( dm ) then
-					dm:Remove()
-					dm = nil
-				end
-				dm = vgui.Create("DMenu")
-				dm:SetDrawBackground( false )
-				for k, v in pairs( Datapoints ) do
-					local x = dm:AddOption( v[2], function()
-						v[3]( Player, dm )
-					end)
-					x:SetTextColor( color_white )
-					x:SetFont("lava_dmenu")
-					x:GenerateColorShift( "hVar", Player:PlayerColor() - 25, Player:PlayerColor() + 25, 255 )
-					x.Paint = function( s, w, h )
-						draw.Rect( 0, 0, w, h, s.hVar)
-						draw.WebImage( Emoji.Get( v[1] ), h/2, h/2, h * 0.7, h * 0.7, nil, s.Hovered and CurTime():cos() * 15 or 0 )
-					end
-				end
-				dm:Open()
-				dm.Paint = function( s, w, h )
-					if not IsValid( Player ) then
-						s:Remove()
-						dm = nil
-						return
-					end
-					draw.Rect( 0, 0, w, h, Player:PlayerColor() )
-				end
-			end
 
 			local v = p:Add("AvatarImage")
 			v:SetSize(ScrH() / 25 - WebElements.Edge/2, ScrH() / 25 - WebElements.Edge/2)
@@ -229,26 +231,49 @@ hook.RunOnce("HUDPaint", function()
 		aHeader:Dock(TOP)
 		aHeader:SetTall(ScrH() / 25)
 		aHeader:SetFont("lava_score_header")
-		aHeader:SetText("Players")
 		aHeader:SetTextColor(color_white)
+		aHeader:SetText("")
 		aHeader:SetTextInset(ScrW() / 100, 0)
 		aHeader.Paint = function(s, w, h)
 			draw.Rect(0, 0, w, h, pColor() - 75)
 			draw.WebImage(Emoji.Get(468), w - h, h * 0.1, h * 0.8, h * 0.8)
+			draw.WebImage(Emoji.Get(468), h/10, h * 0.1, h * 0.8, h * 0.8)
 		end
 
 		for k, Player in pairs(ranking) do
 			AddPlayer(Player, k)
 		end
-	end
 
+		if #ranking < 4 then
+			b:SetParent(l)
+			b:Dock( TOP )
+			b:SetTall( ScrH()/3 + WebElements.Edge + 1 )
+
+			for i = 1, 3 do
+				if not ranking[i] then continue end
+				local av = b:Add("AvatarMask")
+				av:SetSize( b:GetTall() /1.8, b:GetTall() /1.8 )
+				if i == 1 then
+					av:SetPos( s:GetWide()/2 - av:GetWide()/2, av:GetTall()/3)
+				elseif i == 2 then
+					av:SetPos( s:GetWide()/4 - av:GetWide()/2, av:GetTall()/3)
+				elseif i == 3 then
+					av:SetPos( s:GetWide()*0.75 - av:GetWide()/2, av:GetTall()/3)
+				end
+				av.PaintOver = function( s, w, h )
+					draw.WebImage( WebElements.CircleOutline, 0, 0, w, h, ranking[i]:PlayerColor() )
+				end
+				av:SetPlayer( ranking[i], 184 )
+			end
+		end
+	end
 	s:Hide()
 end)
 
 net.Receive("lava_winscreen", function()
 	if s then
 		local tbl = net.ReadTable()
-		
+
 		timer.Simple(3, function()
 			s:Show()
 			s.Canvas:Repopulate(tbl)
