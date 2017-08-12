@@ -265,6 +265,7 @@ hook.RunOnce("HUDPaint", function()
 end)
 
 hook.Add("StartChat", "DrawEmoteBox", function()
+	if not LocalPlayer():Alive() then return end
 	local SizeX, SizeY = chat.GetChatBoxSize()
 	local x, y = chat.GetChatBoxPos()
 	local Ratio = SizeX / (SizeY / 3 + WebElements.Edge)
