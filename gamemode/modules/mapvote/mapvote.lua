@@ -9,7 +9,7 @@ MapVoteConfigDefault = {
 	EnableCooldown = true,
 	MapsBeforeRevote = 3,
 	RTVPlayerCount = 3,
-	MapPrefixes = {"ttt", "gm", "zs", "climb"}
+	MapPrefixes = {"ttt", "gm", "zs", "climb", "lava"}
 }
 
 --Default Config
