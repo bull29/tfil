@@ -345,6 +345,7 @@ local CrosshairPos = {}
 
 function SWEP:DrawHUD()
 	if vgui.CursorVisible() then return end
+	if hook.Call("Lava.ShouldDrawCrosshair", nil, self.Owner, self ) == false then return end
 	local Player = SpectatingPlayer() or LocalPlayer()
 	local tr = Player:GetEyeTrace()
 	local tosc
