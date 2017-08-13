@@ -1,0 +1,32 @@
+function FindNearestEnts(pos,range)
+	local nearestEnts = {}
+	for i, entity in ipairs(player.GetAll()) do
+		local distance = pos:Distance(entity:GetPos())
+		if( distance <= range ) then
+			local find = entity
+			if table.HasValue(nearestEnts,find) then
+				return false 
+			else
+				table.insert(nearestEnts,find)
+			end
+		elseif distance >= range then
+			local find = entity
+			table.RemoveByValue(nearestEnts,find)
+		end
+    end
+	return nearestEnts
+end
+
+
+
+hook.Add("PlayerTick","Extravert Edward",function(ply)
+	if ply:HasAbility("Extravert Edward") then
+		FindEnts = FindNearestEnts(ply:GetPos(),200)
+		ply:SetRunSpeed(225*((table.Count(FindEnts))*1.5))
+		ply:SetWalkSpeed(175*((table.Count(FindEnts))*1.5))
+		ply:SetMaxSpeed(ply:GetRunSpeed())
+		ply:SetJumpPower(ply:GetRunSpeed())
+	end
+end)
+
+Abilities.Register("Extravert Edward", [[You love to have "friends" around you! The more people there are near you, the faster you are.]], 1085)
