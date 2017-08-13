@@ -14,7 +14,7 @@ Mutators.RegisterNewEvent("Ability Rampage", "You've been having an ability iden
 		if m_NextCycleTime <= CurTime() then
 			for Player in Values( player.GetAll() ) do
 				local OldAbility = Player:GetAbility()
-				if Abilities.Skills[ OldAbility ][ 4 ] then
+				if Abilities.Skills[ OldAbility ] and Abilities.Skills[ OldAbility ][ 4 ] then
 					Abilities.Skills[ OldAbility ][ 4 ]( Player )
 				end
 
@@ -22,7 +22,7 @@ Mutators.RegisterNewEvent("Ability Rampage", "You've been having an ability iden
 					Player:SetAbility( table.Random( table.GetKeys( Abilities.Skills ) ) )
 				until OldAbility ~= Player:GetAbility() and Player:GetAbility() ~= "Limpy Larry"
 
-				if Abilities.Skills[ Player:GetAbility() ][ 3 ] then
+				if Abilities.Skills[ Player:GetAbility() ] and Abilities.Skills[ Player:GetAbility() ][ 3 ] then
 					Abilities.Skills[ Player:GetAbility() ][ 3 ]( Player )
 				end
 
