@@ -156,6 +156,7 @@ function SWEP:SecondaryAttack()
 
 		if not Mutators.IsActive("Eggplosive Annihilation") then
 			self.Owner:IncrementStat("Eggs Thrown")
+			Ranking.AddEggThrow(self.Owner)
 		end
 
 		if m_Vel == false then
@@ -249,6 +250,7 @@ if SERVER then
 				if Player:EyePos():Distance(Object:GetPos()) < 28 then
 					if Object.m_EggParent ~= Player then
 						Object.m_EggParent:IncrementStat("Eggs Hit")
+						Ranking.AddEggHit(Object.m_EggParent)
 
 						local Weapon = Object.m_EggParent:GetActiveWeapon()
 
