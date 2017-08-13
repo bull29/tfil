@@ -48,7 +48,6 @@ hook.RunOnce("HUDPaint", function()
 	Close:SetWide( ScrH()/20 )
 	Close:GenerateColorShift( "cVar", White - 100, White, 512 )
 	Close.DoClick = function() s:Hide() end
-	Close.CanClose = CurTime() + 10
 	Close.Paint = function( s, w, h )
 		if s.CanClose > CurTime() then
 			draw.WebImage( Emoji.Get( Emoji.ParseNumber( ( s.CanClose - CurTime() ):floor() )[1] ), w/2, h/2, w*0.8, h*0.8, nil, 0 )
@@ -128,6 +127,7 @@ hook.RunOnce("HUDPaint", function()
 		Scroller:SetTall( ( #ranking - 3 ):Clamp( 0, 10 ) * ScrH()/25 )
 		s:SetTall( wBar:GetTall() + tBar:GetTall() + Scroller:GetTall() + bBar:GetTall())
 		s:Center()
+		Close.CanClose = CurTime() + 6
 
 		local camPos, camAng = ranking[1]:EyePos() + Vector( 0, 0, 10 ), ranking[1]:EyeAngles()
 		local randPos, randAng = Vector((math.min(math.random(), 0.4) - 0.7) * 12, (math.min(math.random(), 0.4) - 0.5) * 12, (math.min(math.random(), 0.4) - 0.7) * -4), (math.min(math.random(), 0.4) - 0.7) * 8
