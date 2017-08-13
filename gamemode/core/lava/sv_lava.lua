@@ -118,6 +118,8 @@ function GM:PlayerDeath( ply, inflictor, attacker )
 		attacker = ply.m_LastShovedBy
 		attacker:AddFrags(1)
 	end
+	
+	hook.Call("Lava.PlayerDeath", nil, ply, attacker, inflictor)
 
 	if ( attacker == ply ) then
 	
@@ -152,7 +154,6 @@ function GM:PlayerDeath( ply, inflictor, attacker )
 	net.Broadcast()
 	
 	MsgAll( ply:Nick() .. " was killed by " .. attacker:GetClass() .. "\n" )
-	
 end
 
 hook.Add("PostPlayerDeath", "CreateDeathRagdoll", function(Player)
