@@ -119,7 +119,7 @@ function GM:PlayerDeath( ply, inflictor, attacker )
 		attacker:AddFrags(1)
 	end
 	
-	hook.Call("Lava.PlayerDeath", nil, ply, attacker, inflictor)
+	hook.Call("Lava.PlayerDeath", nil, ply, inflictor, attacker)
 
 	if ( attacker == ply ) then
 	
