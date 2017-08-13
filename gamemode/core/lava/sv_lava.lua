@@ -82,8 +82,82 @@ hook.Add("DoPlayerDeath", "CreateRagdoll", function(Player, Entity)
 	Player.m_LastKiller = Entity
 end)
 
+--[[---------------------------------------------------------
+	Name: gamemode:PlayerDeath( )
+	Desc: Called when a player dies.
+-----------------------------------------------------------]]
+-- Override base killfeed
+function GM:PlayerDeath( ply, inflictor, attacker )
+
+	-- Don't spawn for at least 2 seconds
+	ply.NextSpawnTime = CurTime() + 2
+	ply.DeathTime = CurTime()
+	
+	if ( IsValid( attacker ) && attacker:GetClass() == "trigger_hurt" ) then attacker = ply end
+	
+	if ( IsValid( attacker ) && attacker:IsVehicle() && IsValid( attacker:GetDriver() ) ) then
+		attacker = attacker:GetDriver()
+	end
+
+	if ( !IsValid( inflictor ) && IsValid( attacker ) ) then
+		inflictor = attacker
+	end
+
+	-- Convert the inflictor to the weapon that they're holding if we can.
+	-- This can be right or wrong with NPCs since combine can be holding a
+	-- pistol but kill you by hitting you with their arm.
+	if ( IsValid( inflictor ) && inflictor == attacker && ( inflictor:IsPlayer() || inflictor:IsNPC() ) ) then
+	
+		inflictor = inflictor:GetActiveWeapon()
+		if ( !IsValid( inflictor ) ) then inflictor = attacker end
+
+	end
+	
+	if (ply.m_LastShovedBy and IsValid(ply.m_LastShovedBy)) and (attacker:GetClass() == "worldspawn" or attacker:GetClass() == "entityflame") then
+		-- Fall damage or lava
+		attacker = ply.m_LastShovedBy
+		attacker:AddFrags(1)
+	end
+
+	if ( attacker == ply ) then
+	
+		net.Start( "PlayerKilledSelf" )
+			net.WriteEntity( ply )
+		net.Broadcast()
+		
+		MsgAll( attacker:Nick() .. " suicided!\n" )
+		
+	return end
+
+	if ( attacker:IsPlayer() ) then
+	
+		net.Start( "PlayerKilledByPlayer" )
+		
+			net.WriteEntity( ply )
+			net.WriteString( inflictor:GetClass() )
+			net.WriteEntity( attacker )
+		
+		net.Broadcast()
+		
+		MsgAll( attacker:Nick() .. " killed " .. ply:Nick() .. " using " .. inflictor:GetClass() .. "\n" )
+		
+	return end
+	
+	net.Start( "PlayerKilled" )
+	
+		net.WriteEntity( ply )
+		net.WriteString( inflictor:GetClass() )
+		net.WriteString( attacker:GetClass() )
+
+	net.Broadcast()
+	
+	MsgAll( ply:Nick() .. " was killed by " .. attacker:GetClass() .. "\n" )
+	
+end
+
 hook.Add("PostPlayerDeath", "CreateDeathRagdoll", function(Player)
 	Player:Extinguish()
+	Player.m_LastShovedBy = nil
 
 	if (IsValid(Player.m_LastKiller) and Player.m_LastKiller:GetClass() == "entityflame") or Player:GetPos().z <= Lava.GetLevel() then
 		local rag = Player:GetRagdollEntity()
@@ -104,4 +178,6 @@ function GM:EntityTakeDamage(Entity, Damage)
 	if IsValid(Entity) and IsValid(Damage:GetAttacker()) and Entity:IsPlayer() and Damage:GetAttacker():GetClass() == "entityflame" then
 		Damage:ScaleDamage(math.random(7, 15))
 	end
+
+	if Damage:IsBulletDamage() and not hook.Call("Lava.ShouldBlockBulletDamage", nil, Entity, Damage) then return true end
 end
