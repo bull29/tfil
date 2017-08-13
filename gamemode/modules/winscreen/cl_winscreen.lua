@@ -4,186 +4,187 @@ local game = game
 local draw = draw
 local pColor = pColor
 local Config = Config
-
-local numberEmoji = {
-	[0] = 2645,
-	[1] = 2648,
-	[2] = 2649,
-	[3] = 2652,
-	[4] = 2653,
-	[5] = 2654,
-	[6] = 2655,
-	[7] = 2656,
-	[8] = 2657,
-	[9] = 2658
-}
-
+local White = color_white
 local anims = {
 	[1] = {
 		"gesture_bow_original",
 		"gesture_salute_original",
-		"gesture_wave_original",
-		"gesture_agree_original",
 		"taunt_laugh",
-		"taunt_cheer",
 		"taunt_dance",
-		"taunt_robot",
 	}, [2] = {
-		"taunt_persistence_base"
+		"taunt_persistence_base",
+		"taunt_robot",
+		"gesture_agree_original",
 	}, [3] = {
-		"taunt_muscle_base",
-		"gesture_disagree_original"
+		"gesture_disagree_original",
+		"gesture_wave_original",
+		"taunt_cheer",
 	}
 }
 
-
 hook.RunOnce("HUDPaint", function()
-	s = InitializePanel("LavaWinscreen", "DPanel")
+	s = InitializePanel( "LavaWinscreen", "DPanel" )
 	s:SetSize(ScrW() * 0.6, ScrH() * 0.8)
+	s:SetMouseInputEnabled( true )
+	s.Paint = function( s, w, h ) draw.Rect( 0, 0, w, h, pColor() - 50) end
 	s:Center()
-	
-	local b = s:Add("DPanel")
-	b:Dock( BOTTOM )
-	b:SetTall( ScrH()/25 )
-	b.Paint = function( s, w, h )
-		draw.Rect( 0, 0, w, h, pColor() - 100 )
+
+	local tBar = s:Add("DLabel")
+	tBar:Dock( TOP )
+	tBar:SetTall( ScrH() / 20)
+	tBar:SetMouseInputEnabled( true )
+	tBar:SetContentAlignment( 5 )
+	tBar:SetText( "Round Report" )
+	tBar:SetFont( "lava_round_report_title" )
+	tBar.Paint = function( s, w, h )
+		draw.Rect( 0, 0, w, h, pColor() - 50 )
+		draw.WebImage( Emoji.Get( 468 ), w/3 + w/15, h/2, h * 0.6, h* 0.6, nil, 0 )
+		draw.WebImage( Emoji.Get( 468 ), w*0.66 - w/15, h/2, h * 0.6, h* 0.6, nil, 0 )
 	end
 
-	local l = s:Add("lava_scroller")
-	l:DockMargin(0, ScrH() * 0.8 / 1.9, 0, 0)
-	l:Dock(FILL)
-	s.Canvas = l
-
-	local t = s:Add("DPanel")
-	t:SetSize(ScrW() * 0.6, ScrH() * 0.8/2 + ScrH()/50)
-	
-	local playerPanel = {}
-	for i = 1, 3 do
-		local x, y = ScrW() * 0.3, ScrH() * 0.15
-		
-		if i == 2 then
-			x, y = ScrW() * 0.15, ScrH() * 0.2
-		elseif i == 3 then
-			x, y = ScrW() * 0.45, ScrH() * 0.23
+	local Close = tBar:Add("DButton")
+	Close:Dock( RIGHT )
+	Close:SetText("")
+	Close:SetWide( ScrH()/20 )
+	Close:GenerateColorShift( "cVar", White - 100, White, 512 )
+	Close.DoClick = function() s:Hide() end
+	Close.CanClose = CurTime() + 10
+	Close.Paint = function( s, w, h )
+		if s.CanClose > CurTime() then
+			draw.WebImage( Emoji.Get( Emoji.ParseNumber( ( s.CanClose - CurTime() ):floor() )[1] ), w/2, h/2, w*0.8, h*0.8, nil, 0 )
+			return
 		end
-		
-		local s = ScrH() * 0.2
-		
-		local ply = t:Add("DModelPanel")
-		ply:SetPos(x - s/2, y - s/2)
-		ply:SetSize(s, s)
-		ply:SetFOV( 5 )
-		function ply:PreDrawModel()
+		draw.WebImage( Emoji.Get( 472 ), w/2, h/2, w*0.8, h*0.8, s.cVar, s.Hovered and CurTime() * -500 or 0 )
+	end
+
+	local wBar = s:Add("DPanel")
+	wBar:Dock( TOP )
+	wBar:SetTall( s:GetTall() / 2 )
+
+	local bBar = s:Add("DLabel")
+	bBar:Dock( BOTTOM )
+	bBar:SetTall( ScrH() / 50 )
+	bBar:SetText("")
+	bBar.Paint = function( s, w, h )
+		draw.Rect( 0, 0, w, h, pColor() - 50)
+	end
+
+	local Scroller = s:Add("lava_scroller")
+	Scroller:Dock( BOTTOM )
+
+
+	local PlayerPanel = {}
+
+	for i = 1, 3 do
+		local ModelPanel = wBar:Add("DModelPanel")
+		ModelPanel:SetFOV( 5 )
+		ModelPanel.PreDrawModel = function()
 			cam.IgnoreZ( true )
 		end
-		function ply:PostDrawModel()
+		ModelPanel.PostDrawModel = function()
 			cam.IgnoreZ( false )
 		end
-		playerPanel[i] = ply
+		PlayerPanel[ i ] = ModelPanel
+		PlayerPanel[ 3 + i ] = wBar:Add("DCirclePanel")
 	end
-	
-	function l:Repopulate(ranking)
-		self:GetCanvas():RemoveChildren()
 
-		local camPos, camAng = ranking[1]:EyePos(), ranking[1]:EyeAngles()
+	local function AddPlayer( Player, Ranking, x, y, w, h )
+		if PlayerPanel[ Ranking ].Player ~= Player then
+			PlayerPanel[ Ranking ].Player = Player
+			PlayerPanel[ Ranking ]:SetSize( w / 10, h / 2)
+			PlayerPanel[ Ranking ]:SetModel( Player:GetModel() )
+			PlayerPanel[ Ranking ]:SetPaintedManually( true )
+			PlayerPanel[ Ranking ]:SetPos( x, y )
+			PlayerPanel[ Ranking ].Entity.GetPlayerColor = function( self ) return Player:GetPlayerColor() end 
+			PlayerPanel[ Ranking ].LayoutEntity = function( self, Entity )
+				self:RunAnimation()
+				self:SetCamPos( Entity:GetForward() * 500 )
+				Entity:SetAngles( Angle( 0, 45, 0 ))
+			end
+			PlayerPanel[ 3 + Ranking ]:SetSize( w / 10, w / 10 )
+			PlayerPanel[ 3 + Ranking ]:SetPos( x, y )
+			PlayerPanel[ 3 + Ranking ]:SetPaintedManually( true )
+			PlayerPanel[ 3 + Ranking ].PaintCircle = function( s, w, h )
+				if not IsValid( Player ) then return end
+				draw.WebImage( Emoji.Get( Player:EmojiID() ), w/2, h/2, w*0.7, h*0.7, nil, 0 )
+				draw.WebImage( WebElements.CircleOutline, 0, 0, w, h, Player:PlayerColor() )
+			end
+			local RandomSequence = anims[ Ranking ][ math.random( #( anims[ Ranking ] ) ) ]
+			if not PlayerPanel[ Ranking ].Entity:LookupSequence( RandomSequence ) or not PlayerPanel[ Ranking ].Entity:LookupSequence( "pose_standing_0" .. Ranking ) then return end
+			PlayerPanel[ Ranking ].Entity:SetSequence( PlayerPanel[ Ranking ].Entity:LookupSequence( RandomSequence ) )
+
+			timer.Simple( PlayerPanel[ Ranking ].Entity:SequenceDuration( PlayerPanel[ Ranking ].Entity:LookupSequence( RandomSequence ) ), function()
+				if IsValid( Player ) and IsValid( PlayerPanel[ Ranking ] ) then
+					PlayerPanel[ Ranking ].Entity:SetSequence( PlayerPanel[ Ranking ].Entity:LookupSequence( "pose_standing_0" .. Ranking ) )
+				end
+			end)
+		end
+		PlayerPanel[ 3 + Ranking ]:PaintManual()
+		PlayerPanel[ Ranking ]:PaintManual()
+	end
+
+	function s:Repopulate( ranking )
+		Scroller:GetCanvas():RemoveChildren()
+		Scroller:SetTall( ( #ranking - 3 ):Clamp( 0, 10 ) * ScrH()/25 )
+		s:SetTall( wBar:GetTall() + tBar:GetTall() + Scroller:GetTall() + bBar:GetTall())
+		s:Center()
+
+		local camPos, camAng = ranking[1]:EyePos() + Vector( 0, 0, 10 ), ranking[1]:EyeAngles()
 		local randPos, randAng = Vector((math.min(math.random(), 0.4) - 0.7) * 12, (math.min(math.random(), 0.4) - 0.5) * 12, (math.min(math.random(), 0.4) - 0.7) * -4), (math.min(math.random(), 0.4) - 0.7) * 8
 
-		s.Paint = function(s, w, h)
-			draw.Rect(0, 0, w, h, Gray)
-			draw.Rect(0, h / 2, w, 1, pColor() - 50)
+		wBar.Paint = function( s, w, h )
 			local x, y = s:LocalToScreen( 0, 0 )
-			render.RenderView({
+			render.RenderView{
 				drawviewmodel = false,
 				origin = camPos,
 				angles = camAng,
-				aspectratio = (w)/(h/2),
+				aspectratio = w/h,
 				x = x,
 				y = y,
 				w = w,
-				h = h / 2 + ScrH()/25
-			})
-
-			if ranking[1] then
-				draw.Rect( w/2.5, 0, w / 5, h / 2 + ScrH()/25, ranking[1]:PlayerColor():Alpha( 125 ) )
-			end
-			if ranking[2] then
-				draw.Rect( w/6.5, 0, w / 5, h / 2 + ScrH()/25, ranking[2]:PlayerColor():Alpha( 125 ) )
-			end
-			if ranking[3] then
-				draw.Rect( w*0.65, 0, w / 5, h / 2 + ScrH()/25, ranking[3]:PlayerColor():Alpha( 125 ) )
-			end
-
-
+				h = h,
+			}
 
 			camPos = camPos + Vector(randPos.x * math.cos(math.rad(camAng.yaw)) * FrameTime(), randPos.y * math.sin(math.rad(camAng.yaw)) * FrameTime(), randPos.z * FrameTime())
 			camAng = camAng + Angle(0, randAng * FrameTime(), 0)
-		end
 
-		t.Paint = function( s, w, h )
-			local s = ScrH() * 0.2
-			
-			local x, y = ScrW() * 0.3, ScrH() * 0.05
-			draw.WebImage(Emoji.Get(629), x, y + s*1.6, s*0.3, s*1.45, nil, 180)
-			draw.WebImage(Emoji.Get(2188), x, y + s*1.1, s*0.25, s*0.25, nil, 0)
-			draw.Rect( w/2.5, h * 0.91, w/5, h / 10, ranking[1]:PlayerColor() )
+			if IsValid( ranking[1] ) then
+				local Player = ranking[1]
+				draw.Rect( w/2 - w/10, 0, w/5, h, Player:PlayerColor():Alpha( 150 ) )
+				draw.WebImage( Emoji.Get( 629 ), w/2, h*0.83, h/7, h * 0.7, nil, 180 )
+				draw.WebImage( Emoji.Get( 2188 ), w/2, h*0.56, h/8, h/8, nil, 0 )
 
-
-			draw.SimpleText(ranking[1]:Nick(), "lava_score_player_row", w/2, h * 0.92, nil, 1, 2)
-
---[[ 			draw.WebImage( WebElements.Circle, w/2, h*0.15, h/5, h/5, ranking[1]:PlayerColor() + 50, 0 )
-			draw.WebImage( Emoji.Get( ranking[1]:EmojiID() ), w/2, h*0.15, h/5, h/5, nil, 0 )--]] 
-			if #ranking < 2 then return end
-			
-			x, y = ScrW() * 0.15, ScrH() * 0.1
-			draw.WebImage(Emoji.Get(629), x, y + s*1.6, s*0.3, s*1.45, nil, 180)
-			draw.WebImage(Emoji.Get(2189), x, y + s*1.1, s*0.25, s*0.25, nil, 0)
-			draw.Rect( w/6.5, h * 0.91, w/5, h / 10, ranking[2]:PlayerColor() )
-
-
-			draw.SimpleText(ranking[2]:Nick(), "lava_score_player_row", w/4, h * 0.92, nil, 1, 2)
-
---[[ 
-			draw.WebImage( WebElements.Circle, w/4, h*0.25, h/5, h/5, ranking[2]:PlayerColor() + 50, 0 )
-			draw.WebImage( Emoji.Get( ranking[2]:EmojiID() ), w/4, h*0.25, h/5, h/5, nil, 0 )--]] 
-			if #ranking < 3 then return end
-			
-			x, y = ScrW() * 0.45, ScrH() * 0.15
-			draw.WebImage(Emoji.Get(629), x, y + s*1.5, s*0.3, s*1.45, nil, 180)
-			draw.WebImage(Emoji.Get(2190), x, y + s*1, s*0.25, s*0.25, nil, 0)
-			draw.Rect( w*0.65, h * 0.91, w/5, h / 10, ranking[3]:PlayerColor() )
-			draw.SimpleText(ranking[3]:Nick(), "lava_score_player_row", w*0.75, h * 0.92, nil, 1, 2)
-
---[[ 
-			draw.WebImage( WebElements.Circle, w*0.75, h*0.3, h/5, h/5, ranking[3]:PlayerColor() + 50, 0 )
-			draw.WebImage( Emoji.Get( ranking[3]:EmojiID() ), w*0.75, h*0.3, h/5, h/5, nil, 0 )--]] 
-		end
-		local Offset = math.random( 1, 1000 )
-		local function AddPlayer(Player, rank)
-			if rank <= 3 then
-				local ply = playerPanel[rank]
-				
-				ply:SetModel(Player:GetModel())
-				ply:SetAnimated(true)
-				function ply.Entity:GetPlayerColor() return Player:GetPlayerColor() end
-				function ply:LayoutEntity(ent)
-					ply:RunAnimation()
-					self:SetCamPos( ent:GetForward() * 900)
-					ent:SetAngles(Angle(0, 45, 0))
-				end
-				
-				local anim = ply.Entity:LookupSequence(anims[rank][math.random(1, #anims[rank])])
-				ply.Entity:SetSequence(anim)
-				
-				timer.Simple(ply.Entity:SequenceDuration(anim), function()
-					if IsValid( ply ) and IsValid( ply.Entity ) then
-						ply.Entity:SetSequence(ply.Entity:LookupSequence("pose_standing_0"..(( rank + Offset )%5 ):Clamp( 1, 4) ))
-					end
-				end)
-				
-				return
+				draw.Rect( w/2 - w/10, h - h/10 + 1, w/5, h/10, Player:PlayerColor() )
+				draw.SimpleText( Player:Nick(), "lava_winscreen_nick", w / 2, h - h / 18, nil, 1, 1 )
+				AddPlayer( Player, 1, w/2 - w/20, h * 0.01, w, h )
 			end
-			
-			local p = l:Add("DLabel")
+
+			if IsValid( ranking[2] ) then
+				local Player = ranking[2]
+				draw.Rect( w/4 - w/10, 0, w/5, h, Player:PlayerColor():Alpha( 150 ) )
+				draw.WebImage( Emoji.Get( 629 ), w/4, h*0.8, h/7, h * 0.4, nil, 180 )
+				draw.WebImage( Emoji.Get( 2189 ), w/4, h*0.672, h/8, h/8, nil, 0 )
+
+				draw.Rect( w/4 - w/10, h - h/10 + 1, w/5, h/10, Player:PlayerColor() )
+				draw.SimpleText( Player:Nick(), "lava_winscreen_nick", w / 4, h - h / 18, nil, 1, 1 )
+				AddPlayer( Player, 2, w/4 - w/20, h / 8, w, h )
+			end
+
+			if IsValid( ranking[3] ) then
+				local Player = ranking[3]
+				draw.Rect( w*0.75 - w/10, 0, w/5, h, Player:PlayerColor():Alpha( 150 ) )
+				draw.WebImage( Emoji.Get( 629 ), w*0.75, h*0.9, h/7, h * 0.3, nil, 180 )
+				draw.WebImage( Emoji.Get( 2190 ), w*0.75, h*0.825, h/8, h/8, nil, 0 )
+
+				draw.Rect( w*0.75 - w/10, h - h/10 + 1, w/5, h/10, Player:PlayerColor() )
+				draw.SimpleText( Player:Nick(), "lava_winscreen_nick", w * 0.75, h - h / 18, nil, 1, 1 )
+				AddPlayer( Player, 3, w*0.75 - w/20, h / 3.7, w, h )
+			end
+		end
+
+		for Index, Player in pairs( ranking ) do
+			if Index < 4 then continue end
+			local p = Scroller:Add("DLabel")
 			p:Dock(TOP)
 			p:SetMouseInputEnabled(true)
 			p:SetTall(ScrH() / 25)
@@ -191,8 +192,6 @@ hook.RunOnce("HUDPaint", function()
 			p.InitialHeight = p:GetTall()
 			local tab = p:GenerateColorShift("sMA", Player:PlayerColor() * 0.75, Player:PlayerColor(), 128)
 			p.Paint = function(s, w, h)
-				local a_Height = h
-				h = s.InitialHeight
 				if not IsValid( Player ) then
 					s:Remove()
 					return
@@ -200,15 +199,12 @@ hook.RunOnce("HUDPaint", function()
 				tab[1], tab[2] = Player:PlayerColor()* 0.75, Player:PlayerColor(),
 				draw.Rect(0, 0, w, h, s.sMA)
 
-				local r = tostring(rank)
+				local r = Emoji.ParseNumber(Index)
 				for i = 1, #r do
-					local num = tonumber(string.sub(r, i, i))
-					draw.WebImage(Emoji.Get(numberEmoji[num]), w - h*0.6 - h*0.7*(#r - i), h/2, h*0.7, h*0.7, nil, 0)
+					draw.WebImage(Emoji.Get(r[i]), w - h*0.6 - h*0.7*(#r - i), h/2, h*0.7, h*0.7, nil, 0)
 				end
-				
-				draw.SimpleText( Player:Nick(), "lava_score_player_row", h*2 + h/20, h/2, nil, 0, 1 )
 
-				draw.Rect(0, h, w, a_Height - h, tab[1] - 10)
+				draw.SimpleText( Player:Nick(), "lava_score_player_row", h*2 + h/20, h/2, nil, 0, 1 )
 			end
 
 			local v = p:Add("AvatarImage")
@@ -226,58 +222,21 @@ hook.RunOnce("HUDPaint", function()
 				draw.WebImage( WebElements.CircleOutline, 0, 0, w, h, Player:PlayerColor() )
 			end
 		end
-
-		local aHeader = l:Add("DLabel")
-		aHeader:Dock(TOP)
-		aHeader:SetTall(ScrH() / 25)
-		aHeader:SetFont("lava_score_header")
-		aHeader:SetTextColor(color_white)
-		aHeader:SetText("")
-		aHeader:SetTextInset(ScrW() / 100, 0)
-		aHeader.Paint = function(s, w, h)
-			draw.Rect(0, 0, w, h, pColor() - 75)
-			draw.WebImage(Emoji.Get(468), w - h, h * 0.1, h * 0.8, h * 0.8)
-			draw.WebImage(Emoji.Get(468), h/10, h * 0.1, h * 0.8, h * 0.8)
-		end
-
-		for k, Player in pairs(ranking) do
-			AddPlayer(Player, k)
-		end
-
-		if #ranking < 4 then
-			b:SetParent(l)
-			b:Dock( TOP )
-			b:SetTall( ScrH()/3 + WebElements.Edge + 1 )
-
-			for i = 1, 3 do
-				if not ranking[i] then continue end
-				local av = b:Add("AvatarMask")
-				av:SetSize( b:GetTall() /1.8, b:GetTall() /1.8 )
-				if i == 1 then
-					av:SetPos( s:GetWide()/2 - av:GetWide()/2, av:GetTall()/3)
-				elseif i == 2 then
-					av:SetPos( s:GetWide()/4 - av:GetWide()/2, av:GetTall()/3)
-				elseif i == 3 then
-					av:SetPos( s:GetWide()*0.75 - av:GetWide()/2, av:GetTall()/3)
-				end
-				av.PaintOver = function( s, w, h )
-					draw.WebImage( WebElements.CircleOutline, 0, 0, w, h, ranking[i]:PlayerColor() )
-				end
-				av:SetPlayer( ranking[i], 184 )
-			end
-		end
 	end
+
 	s:Hide()
 end)
 
 net.Receive("lava_winscreen", function()
-	if s then
+	if IsValid( s ) then
 		local tbl = net.ReadTable()
 
-		timer.Simple(3, function()
-			s:Show()
-			s.Canvas:Repopulate(tbl)
-			s:MakePopup()
+		timer.Simple(2, function()
+			if IsValid( s ) then
+				s:Show()
+				s:Repopulate(tbl)
+				s:MakePopup()
+			end
 		end)
 	end
 end)
