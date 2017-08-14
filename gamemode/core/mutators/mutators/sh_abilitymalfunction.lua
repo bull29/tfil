@@ -13,6 +13,7 @@ Mutators.RegisterNewEvent("Ability Rampage", "You've been having an ability iden
 
 		if m_NextCycleTime <= CurTime() then
 			for Player in Values( player.GetAll() ) do
+				if not Player:Alive() then continue end
 				local OldAbility = Player:GetAbility()
 				if Abilities.Skills[ OldAbility ] and Abilities.Skills[ OldAbility ][ 4 ] then
 					Abilities.Skills[ OldAbility ][ 4 ]( Player )
