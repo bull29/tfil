@@ -147,3 +147,13 @@ surface.CreateFont("lava_emoji_reaction_textpane", {
 	font = "Roboto Bold",
 	size = ScrH()/50
 })
+
+surface.CreateFont("lava_round_report_title", {
+	font = "Roboto Condensed",
+	size = ScrH()/25
+})
+
+surface.CreateFont("lava_winscreen_nick", {
+	font = "Roboto Condensed",
+	size = ScrH()/40
+})
