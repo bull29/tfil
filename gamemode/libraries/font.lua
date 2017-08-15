@@ -2,6 +2,7 @@ local FontFunctions = {}
 local CurrentFont = "ChatFont"
 local TemporaryFonts = {}
 local GeneratedFonts = {}
+local crc = util.CRC
 
 function FontFunctions.SetActiveFont(font)
 	CurrentFont = font
@@ -47,12 +48,12 @@ function FontFunctions.GenerateFont(text, width, font, maxheight )
 		TemporaryFonts[ font ] = "temporary_font_" .. font
 	end
 
-	surface.CreateFont("lava_generated_font_" ..  text .. width .. "_" .. font:lower(), {
+	surface.CreateFont("lava_generated_font_" ..  crc( text .. width .. font ), {
 		font = font,
 		size = FontFunctions.GetDesiredHeight(text, width, TemporaryFonts[ font ] ):min( maxheight or 10000 ):floor()
 	})
 
-	GeneratedFonts[ text .. width .. font ] = "lava_generated_font_" .. text .. width .. "_" .. font:lower()
+	GeneratedFonts[ text .. width .. font ] = "lava_generated_font_" .. crc( text .. width .. font )
 	return GeneratedFonts[ text .. width .. font ]
 end
 
