@@ -31,7 +31,7 @@ end
 
 function FontFunctions.GetDesiredHeight(text, width, font )
 	CurrentFont = font or CurrentFont
-	return width * FontFunctions.GetTall(text, CurrentFont) / FontFunctions.GetWide(text, CurrentFont)
+	return width * FontFunctions.GetTall(text, CurrentFont) / FontFunctions.GetWide(text)
 end
 
 function FontFunctions.GenerateFont(text, width, font, maxheight )
@@ -41,17 +41,18 @@ function FontFunctions.GenerateFont(text, width, font, maxheight )
 
 	if not TemporaryFonts[ font ] then
 		surface.CreateFont( "temporary_font_" .. font, {
-			font = font
+			font = font,
+			size = 16
 		})
 		TemporaryFonts[ font ] = "temporary_font_" .. font
 	end
 
-	surface.CreateFont("lava_generated_font_" .. width .. "_" .. font:lower(), {
+	surface.CreateFont("lava_generated_font_" ..  text .. width .. "_" .. font:lower(), {
 		font = font,
-		size = FontFunctions.GetDesiredHeight(text, width, TemporaryFonts[ font ] ):min( maxheight or 0 )
+		size = FontFunctions.GetDesiredHeight(text, width, TemporaryFonts[ font ] ):min( maxheight or 10000 ):floor()
 	})
 
-	GeneratedFonts[ text .. width .. font ] = "lava_generated_font_" .. width .. "_" .. font:lower()
+	GeneratedFonts[ text .. width .. font ] = "lava_generated_font_" .. text .. width .. "_" .. font:lower()
 	return GeneratedFonts[ text .. width .. font ]
 end
 
