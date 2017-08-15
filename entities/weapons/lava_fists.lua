@@ -155,7 +155,6 @@ function SWEP:SecondaryAttack()
 		egg.m_Velocity = egg:GetVelocity()
 
 		if not Mutators.IsActive("Eggplosive Annihilation") then
-			self.Owner:IncrementStat("Eggs Thrown")
 			Ranking.AddEggThrow(self.Owner)
 		end
 
@@ -249,7 +248,6 @@ if SERVER then
 			for Player in Values(player.GetAll()) do
 				if Player:EyePos():Distance(Object:GetPos()) < 28 then
 					if Object.m_EggParent ~= Player then
-						Object.m_EggParent:IncrementStat("Eggs Hit")
 						Ranking.AddEggHit(Object.m_EggParent)
 
 						local Weapon = Object.m_EggParent:GetActiveWeapon()
@@ -343,9 +341,11 @@ local draw = draw
 local c_CValue = 1
 local pColor = pColor
 local vgui = vgui
+local CrosshairPos = {}
 
 function SWEP:DrawHUD()
 	if vgui.CursorVisible() then return end
+	if hook.Call("Lava.ShouldDrawCrosshair", nil, self.Owner, self ) == false then return end
 	local Player = SpectatingPlayer() or LocalPlayer()
 	local tr = Player:GetEyeTrace()
 	local tosc
@@ -373,4 +373,8 @@ function SWEP:DrawHUD()
 	for i = 1, self:GetEggs() do
 		draw.WebImage(Emoji.Get(2204), ScrW() - Size * (0.3 * i) - Size, ScrH() - Size * 1.5, Size, Size, nil, i == self:GetEggs() and (CurTime() * 5):sin() * 15 or -15, true)
 	end
+
+	CrosshairPos[1], CrosshairPos[2] = tosc.x, tosc.y
 end
+
+_G.LavaCrosshairPos = CrosshairPos

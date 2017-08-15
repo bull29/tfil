@@ -6,6 +6,8 @@ local game = game
 local draw = draw
 local pColor = pColor
 local Config = Config
+local MsgC = MsgC
+local White = color_white
 
 local function AddDatapoint( icon, name, func )
 	table.insert( Datapoints, { icon, name, func }  )
@@ -223,6 +225,10 @@ hook.Add("Lava.PopulateScoreboardPlayerButtons", "AddDefaultButtons", function( 
 		Player:SetMuted( not Player:IsMuted() )
 		chat.AddText( ("Player ${1} has been ${2}."):fill( Player:Nick(), Player:IsMuted() and "Muted" or "Unmuted") )
 	end)
+	func( 1384, "Toggle Chat Mute", function( Player )
+		Player.m_IsChatMuted = not Player.m_IsChatMuted
+		chat.AddText( ("Player ${1} has been ${2} in chat (Messages still log to console)."):fill( Player:Nick(), Player.m_IsChatMuted and "Muted" or "Unmuted") )
+	end)
 	func( 1453, "Copy SteamID", function( Player )
 		SetClipboardText( Player:SteamID64() )
 		chat.AddText( ("${1}'s SteamID ${2} has been copied to clipboard."):fill( Player:Nick(), Player:SteamID64()) )
@@ -234,4 +240,11 @@ hook.RunOnce( "HUDPaint", function()
 	net.Start("lava_country")
 	net.WriteString( system.GetCountry() )
 	net.SendToServer()
+end)
+
+hook.Add("OnPlayerChat", "MuteChat", function( Player, Text )
+	if Player.m_IsChatMuted and Player ~= LocalPlayer() then
+		MsgC( "<MUTED> ", Player:PlayerColor(), Player:Nick(), White, ": "..Text, "\n")
+		return true
+	end
 end)

@@ -30,11 +30,7 @@ Mutators.RegisterNewEvent("Flametag", "A Randomly chosen player is flaming. If h
 	end
 	if CLIENT then
 		AddHook( function() end)
-		AddHook( function()
-			if LocalPlayer() == Mutators.GetSpecialPlayer() then
-				_ontp = true
-			end
-		end)
+		AddHook( function()	end)
 	end
 	AddHook( function( Player )
 		local Special = Mutators.GetSpecialPlayer()

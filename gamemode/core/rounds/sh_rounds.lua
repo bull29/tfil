@@ -25,7 +25,7 @@ if CLIENT then
 				hook.Call("Lava.PostRound")
 			elseif OldState == "Ended" then
 				hook.Call("Lava.PreroundStart")
-			elseif OldState == "PreroundStart" then
+			elseif OldState == "Preround" then
 				hook.Call("Lava.RoundStart")
 			end
 			OldState = Rounds.GetState()
