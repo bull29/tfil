@@ -100,8 +100,11 @@ function SWEP:PrimaryAttack(NoForce)
 
 			local Entity = tR_v.Entity
 			if not IsValid(Entity) then return end
-			if Entity:IsPlayer() and Entity:GetMoveType() == 9 then
-				Entity:SetMoveType( 2 )
+			if Entity:IsPlayer() then
+				Entity:EmitSound("vo/npc/Barney/ba_pain0" .. math.random( 9 ) .. ".wav")
+				if Entity:GetMoveType() == 9 then
+					Entity:SetMoveType( 2 )
+				end
 			end
 			if not Entity:IsPlayer() then
 				if Entity:GetPhysicsObject():IsValid() then
