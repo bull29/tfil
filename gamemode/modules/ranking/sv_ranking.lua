@@ -160,6 +160,8 @@ hook.Add("PlayerInitialSpawn", "LavaRanking", function(ply)
 	
 	if not result then
 		sql.Query("INSERT INTO tfil_stats (steamid64, name, lastvisit) VALUES ('" .. id .. "', '" .. SQLStr(ply:GetName(), true) .. "', " .. os.time() .. ");")
+	else
+		sql.Query("UPDATE tfil_stats SET name = '" .. SQLStr(ply:GetName(), true) .. "' WHERE steamid64 = '" .. id .. "'")
 	end
 end)
 
@@ -176,7 +178,7 @@ end)
 hook.Add("Lava.PlayerRankings", "LavaRanking", function(data)
 	Ranking.AddWin(data[1])
 	
-	for i = 2, #data do
+	for i = 4, #data do
 		Ranking.AddLose(data[i])
 	end
 end)
@@ -215,8 +217,15 @@ net.Receive("tfil_rankingrequest", function(len, ply)
 		local order = orders[(orderInd - 1)%13 + 1]
 		local asc = orderInd > 13 and "ASC" or "DESC"
 		local offset = page > 0 and ("OFFSET " .. (page * max)) or ""
+		local search = net.ReadString() or ""
 		
-		local data = sql.Query("SELECT * FROM tfil_stats ORDER BY " .. order .. " " .. asc .. " LIMIT " .. max .. " " .. offset .. ";")
+		if #search > 25 then
+			search = string.sub(search, 1, 25)
+		end
+		
+		search = SQLStr(search, true)
+		
+		local data = sql.Query("SELECT * FROM tfil_stats WHERE name LIKE '%" .. search .. "%' ORDER BY " .. order .. " " .. asc .. " LIMIT " .. max .. " " .. offset .. ";")
 		
 		if data and istable(data) then
 			local dataS = sql.QueryRow("SELECT * FROM tfil_stats WHERE steamid64 = '" .. ply:SteamID64() .. "';")
