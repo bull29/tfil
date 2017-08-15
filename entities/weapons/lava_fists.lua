@@ -264,6 +264,8 @@ if SERVER then
 					net.Start("egged")
 					net.WriteEntity( Player )
 					net.Broadcast()
+
+					hook.Call("Lava.PlayerEgged", nil, Object.m_EggParent, Object, Player )
 					break
 				end
 			end
