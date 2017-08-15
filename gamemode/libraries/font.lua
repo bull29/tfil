@@ -46,11 +46,9 @@ function FontFunctions.GenerateFont(text, width, font, maxheight )
 		TemporaryFonts[ font ] = "temporary_font_" .. font
 	end
 
-	local size = FontFunctions.GetDesiredHeight(text, width, TemporaryFonts[ font ] )
-
 	surface.CreateFont("lava_generated_font_" .. width .. "_" .. font:lower(), {
 		font = font,
-		size = size * ( ( maxheight and maxheight < size and maxheight/size ) or 0)
+		size = FontFunctions.GetDesiredHeight(text, width, TemporaryFonts[ font ] ):min( maxheight or 0 )
 	})
 
 	GeneratedFonts[ text .. width .. font ] = "lava_generated_font_" .. width .. "_" .. font:lower()
