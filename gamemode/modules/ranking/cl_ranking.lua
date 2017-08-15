@@ -18,7 +18,7 @@ local orders = {
 
 ----------
 
-function Ranking.MakeRequest(page, max, order, asc, callback)
+function Ranking.MakeRequest(page, max, order, asc, search, callback)
 	if orders[order] then
 		requestCallback = callback
 		
@@ -26,6 +26,7 @@ function Ranking.MakeRequest(page, max, order, asc, callback)
 		net.WriteInt(page, 16)
 		net.WriteInt(max, 6)
 		net.WriteInt(orders[order] + (asc and 13 or 0), 6)
+		net.WriteString(search)
 		net.SendToServer()
 	end
 end

@@ -113,8 +113,7 @@ function GM:PlayerDeath( ply, inflictor, attacker )
 
 	end
 	
-	if (ply.m_LastShovedBy and IsValid(ply.m_LastShovedBy)) and (attacker:GetClass() == "worldspawn" or attacker:GetClass() == "entityflame") then
-		-- Fall damage or lava
+	if ply.m_LastShovedBy and IsValid(ply.m_LastShovedBy) and ply.m_LastShovedTime > CurTime() - 10 then
 		attacker = ply.m_LastShovedBy
 		attacker:AddFrags(1)
 	end

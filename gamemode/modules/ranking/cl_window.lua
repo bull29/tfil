@@ -1,5 +1,5 @@
 local Gray = Color(0, 0, 0, 150)
-local s
+local p, s
 local game = game
 local draw = draw
 local pColor = pColor
@@ -31,14 +31,19 @@ AddDatapoint( "Favourite Ability", "ability", function( str ) return str == "NUL
 AddDatapoint( "Kills", "kills", Zerofy )
 AddDatapoint( "Deaths", "deaths", Zerofy )
 AddDatapoint( "Wins", "wins", Zerofy )
-AddDatapoint( "Losses", "wins", Zerofy )
+AddDatapoint( "Losses", "loses", Zerofy )
 AddDatapoint( "Eggs Thrown", "eggsthrown", Zerofy )
 AddDatapoint( "Eggs Hit", "eggshit", Zerofy )
 
 hook.RunOnce("HUDPaint", function()
-	s = InitializePanel("LavaRanking", "DPanel")
+	p = InitializePanel("LavaRanking", "DFrame")
+	p:SetSize(ScrW() * 0.8, ScrH() * 0.8)
+	p:Center()
+	p:SetTitle("")
+	p:ShowCloseButton(false)
+	
+	s = p:Add("DPanel")
 	s:SetSize(ScrW() * 0.8, ScrH() * 0.8)
-	s:Center()
 	s.Paint = function(s, w, h)
 		draw.Rect(0, 0, w, h, Gray)
 		draw.Rect(0, 0, w, h/15, pColor() - 100)
@@ -49,7 +54,6 @@ hook.RunOnce("HUDPaint", function()
 	local b = s:Add("DPanel")
 	b:Dock( BOTTOM )
 	b:SetTall( ScrH()/10 )
-	
 
 	local l = s:Add("lava_scroller")
 	l:DockMargin(0, ScrH() * 0.05, 0, 0)
@@ -61,9 +65,29 @@ hook.RunOnce("HUDPaint", function()
 	Close:SetPos( s:GetWide() - Close:GetWide() )
 	Close:SetText("")
 	Close:GenerateColorShift( "cVar", White - 100, White, 512 )
-	Close.DoClick = function() s:Hide() end
+	Close.DoClick = function() p:Hide() end
 	Close.Paint = function( s, w, h )
 		draw.WebImage( Emoji.Get( 472 ), w/2, h/2, w*0.8, h*0.8, s.cVar, s.Hovered and CurTime() * -500 or 0 )
+	end
+
+	local search = p:Add("DTextEntry")
+	search:SetPos(ScrW() * 0.8 - ScrH() * 0.3, ScrH() * 0.0125)
+	search:SetSize(ScrH() * 0.2, ScrH() * 0.025)
+	search:SetFont("lava_score_player_row")
+	search.OnChange = function()
+		search:SetValue(string.sub(search:GetValue(), 1, 25))
+	end
+	search.OnEnter = function()
+		Ranking.MakeRequest(page, 25, sel, asc, search:GetValue(), function(data, dataS)
+			tbl = {
+				data = data,
+				dataS = dataS,
+				page = page,
+				max = 25
+			}
+			
+			s.Canvas:Repopulate(tbl)
+		end)
 	end
 
 	local prevpage = s:Add("DButton")
@@ -76,7 +100,7 @@ hook.RunOnce("HUDPaint", function()
 	prevpage.DoClick = function()
 		page = math.max(page - 1, 1)
 		
-		Ranking.MakeRequest(page, 25, sel, asc, function(data, dataS)
+		Ranking.MakeRequest(page, 25, sel, asc, search:GetValue(), function(data, dataS)
 			tbl = {
 				data = data,
 				dataS = dataS,
@@ -98,7 +122,7 @@ hook.RunOnce("HUDPaint", function()
 	nextpage.DoClick = function()
 		page = page + 1
 		
-		Ranking.MakeRequest(page, 25, sel, asc, function(data, dataS)
+		Ranking.MakeRequest(page, 25, sel, asc, search:GetValue(), function(data, dataS)
 			tbl = {
 				data = data,
 				dataS = dataS,
@@ -214,7 +238,7 @@ hook.RunOnce("HUDPaint", function()
 
 			sel = sort
 
-			Ranking.MakeRequest(page, 25, sort, asc, function(data, dataS)
+			Ranking.MakeRequest(page, 25, sort, asc, search:GetValue(), function(data, dataS)
 				tbl = {
 					data = data,
 					dataS = dataS,
@@ -230,15 +254,15 @@ hook.RunOnce("HUDPaint", function()
 			AddPlayer(v, k)
 		end
 	end
-	s:Hide()
+	p:Hide()
 end)
 
 hook.Add("OnPlayerChat", "LavaRanking", function(ply, text)
 	if ply ~= LocalPlayer() then return end
 	if text ~= "!stats" and text ~= "!ranking" then return end
 
-	if s then
-		Ranking.MakeRequest(page, 25, sel, asc, function(data, dataS)
+	if p then
+		Ranking.MakeRequest(page, 25, sel, asc, "", function(data, dataS)
 			tbl = {
 				data = data,
 				dataS = dataS,
@@ -246,9 +270,9 @@ hook.Add("OnPlayerChat", "LavaRanking", function(ply, text)
 				max = 25
 			}
 
-			s:Show()
+			p:Show()
 			s.Canvas:Repopulate(tbl)
-			s:MakePopup()
+			p:MakePopup()
 		end)
 	end
 end)
@@ -256,7 +280,7 @@ end)
 
 hook.Add("Lava.PopulateWidgetMenu", "MakeStatsWindow", function( Context )
 	Context.NewWidget( "Global Leaderboards", 1367, function()
-		Ranking.MakeRequest(page, 25, sel, asc, function(data, dataS)
+		Ranking.MakeRequest(page, 25, sel, asc, "", function(data, dataS)
 			tbl = {
 				data = data,
 				dataS = dataS,
@@ -264,9 +288,9 @@ hook.Add("Lava.PopulateWidgetMenu", "MakeStatsWindow", function( Context )
 				max = 25
 			}
 
-			s:Show()
+			p:Show()
 			s.Canvas:Repopulate(tbl)
-			s:MakePopup()
+			p:MakePopup()
 		end)
 	end)
 end)
