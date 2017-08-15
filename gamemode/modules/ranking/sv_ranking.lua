@@ -226,17 +226,21 @@ net.Receive("tfil_rankingrequest", function(len, ply)
 		search = SQLStr(search, true)
 		
 		local data = sql.Query("SELECT * FROM tfil_stats WHERE name LIKE '%" .. search .. "%' ORDER BY " .. order .. " " .. asc .. " LIMIT " .. max .. " " .. offset .. ";")
-		
+		local dataS = sql.QueryRow("SELECT * FROM tfil_stats WHERE steamid64 = '" .. ply:SteamID64() .. "';")
+
 		if data and istable(data) then
-			local dataS = sql.QueryRow("SELECT * FROM tfil_stats WHERE steamid64 = '" .. ply:SteamID64() .. "';")
-			
 			net.Start("tfil_rankingrequest")
 			net.WriteTable(data)
 			net.WriteTable(dataS)
 			net.Send(ply)
+		elseif search ~= "" then
+			net.Start("tfil_rankingrequest")
+			net.WriteTable{}
+			net.WriteTable(dataS or {})
+			net.Send(ply)
 		end
 	end
-	
+
 	requestTimeout[ply] = CurTime() + 0.25
 end)
 

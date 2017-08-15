@@ -141,6 +141,7 @@ hook.RunOnce("HUDPaint", function()
 
 		local data = tbl.dataS
 		b.Paint = function( s, w, h )
+			if not data or not istable( data ) then return end
 			draw.Rect(0, 0, w, h, pColor() - 100)
 			draw.Rect(h/2, h/6, w - h, h/2, pColor() - 50)
 			
