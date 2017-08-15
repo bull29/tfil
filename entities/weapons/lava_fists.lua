@@ -155,7 +155,6 @@ function SWEP:SecondaryAttack()
 		egg.m_Velocity = egg:GetVelocity()
 
 		if not Mutators.IsActive("Eggplosive Annihilation") then
-			self.Owner:IncrementStat("Eggs Thrown")
 			Ranking.AddEggThrow(self.Owner)
 		end
 
@@ -249,7 +248,6 @@ if SERVER then
 			for Player in Values(player.GetAll()) do
 				if Player:EyePos():Distance(Object:GetPos()) < 28 then
 					if Object.m_EggParent ~= Player then
-						Object.m_EggParent:IncrementStat("Eggs Hit")
 						Ranking.AddEggHit(Object.m_EggParent)
 
 						local Weapon = Object.m_EggParent:GetActiveWeapon()
