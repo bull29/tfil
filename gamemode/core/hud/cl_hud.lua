@@ -8,6 +8,7 @@ local tPane
 local m_HavePlayedSound
 
 local tTranslateTable = {
+	snooze = "Snooze",
 	preround = "Preparation",
 	started = "In Progress",
 	ended = "Postround"

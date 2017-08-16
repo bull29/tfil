@@ -215,3 +215,9 @@ hook.Add("OnContextMenuClose", "DisableSpecContextRender", function()
 	tShouldDisable = false
 end)
 
+hook.Add("Lava.PopulateWidgetMenu", "AddSpecatorModeWidget", function( Context )
+	Context.NewWidget("Spectating Mode", 2546, function()
+		net.Start("lava_afk")
+		net.SendToServer()
+	end)
+end)

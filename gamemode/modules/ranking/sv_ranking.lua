@@ -41,7 +41,7 @@ end
 ----------
 
 local function ShouldCount()
-	return player.GetCount() > Config.GetMinPlayersForStats()
+	return #player.GetActive() > Config.GetMinPlayersForStats()
 end
 
 function Ranking.AddAbilityUse(ply, ability)

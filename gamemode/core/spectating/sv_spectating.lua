@@ -1,3 +1,4 @@
+util.AddNetworkString("lava_afk")
 
 local function NextPlayer( CurrentNumber )
 	return ((CurrentNumber % player.GetCount() + 1))
@@ -49,6 +50,23 @@ hook.Add("Lava.DeathThink", "LavaSpectating", function(Player)
 			end
 
 			Player:SpectateEntity(player.GetAll()[Player.m_SpectateIndex])
+		end
+	end
+end)
+
+net.Receive("lava_afk", function(_, Player)
+	if not Player:GetNW2Bool("$afk") then
+		if Player:Alive() and hook.Call("CanPlayerSuicide", gmod.GetGamemode(), Entity(1)) then
+			Player:KillSilent()
+		end
+
+		Player:SetNW2Bool("$afk", true)
+		Notification.SendType("AFK", Player:Nick() .. " is now afk in specatators' mode.")
+	else
+		Player:SetNW2Bool("$afk", false)
+		Notification.SendType("AFKBack", Player:Nick() .. " is now back from afk mode!")
+		if player.GetCount() == 1 then
+			Rounds.Preround()
 		end
 	end
 end)
