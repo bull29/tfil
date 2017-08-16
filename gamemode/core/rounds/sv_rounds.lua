@@ -168,7 +168,7 @@ hook.Add( "player_disconnect", "CheckAllDead", function()
 end )
 
 hook.Add("PlayerDeathThink", "PreventRespawning",function( Player )
-	if hook.Call("Lava.DeathThink", nil, Player ) == nil and not Player:Alive() and Rounds.CurrentState ~= "Preround" then
+	if not Player:Alive() and Rounds.CurrentState ~= "Preround" and hook.Call("Lava.DeathThink", nil, Player ) == nil then
 		return false
 	end
 end)
