@@ -1,6 +1,4 @@
-if hook and hook.AddListener then
-	return
-end
+if m_HaveOverriddenHooks then return end
 
 local gmod                        = gmod
 local pairs                        = pairs
@@ -78,7 +76,7 @@ end
     Args: string hookName, identifier
     Desc: Removes the hook listener with the given indentifier.
 -----------------------------------------------------------]]
-function Remove( event_name, name )
+function RemoveListener( event_name, name )
 
 	if ( !isstring( event_name ) ) then return end
 	if ( !ListenerHooks[ event_name ] ) then return end
@@ -167,3 +165,5 @@ function Call( name, gm, ... )
 	return GamemodeFunction( gm, ... )        
 	
 end
+
+m_HaveOverriddenHooks = true
