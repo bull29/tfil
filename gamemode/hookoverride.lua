@@ -1,4 +1,3 @@
-if m_HaveOverriddenHooks then return end
 
 local gmod                        = gmod
 local pairs                        = pairs
@@ -165,5 +164,3 @@ function Call( name, gm, ... )
 	return GamemodeFunction( gm, ... )        
 	
 end
-
-m_HaveOverriddenHooks = true
