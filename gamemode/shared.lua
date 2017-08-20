@@ -3,11 +3,6 @@ GM.Author = "Bull [76561198045139792]"
 GM.Email = "thebull2140@gmail.com"
 GM.Website = "https://github.com/bull29"
 
-if not m_HaveOverriddenHooks then
-	include("hookoverride.lua")
-	m_HaveOverriddenHooks = true
-end
-
 local acl = AddCSLuaFile
 local inc = include
 local sp = SortedPairs
