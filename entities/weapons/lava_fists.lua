@@ -112,10 +112,12 @@ function SWEP:PrimaryAttack(NoForce)
 						Entity:GetPhysicsObject():AddVelocity(self.Owner:GetAimVector() * (10000 * Entity:GetPhysicsObject():GetMass():Clamp(1, 100)))
 					end
 				end
-			elseif hook.Call( "Lava.PlayerPushPlayer", nil, self.Owner, Entity ) == nil then
-				Entity:SetVelocity(self.Owner:GetForward():SetZ(Entity:OnGround() and 0.2 or -0.2) * 1000)
+			else
 				Entity.m_LastShovedBy = self.Owner
 				Entity.m_LastShovedTime = CurTime()
+				if hook.Call( "Lava.PlayerPushPlayer", nil, self.Owner, Entity ) == nil then
+					Entity:SetVelocity(self.Owner:GetForward():SetZ(Entity:OnGround() and 0.2 or -0.2) * 1000)
+				end
 			end
 		end
 	end
