@@ -167,7 +167,8 @@ hook.Add( "player_disconnect", "CheckAllDead", function()
 end )
 
 hook.Add("PlayerDeathThink", "PreventRespawning",function( Player )
-	if Player:GetNW2Bool("$afk") or ( not Player:Alive() and Rounds.CurrentState ~= "Preround" and hook.Call("Lava.DeathThink", nil, Player ) == nil ) then
+	if Player:GetNW2Bool("$afk") or ( not Player:Alive() and Rounds.CurrentState ~= "Preround" ) then
+		hook.Call("Lava.SpectatorThink", nil, Player )
 		return false
 	end
 end)
