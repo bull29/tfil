@@ -48,7 +48,7 @@ hook.RunOnce("HUDPaint", function()
 	Close:SetText("")
 	Close:SetWide( ScrH()/20 )
 	Close:GenerateColorShift( "cVar", White - 100, White, 512 )
-	Close.DoClick = function() if s.CanClose < CurTime() then s:Hide() end end
+	Close.DoClick = function( self ) if self.CanClose < CurTime() then s:Hide() end end
 	Close.Paint = function( s, w, h )
 		if s.CanClose > CurTime() then
 			draw.WebImage( Emoji.Get( Emoji.ParseNumber( ( s.CanClose - CurTime() ):floor() )[1] ), w/2, h/2, w*0.8, h*0.8, nil, 0 )

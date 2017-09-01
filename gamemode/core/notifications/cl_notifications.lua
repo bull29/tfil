@@ -88,3 +88,7 @@ hook.RunOnce("HUDPaint", function()
 		chat.PlaySound()
 	end)
 end)
+
+hook.Add( "ChatText", "HideDefaultShit", function( _, _, _, type )
+	if type == "joinleave" then return true end
+end )

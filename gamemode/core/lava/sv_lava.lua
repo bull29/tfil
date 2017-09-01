@@ -12,7 +12,7 @@ local hook = hook
 local FrameTime = FrameTime
 local player_manager = player_manager
 local CurTime = CurTime
-local m_UnderDescentAmount = 128 * 1.5
+local m_UnderDescentAmount = 16 * 1.5
 Rounds.NextSuperDecentTime = nil
 
 hook.Add("Think", "LavaSync", function()
@@ -45,7 +45,7 @@ hook.Add("Think", "LavaMainCycle", function()
 
 				if t <= FrameTime() * 10 then
 					Rounds.NextSuperDecentTime = CurTime() + 20
-					m_UnderDescentAmount = 64
+					m_UnderDescentAmount = 8
 				end
 			end
 		else

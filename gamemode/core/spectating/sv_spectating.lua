@@ -8,7 +8,7 @@ local function PreviousPlayer( CurrentNumber )
 	return ((CurrentNumber - 2) % player.GetCount()) + 1
 end
 
-hook.Add("Lava.DeathThink", "LavaSpectating", function(Player)
+hook.Add("Lava.SpectatorThink", "LavaSpectating", function(Player)
 	Player.m_NextSpectateToggle = Player.m_NextSpectateToggle or CurTime()
 
 	if Player.m_NextSpectateToggle < CurTime() then

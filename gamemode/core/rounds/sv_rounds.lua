@@ -1,9 +1,9 @@
 local Config = GM.GetConfig()
 local Rounds = {}
+local PlayerRanking = {}
 Rounds.CurrentState = Rounds.CurrentState or "Preround"
 NextMapTime = NextMapTime or 0
 SetGlobalInt( "$NextMapTime", NextMapTime )
-local playerRanking = {}
 
 hook.Add("Initialize", "ResetmapTime", function()
 	NextMapTime = 0
@@ -23,7 +23,6 @@ end
 local function SetTimer(time)
 	Rounds.NextStateChange = time
 end
-
 
 function Rounds.Preround()
 	if NextMapTime >= Config.GetMapSwitchTime() then
@@ -69,7 +68,7 @@ function Rounds.Start()
 		end
 	end
 
-	playerRanking = {}
+	PlayerRanking = {}
 
 	SetRoundState("Started")
 	SetTimer(os.time() + Config.GetRoundTime())
@@ -133,10 +132,10 @@ function Rounds.CheckShouldRestart()
 				ShouldRestart = true
 				Notification.SendType( "Winner", player.GetAlive()[1]:Nick() .. " has won!")
 
-				table.insert(playerRanking, player.GetAlive()[1])
+				table.insert(PlayerRanking, player.GetAlive()[1])
 
 				local tbl = {}
-				for k, v in pairs(table.Reverse(playerRanking)) do
+				for k, v in pairs(table.Reverse(PlayerRanking)) do
 					if IsValid(v) and v:IsPlayer() then
 						table.insert(tbl, v)
 					end
@@ -168,7 +167,8 @@ hook.Add( "player_disconnect", "CheckAllDead", function()
 end )
 
 hook.Add("PlayerDeathThink", "PreventRespawning",function( Player )
-	if hook.Call("Lava.DeathThink", nil, Player ) == nil and not Player:Alive() and Rounds.CurrentState ~= "Preround" then
+	if Player:GetNW2Bool("$afk") or ( not Player:Alive() and Rounds.CurrentState ~= "Preround" ) then
+		hook.Call("Lava.SpectatorThink", nil, Player )
 		return false
 	end
 end)
@@ -180,7 +180,7 @@ hook.Add("PlayerInitialSpawn", "CheckLone",function()
 end)
 
 hook.Add("PlayerDeath", "SelectPlayerRanking", function(ply)
-	table.insert(playerRanking, ply)
+	table.insert(PlayerRanking, ply)
 end)
 
 _G.Rounds = Rounds

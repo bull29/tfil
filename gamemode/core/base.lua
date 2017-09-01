@@ -10,6 +10,8 @@ end
 
 function GM:ShouldCollide(A, B)
 	if A:IsPlayer() and B:IsPlayer() and (A:GetMoveType() == 9 or B:GetMoveType() == 9) then return false end
+	if A:IsPlayer() and B.m_Owner == A then return false end
+	if B:IsPlayer() and A.m_Owner == B then return false end
 
 	return true
 end
@@ -48,61 +50,42 @@ function GM:EntityTakeDamage(Entity, Damage)
 	if Damage:IsBulletDamage() and not hook.Call("Lava.ShouldBlockBulletDamage", nil, Entity, Damage) then return true end
 end
 
-function GM:PlayerDeath(ply, inflictor, attacker)
-	ply.NextSpawnTime = CurTime() + 2
-	ply.DeathTime = CurTime()
+if SERVER then util.AddNetworkString("lava_player_death") end
 
-	if (IsValid(attacker) and attacker:GetClass() == "trigger_hurt") then
-		attacker = ply
+function GM:PlayerDeath(Player, Inflictor, Attacker)
+	Player.NextSpawnTime = CurTime() + 2
+	Player.DeathTime = CurTime()
+
+	if (IsValid(Attacker) and Attacker:GetClass() == "trigger_hurt") then
+		Attacker = Player
 	end
 
-	if (IsValid(attacker) and attacker:IsVehicle() and IsValid(attacker:GetDriver())) then
-		attacker = attacker:GetDriver()
+	if (IsValid(Attacker) and Attacker:IsVehicle() and IsValid(Attacker:GetDriver())) then
+		Attacker = Attacker:GetDriver()
 	end
 
-	if (not IsValid(inflictor) and IsValid(attacker)) then
-		inflictor = attacker
+	if (not IsValid(Inflictor) and IsValid(Attacker)) then
+		Inflictor = Attacker
 	end
 
-	if (IsValid(inflictor) and inflictor == attacker and (inflictor:IsPlayer() or inflictor:IsNPC())) then
-		inflictor = inflictor:GetActiveWeapon()
+	if (IsValid(Inflictor) and Inflictor == Attacker and (Inflictor:IsPlayer() or Inflictor:IsNPC())) then
+		Inflictor = Inflictor:GetActiveWeapon()
 
-		if (not IsValid(inflictor)) then
-			inflictor = attacker
+		if (not IsValid(Inflictor)) then
+			Inflictor = Attacker
 		end
 	end
 
-	if ply.m_LastShovedBy and IsValid(ply.m_LastShovedBy) and ply.m_LastShovedTime > CurTime() - 10 then
-		attacker = ply.m_LastShovedBy
-		attacker:AddFrags(1)
+	if Player.m_LastShovedBy and IsValid(Player.m_LastShovedBy) and Player.m_LastShovedTime > CurTime() - 10 then
+		Attacker = Player.m_LastShovedBy
+		Attacker:AddFrags(1)
 	end
 
-	hook.Call("Lava.PlayerDeath", nil, ply, inflictor, attacker)
+	hook.Call("Lava.PlayerDeath", nil, Player, Inflictor, Attacker)
 
-	if (attacker == ply) then
-		net.Start("PlayerKilledSelf")
-		net.WriteEntity(ply)
-		net.Broadcast()
-		MsgAll(attacker:Nick() .. " suicided!\n")
-
-		return
-	end
-
-	if (attacker:IsPlayer()) then
-		net.Start("PlayerKilledByPlayer")
-		net.WriteEntity(ply)
-		net.WriteString(inflictor:GetClass())
-		net.WriteEntity(attacker)
-		net.Broadcast()
-		MsgAll(attacker:Nick() .. " killed " .. ply:Nick() .. " using " .. inflictor:GetClass() .. "\n")
-
-		return
-	end
-
-	net.Start("PlayerKilled")
-	net.WriteEntity(ply)
-	net.WriteString(inflictor:GetClass())
-	net.WriteString(attacker:GetClass())
+	net.Start("lava_player_death")
+	net.WriteEntity( Player )
+	net.WriteEntity( Attacker )
+	net.WriteEntity( Inflictor )
 	net.Broadcast()
-	MsgAll(ply:Nick() .. " was killed by " .. attacker:GetClass() .. "\n")
 end

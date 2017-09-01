@@ -33,6 +33,12 @@ hook.Add("Lava.PostPlayerSpawn", "METAMON", function( Player )
 	Player:SetAbilityMeter( 0 )
 end)
 
+hook.Add("PlayerTick", "MetamonAutoregen", function( Player )
+	if Player:HasAbility("Metamon") then
+		Player:SetAbilityMeter( (Player:GetAbilityMeter() + FrameTime()/25 ):min( 11 ) )
+	end
+end)
+
 hook.Add("HUDPaint", "DRAWMON", function()
 	if LocalPlayer():HasAbility("Metamon") and LocalPlayer():Alive() then
 		draw.Rect( ScrW()/2, ScrH() * 0.9, ScrW()*0.4 + WebElements.Edge * 2, ScrH()/25 + WebElements.Edge, pColor(), nil, 0 )

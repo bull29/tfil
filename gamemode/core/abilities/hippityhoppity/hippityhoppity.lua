@@ -3,7 +3,7 @@
 hook.Add("GetFallDamage", "AvoidFallDamageHH", function(Player, Speed )
 	if Player:HasAbility("Hippity Hoppity") then
 		if not Player:Crouching() then
-			Player:SetVelocity( ( Player:GetAimVector() * 0.35 ):SetZ( 1.2 ) * ( Speed*0.75 ) )
+			Player:SetVelocity( ( Player:GetAimVector() * 0.35 ):SetZ( 1.5 ) * ( Speed*0.75 ) )
 		end
 		return ( CalculateBaseFallDamage( Speed ) * 0.75 ):min( 5 )
 	end
