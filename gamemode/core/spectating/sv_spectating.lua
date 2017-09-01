@@ -61,10 +61,10 @@ net.Receive("lava_afk", function(_, Player)
 		end
 
 		Player:SetNW2Bool("$afk", true)
-		Notification.SendType("AFK", Player:Nick() .. " is now afk in specatators' mode.")
+		--Notification.SendType("AFK", Player:Nick() .. " is now afk in specatators' mode.")
 	else
 		Player:SetNW2Bool("$afk", false)
-		Notification.SendType("AFKBack", Player:Nick() .. " is now back from afk mode!")
+		--Notification.SendType("AFKBack", Player:Nick() .. " is now back from afk mode!")
 		if player.GetCount() == 1 then
 			Rounds.Preround()
 		end
