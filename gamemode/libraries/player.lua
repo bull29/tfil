@@ -93,4 +93,14 @@ function player.GetSpectators()
 	return tab
 end
 
+function player.GetActive()
+	local tab = {}
+	for Player in Values( player.GetAll() ) do
+		if not Player:GetNW2Bool("$afk") then
+			table.insert( tab, Player )
+		end
+	end
+	return tab
+end
+
 player.GetDead = player.GetSpectators

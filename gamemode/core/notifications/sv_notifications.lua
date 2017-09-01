@@ -76,6 +76,18 @@ Notification.CreateType("Chance", {
 	ICON = 493
 })
 
+Notification.CreateType("AFK", {
+	SOUND = "plats/elevbell1.wav",
+	TIME = 9,
+	ICON = 1384
+})
+
+Notification.CreateType("AFKBack", {
+	SOUND = "plats/elevbell1.wav",
+	TIME = 9,
+	ICON = 1941
+})
+
 gameevent.Listen("player_connect")
 gameevent.Listen("player_disconnect")
 

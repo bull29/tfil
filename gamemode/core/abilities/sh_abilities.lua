@@ -56,6 +56,12 @@ function Player:ShiftAbilityMeter( n )
 	self:UpdateAbilityMeter()
 end
 
+function Player:SetAbilityMeter( n )
+	if CLIENT then return end
+	self.m_CurrentAbilityMeter = ( n ):min( 100 ):max( 0 )
+	self:UpdateAbilityMeter()
+end
+
 function Player:HasUsedUpAbility()
 	return SERVER and self.m_HasUsedUpAbility or self:GetNW2Bool("$abilityusedup")
 end

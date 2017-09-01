@@ -36,18 +36,18 @@ hook.RunOnce("HUDPaint", function()
 	local i = InitializePanel("LavaContextCore", "DIconLayout")
 	i:Dock(LEFT)
 	i:SetSpaceY(ScrH() / 100)
-	i:SetWide(ScrW()/15)
+	i:SetWide(ScrW()/17)
 	i:SetPaintedManually(true)
 	i:DockMargin(ScrH() / 100, ScrH() / 100, ScrH() / 100, 0)
 	hook.Call("Lava.PopulateWidgetMenu", nil, Context )
 
-	i:Add("DIconLayout"):SetSize(72, 36)
+	i:Add("DIconLayout"):SetSize(72, ScrH()/50)
 
 
 	for Name, Properties in SortedPairs(Context.Widgets) do
 		local t = i:Add("DButton")
 		t:SetText("")
-		t:SetSize(ScrW()/15, ScrW()/15)
+		t:SetSize(ScrW()/17, ScrW()/17)
 		local tab = t:GenerateColorShift("m_ColorVar", pColor():Alpha( 100 ), pColor(), 255 * 3 )
 		t.Paint = function(s, w, h)
 			tab[ 1 ] = pColor():Alpha( 100 )

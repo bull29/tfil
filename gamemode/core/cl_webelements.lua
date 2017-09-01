@@ -12,5 +12,6 @@ wE.ClockHand		= "http://i.imgur.com/jQyeVXt.png"
 wE.QuadCircle		= "http://i.imgur.com/8uMN5HY.png"
 wE.PlusSign			= "http://i.imgur.com/N78SHA0.png"
 wE.SpeechBubble		= "https://i.imgur.com/rrSZw9C.png"
+wE.PowerMeter		= "https://i.imgur.com/AB6fK9L.png"
 
 _G.WebElements = wE

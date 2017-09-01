@@ -39,7 +39,9 @@ function Rounds.Preround()
 
 	Lava.CurrentLevel = Lava.StartingLevel or Entity(0):GetModelRenderBounds().z
 	for Player in Values(player.GetAll()) do
-		Player:Spawn()
+		if not Player:GetNW2Bool("$afk") then
+			Player:Spawn()
+		end
 		Player:SetObserverMode( OBS_MODE_NONE )
 	end
 
@@ -54,7 +56,9 @@ function Rounds.Start()
 
 	for Player in Values(player.GetAll()) do
 		if not Player:Alive() then
-			Player:Spawn()
+			if not Player:GetNW2Bool("$afk") then
+				Player:Spawn()
+			end
 			Player:SetObserverMode( OBS_MODE_NONE )
 		elseif Player:Health() ~= 100 or ( Player.m_Ragdoll and Player.m_RagdollData.Health ~= 100 ) then
 			Player:SetHealth( Player:HasAbility("Skippy Feet") and 35 or 100 )
@@ -83,13 +87,20 @@ function Rounds.PostRound()
 end
 
 hook.Add("Think", "SyncRoundTime", function()
-	local _ = tostring((os.time() - (Rounds.NextStateChange or os.time())):abs())
-	local min = (_ / 60):floor()
-	local str = (min < 10 and "0" .. min or min) .. ":" .. (_ % 60 < 10 and "0" .. _ % 60 or _ % 60)
-	SetStringProper(str)
+	if #player.GetActive() > 0 then
+		local _ = tostring((os.time() - (Rounds.NextStateChange or os.time())):abs())
+		local min = (_ / 60):floor()
+		local str = (min < 10 and "0" .. min or min) .. ":" .. (_ % 60 < 10 and "0" .. _ % 60 or _ % 60)
+		SetStringProper(str)
+	else
+		SetStringProper("10:10")
+		SetRoundState("Snooze")
+	end
 end)
 
 hook.Add("Tick", "CycleRounds", function()
+	if #player.GetActive() == 0 then return end
+
 	Rounds.NextStateChange = Rounds.NextStateChange or 0
 	if Rounds.NextStateChange <= os.time() then
 		if Rounds.CurrentState == "Preround" then
@@ -116,7 +127,7 @@ function Rounds.CheckShouldRestart()
 		if hook.Call( "Lava.SelectRoundWinner") == true then return end
 
 		if #player.GetAlive() == 1 then
-			if player.GetCount() == 1 then
+			if #player.GetActive() == 1 then
 				ShouldRestart = false
 			else
 				ShouldRestart = true
@@ -144,7 +155,7 @@ end
 gameevent.Listen( "player_disconnect" )
 hook.Add("PostPlayerDeath", "CheckAllDead", function()
 	if Rounds.CurrentState == "Started" then
-		if player.GetCount() == 1 then
+		if #player.GetActive() == 1 then
 			Notification.SendType( "Winner", player.GetAll()[1]:Nick() .. " has won by default!")
 		end
 		Rounds.CheckShouldRestart()
@@ -157,7 +168,7 @@ hook.Add( "player_disconnect", "CheckAllDead", function()
 end )
 
 hook.Add("PlayerDeathThink", "PreventRespawning",function( Player )
-	if not Player:Alive() and Rounds.CurrentState ~= "Preround" and hook.Call("Lava.DeathThink", nil, Player ) == nil then
+	if hook.Call("Lava.DeathThink", nil, Player ) == nil and not Player:Alive() and Rounds.CurrentState ~= "Preround" then
 		return false
 	end
 end)

@@ -3,6 +3,7 @@ util.AddNetworkString("Lava.SelectAbility")
 
 hook.Add("PlayerInitialSpawn", "Abilities.SelectRandom", function( Player )
 	Player:SetAbility( Player:GetPData("$ability", false ) or table.Random( table.GetKeys( Abilities.Skills ) ) )
+	Player.PreferedAbility = Player:GetPData("$ability")
 end)
 
 hook.Add("PlayerSpawn", "Abilities.SetAbility", function( Player )

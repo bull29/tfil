@@ -40,7 +40,12 @@ end
 
 ----------
 
+local function ShouldCount()
+	return #player.GetActive() > Config.GetMinPlayersForStats()
+end
+
 function Ranking.AddAbilityUse(ply, ability)
+	if not ShouldCount() then return end
 	local pdata = ply:GetPData("$ability_usecounts", false)
 	local data = {}
 	
@@ -75,6 +80,7 @@ function Ranking.AddAbilityUse(ply, ability)
 end
 
 function Ranking.AddKill(ply)
+	if not ShouldCount() then return end
 	local id = ply:SteamID64()
 	local result = sql.QueryRow("SELECT kills FROM tfil_stats WHERE steamid64 = '" .. id .. "';")
 	
@@ -88,6 +94,7 @@ function Ranking.AddKill(ply)
 end
 
 function Ranking.AddDeath(ply)
+	if not ShouldCount() then return end
 	local id = ply:SteamID64()
 	local result = sql.QueryRow("SELECT deaths FROM tfil_stats WHERE steamid64 = '" .. id .. "';")
 	
@@ -101,6 +108,7 @@ function Ranking.AddDeath(ply)
 end
 
 function Ranking.AddWin(ply)
+	if not ShouldCount() then return end
 	local id = ply:SteamID64()
 	local result = sql.QueryRow("SELECT wins FROM tfil_stats WHERE steamid64 = '" .. id .. "';")
 	
@@ -226,17 +234,21 @@ net.Receive("tfil_rankingrequest", function(len, ply)
 		search = SQLStr(search, true)
 		
 		local data = sql.Query("SELECT * FROM tfil_stats WHERE name LIKE '%" .. search .. "%' ORDER BY " .. order .. " " .. asc .. " LIMIT " .. max .. " " .. offset .. ";")
-		
+		local dataS = sql.QueryRow("SELECT * FROM tfil_stats WHERE steamid64 = '" .. ply:SteamID64() .. "';")
+
 		if data and istable(data) then
-			local dataS = sql.QueryRow("SELECT * FROM tfil_stats WHERE steamid64 = '" .. ply:SteamID64() .. "';")
-			
 			net.Start("tfil_rankingrequest")
 			net.WriteTable(data)
 			net.WriteTable(dataS)
 			net.Send(ply)
+		elseif search ~= "" then
+			net.Start("tfil_rankingrequest")
+			net.WriteTable{}
+			net.WriteTable(dataS or {})
+			net.Send(ply)
 		end
 	end
-	
+
 	requestTimeout[ply] = CurTime() + 0.25
 end)
 
