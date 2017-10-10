@@ -2,6 +2,8 @@ local draw = draw
 local pColor = pColor
 
 local function CreateAbilitiesPanel()
+	local AbilitiesCount = {}
+
 	local x = InitializePanel("LavaAbiltiesSelector", "DPanel")
 	x:SetSize(ScrW() / 3, ScrH() * 0.87)
 	x:MakePopup()
@@ -46,6 +48,7 @@ local function CreateAbilitiesPanel()
 		c:SetContentAlignment(4)
 		c:SetTextInset(ScrH() / 10, 0)
 		c:SetTextColor(color_white)
+		c.Count = 0
 		c:GenerateColorShift("HoverVar", pColor():Alpha(50), pColor():Alpha(200) + 50, 255 * 3)
 		c:MakeBorder(WebElements.Edge / 3, pColor() - 100)
 		local text = v[1]:gsub("\t", "" ):gsub("\n", " "):gsub("%s%s", " ")
@@ -58,6 +61,12 @@ local function CreateAbilitiesPanel()
 				r.Val = text
 				r:SetText("\t" .. text)
 			end
+
+			local nTab = Emoji.ParseNumber( #tostring( s.Count ) > 1 and s.Count or "0" .. s.Count )
+
+			for index, element in pairs( nTab ) do
+				draw.WebImage( Emoji.Get( element ), w - h * 1.5 + index * h/2, h/2, h/2, h/2, nil, 0 )
+			end
 		end
 
 		c.DoClick = function()
@@ -66,8 +75,14 @@ local function CreateAbilitiesPanel()
 			net.WriteString(k)
 			net.SendToServer()
 		end
+
+		AbilitiesCount[ k ] = c
 	end
 
+	for Player in Values( player.GetAll() ) do
+		if not IsValid( AbilitiesCount[ Player:GetAbility() ] ) then continue end
+		AbilitiesCount[ Player:GetAbility() ].Count = AbilitiesCount[ Player:GetAbility() ].Count + 1
+	end
 	return x
 end
 
