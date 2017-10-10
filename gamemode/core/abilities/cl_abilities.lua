@@ -62,6 +62,8 @@ local function CreateAbilitiesPanel()
 				r:SetText("\t" .. text)
 			end
 
+			if s.Count == 0 then return end
+
 			local nTab = Emoji.ParseNumber( #tostring( s.Count ) > 1 and s.Count or "0" .. s.Count )
 
 			for index, element in pairs( nTab ) do
