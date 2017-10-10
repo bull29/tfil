@@ -19,7 +19,7 @@ hook.Add("SetupWorldFog", "WorldFog", RenderFog)
 hook.Add("SetupSkyboxFog", "SkyboxFog", RenderFog)
 hook.Add("PostDraw2DSkyBox", "FogSkyUnity", function()
 	if not Config.GetMapEffects() then return end
-	render.Clear(255 * fDensity, 55 * fDensity, 0, 0, false, true)
+	render.Clear(255 * fDensity, 128 * fDensity, 0, 0, false, true)
 end)
 hook.Add("RenderScreenspaceEffects","LavaColorModify",function()
 	if not Config.GetMapEffects() then return end
