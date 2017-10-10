@@ -71,6 +71,7 @@ end, function()
 end)
 
 hook.RunOnce("Initialize", function()
+	if SERVER then return end
 	if not vgui.GetControlTable("o_AvatarImage") then
 		local SetPlayer = debug.getregistry().Panel.SetPlayer
 
