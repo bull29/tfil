@@ -15,6 +15,7 @@ function Ragdoll.Enable( Player )
 
 	Player.m_RagdollData = {
 		Angles = Player:EyeAngles(),
+		Ability = Player:GetAbility(),
 		Model = Player:GetModel(),
 		pColor = Player:GetPlayerColor(),
 		Health = Player:Health(),
@@ -72,7 +73,7 @@ function Ragdoll.Enable( Player )
 end
 
 
-function Ragdoll.Disable( Player, h_DisableSpawn , force )
+function Ragdoll.Disable( Player, h_DisableSpawn, force )
 	if not force then
 		if not Player.m_Ragdoll then return end
 
@@ -99,6 +100,7 @@ function Ragdoll.Disable( Player, h_DisableSpawn , force )
 			Player:GetActiveWeapon():SetEggs( Player.m_RagdollData.Eggs )
 		end
 		Player:SetHealth( Player.m_RagdollData.Health )
+		Player:SetAbility( Player.m_RagdollData.Ability )
 	end)
 
 	if not h_DisableSpawn then
