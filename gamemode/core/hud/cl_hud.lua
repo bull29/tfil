@@ -8,10 +8,10 @@ local tPane
 local m_HavePlayedSound
 
 local tTranslateTable = {
-	snooze = "Snooze",
-	preround = "Preparation",
-	started = "In Progress",
-	ended = "Postround"
+	snooze = lang.snooze or "Snooze",
+	preround = lang.preround or "Preparation",
+	started = lang.started or "In Progress",
+	ended = lang.ended or "Postround"
 }
 
 hook.RunOnce("HUDPaint", function()
@@ -20,7 +20,7 @@ hook.RunOnce("HUDPaint", function()
 	local x = g:Add("AvatarMask")
 	g:SetSize(ScrH() / 5, ScrH() / 5)
 	g:SetPos(ScrH() / 50, ScrH() - ScrH() / 5 - ScrH() / 50)
-
+	
 	g.Paint = function(s, w, h)
 		x:PaintManual()
 		local floor = (h / 25):floor()
@@ -50,7 +50,7 @@ hook.RunOnce("HUDPaint", function()
 		local floor = (h / 20):floor()
 		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - 50)
 		draw.WebImage(WebElements.Circle, floor, floor, w - floor * 2, h - floor * 2, (pColor() - 100))
-		draw.WebImage(Emoji.Get(2628), h / 4.8, h / 4, w - h / 2.4, h - h / 2.4)
+		draw.WebImage(Emoji.Get(2652), h / 4.8, h / 4, w - h / 2.4, h - h / 2.4)
 		draw.WebImage(WebElements.CircleOutline, floor, floor, w - floor * 2, h - floor * 2, pColor())
 	end
 
@@ -152,7 +152,7 @@ hook.RunOnce("HUDPaint", function()
 
 	k.PaintCircle = function(s, w, h)
 		draw.WebImage(Emoji.Get(1457), 0, 0, w, h, nil, CurTime():sin() * 15, true)
-		draw.WebImage(Emoji.Get(2440), h / 6, h / 2 + CurTime():sin() * h / 4, h / 5, h / 5, nil, 0)
+		draw.WebImage(Emoji.Get(2464), h / 6, h / 2 + CurTime():sin() * h / 4, h / 5, h / 5, nil, 0)
 		draw.WebImage(Emoji.Get(531), w - h / 6, h / 2 + -CurTime():sin() * h / 4, h / 3, h / 3, nil, 0)
 	end
 
@@ -208,7 +208,7 @@ hook.RunOnce("HUDPaint", function()
 			end
 		end)
 	end
-
+	
 	rTab[d] = true
 	rTab[g] = true
 	rTab[h] = true

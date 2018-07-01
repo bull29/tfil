@@ -75,8 +75,48 @@ hook.RunOnce("HUDPaint", function()
 	net.Receive("lava_notification", function()
 		local Table = net.ReadTable()
 		local String = net.ReadString()
-
-		AddNotification( String, Table.ICON, Table.TIME, Table.SOUND )
+		local Result = ""
+		
+		if (Table[2]) then -- If locale locator exists
+			if istable(Table[2]) then -- if locale locator is more than one
+				local info = Table[2]
+				
+				for i = 1, #info do
+					print(info[i])
+					local Case = string.sub(info[i], 1, 1)
+					print(Case)
+					if Case=="~" then -- if there's special indicator
+						local locale = string.sub(info[i], 2, string.len(info[i]))
+						print(locale)
+						if (lang[locale]) then
+							print('yes wehave@!!!!')
+							Result = Result .. lang[locale]
+						else
+							print('no we havent.....')
+							Result = String .. " By The Way It's not Localized"
+							break
+						end
+					else -- if not, treat as a normal string
+						Result = Result .. info[i]
+					end
+				end
+				
+			else
+				local Case = string.sub(Table[2], 1, 1)
+				if Case=="~" then -- if there's special indicator for locale
+					local locale = string.sub(Table[2], 2, string.len(Table[2]))
+					if (lang[locale]) then
+						Result = lang[locale]
+					else
+						Result = String .. " By The Way It's not Localized huh"
+					end
+				else
+					Result = String .. " By The Way It's not Localized huh"
+				end
+			end
+		end
+		
+		AddNotification( Result, Table[1].ICON, Table[1].TIME, Table[1].SOUND )
 
 		if IsValid( t ) then
 			t:Show()
@@ -84,7 +124,45 @@ hook.RunOnce("HUDPaint", function()
 	end)
 
 	net.Receive("lava_chatalert",function()
-		chat.AddText( pColor(), net.ReadString() )
+		local Table = net.ReadTable()
+		local String = Table[1]
+		local Result = ""
+		
+		if (Table[2]) then -- If locale locator exists
+			if istable(Table[2]) then -- if locale locator is more than one
+				local info = Table[2]
+				
+				for i = 1, #info do
+					local Case = string.sub(info[i], 1, 1)
+					if Case=="~" then -- if there's special indicator
+						local locale = string.sub(info[i], 2, string.len(info[i]))
+						if (lang[locale]) then
+							Result = Result .. lang[locale]
+						else
+							Result = String .. " By The Way It's not Localized"
+							break
+						end
+					else -- if not, treat as a normal string
+						Result = Result .. info[i]
+					end
+				end
+				
+			else
+				local Case = string.sub(Table[2], 1, 1)
+				if Case=="~" then -- if there's special indicator for locale
+					local locale = string.sub(Table[2], 2, string.len(Table[2]))
+					if (lang[locale]) then
+						Result = lang[locale]
+					else
+						Result = String .. " By The Way It's not Localized huh"
+					end
+				else
+					Result = String .. " By The Way It's not Localized huh"
+				end
+			end
+		end
+		
+		chat.AddText( pColor(), Result )
 		chat.PlaySound()
 	end)
 end)
