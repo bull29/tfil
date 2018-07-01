@@ -35,6 +35,12 @@ function IncludeDirectory(dir, cl, sv )
 	end
 end
 
+lang_data = {}
+lang = {}
+
+IncludeDirectory("tfil/gamemode/language")
+hook.Call("Lava.PostInitLanguageFiles")
+
 IncludeDirectory("tfil/gamemode/libraries")
 hook.Call("Lava.PostInitLibraryFiles")
 

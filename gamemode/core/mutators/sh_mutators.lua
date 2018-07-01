@@ -48,7 +48,7 @@ function Mutators.StartEvent( event )
 		net.WriteString( event )
 		net.Broadcast()
 
-		Notification.SendType( "Mutator", "The " .. event .. " mutator has begun!" )
+		Notification.SendType( "Mutator", "The " .. event .. " mutator has begun!", { "~mutatorsHasBegunPrefix", event, "~mutatorsHasBegunSuffix" })
 		Notification.SendType( "Mutator", tab.desc:gsub("\t", "" ):gsub( "\n", "") )
 	end
 	if tab.startfn then
@@ -100,17 +100,17 @@ if SERVER then
 	hook.Add("Lava.RoundStart", "ShouldStartaMutator", function()
 		FrameDelay( function()
 			local A = math.random( 1, 6 )
-			Notification.SendType( "Chance", "Should we start a mutator? Let's roll!" )
+			Notification.SendType( "Chance", "Should we start a mutator? Let's roll!", "~mutatorsShouldStartAMutator" )
 			timer.Simple( 3, function()
 				local B = math.random( 1, 6 )
 				if A == B then
-					Notification.SendType( "Chance", ("We rolled ${1} and ${2}! Let's start us a mutator!"):fill( A, B ))
+					Notification.SendType( "Chance", ("We rolled ${1} and ${2}! Let's start us a mutator!"):fill( A, B ), {"~mutatorsLetsMutatePrefix", A,"~mutatorsLetsMutateAnd", B, "~mutatorsLetsMutateSuffix"} )
 					timer.Simple( 2, function()
 						local Table, Key = table.Random( Mutators.Events )
 						Mutators.StartEvent( Key )
 					end)
 				else
-					Notification.SendType( "Chance", ("We rolled ${1} and ${2}! Sorry chap! no mutator this round."):fill( A, B ))
+					Notification.SendType( "Chance", ("We rolled ${1} and ${2}! Sorry chap! no mutator this round."):fill( A, B ), {"~mutatorsNoMutatePrefix", A, "~mutatorsNoMutateAnd", B, "~mutatorsNoMutateSuffix"} )
 				end
 			end)
 		end)

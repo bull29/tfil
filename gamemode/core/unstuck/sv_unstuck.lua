@@ -16,13 +16,13 @@ net.Receive( "lava_unstuck", function( _, Player )
 	Player.m_NextUnstuckTime = Player.m_NextUnstuckTime or CurTime()
 
 	if Player.m_NextUnstuckTime > CurTime() then
-		Notification.ChatAlert( "Please wait a little before attempting to use unstuck again. ", Player )
+		Notification.ChatAlert( "Please wait a little before attempting to use unstuck again.", "~unstuckCooltime", Player )
 	else
 		if Player:GetVelocity():Length2D() > 1 then
-			return Notification.ChatAlert( "Please stop moving.", Player  )
+			return Notification.ChatAlert( "Please stop moving.", "~unstuckStopMoving", Player  )
 		end
 		if not Player:CheckHullCollision() then
-			return Notification.ChatAlert( "You are not stuck.", Player )
+			return Notification.ChatAlert( "You are not stuck.", "~unstuckNotStuck", Player )
 		end
 
 		Player.m_NextUnstuckTime = CurTime() + 30

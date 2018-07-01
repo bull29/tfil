@@ -73,11 +73,11 @@ function Rounds.Start()
 	SetRoundState("Started")
 	SetTimer(os.time() + Config.GetRoundTime())
 
-	Notification.Create("The Round has Started! The Floor is Lava!", { SOUND = "ambient/water/drip2.wav", TIME = 5, ICON = 328 })
+	Notification.Create("The Round has Started! The Floor is Lava!", { SOUND = "ambient/water/drip2.wav", TIME = 5, ICON = 328 }, "~gamestart")
 end
 
 function Rounds.PostRound()
-	hook.Call("Lava.PostRound" )
+	hook.Call("Lava.PostRound")
 	SetRoundState("Ended")
 	SetTimer(os.time() + Config.GetPostRoundTime())
 
@@ -130,7 +130,7 @@ function Rounds.CheckShouldRestart()
 				ShouldRestart = false
 			else
 				ShouldRestart = true
-				Notification.SendType( "Winner", player.GetAlive()[1]:Nick() .. " has won!")
+				Notification.SendType( "Winner", player.GetAlive()[1]:Nick() .. " has won!", { "~winnerPrefix", player.GetAlive()[1]:Nick(), "~winnerSuffix" })
 
 				table.insert(PlayerRanking, player.GetAlive()[1])
 
@@ -155,7 +155,7 @@ gameevent.Listen( "player_disconnect" )
 hook.Add("PostPlayerDeath", "CheckAllDead", function()
 	if Rounds.CurrentState == "Started" then
 		if #player.GetActive() == 1 then
-			Notification.SendType( "Winner", player.GetAll()[1]:Nick() .. " has won by default!")
+			Notification.SendType( "Winner", player.GetAll()[1]:Nick() .. " has won by default!", {"~winnerByDefaultPrefix",  player.GetAll()[1]:Nick(), "~winnerByDefaultSuffix"})
 		end
 		Rounds.CheckShouldRestart()
 	end

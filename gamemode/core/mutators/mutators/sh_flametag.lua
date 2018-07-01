@@ -15,7 +15,7 @@ Mutators.RegisterNewEvent("Flametag", "A Randomly chosen player is flaming. If h
 			sPlayer:SetModel("models/player/charple.mdl")
 			sPlayer:SetWalkSpeed( 100 )
 			sPlayer:SetRunSpeed( 200 )
-			Notification.SendType( "Mutator", sPlayer:Nick() .. " is the Flamer! Go give him a peepee touch!" )
+			Notification.SendType( "Mutator", sPlayer:Nick() .. " is the Flamer! Go give him a peepee touch!", { "~mutatorsIsFlamerPrefix", sPlayer:Nick(), "~mutatorsIsFlamerSuffix" })
 			if SERVER then
 				sPlayer:Ignite(500, 128)
 				sPlayer.PreferedAbility = sPlayer:GetAbility()

@@ -27,7 +27,7 @@ Mutators.RegisterNewEvent("Ability Rampage", "You've been having an ability iden
 					Abilities.Skills[ Player:GetAbility() ][ 3 ]( Player )
 				end
 
-				Notification.ChatAlert( "Your new ability is " .. Player:GetAbility() .. "!", Player )
+				Notification.ChatAlert( "Your new ability is " .. Player:GetAbility() .. "!", {"~abilityYourNewPrefix", Player:GetAbility(), "~abilityYourNewSuffix"}, Player )
 			end
 			m_NextCycleTime = CurTime() + 30
 		end

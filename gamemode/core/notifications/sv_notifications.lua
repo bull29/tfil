@@ -6,27 +6,27 @@ Notification.Presets = {}
 util.AddNetworkString("lava_notification")
 util.AddNetworkString("lava_chatalert")
 
-function Notification.Create(Text, Table, Player)
+function Notification.Create(Text, Table, Locale, Player)
 	if hook.Call("Lava.NotificationDispatch", nil, Text, Table, Player) == false then return end
 	ServerLog( Text .. "\n" )
 	net.Start("lava_notification")
-	net.WriteTable(Table)
+	net.WriteTable({Table, Locale})
 	net.WriteString(Text)
 	net.Send(IsValid( Player ) and Player or player.GetAll())
 end
 
-function Notification.SendType(Type, Text, Player)
+function Notification.SendType(Type, Text, Locale, Player)
 	if hook.Call("Lava.NotificationDispatch", nil, Text, Notification.Presets[Type], Player) == false then return end
 	ServerLog( Text .. "\n" )
 	net.Start("lava_notification")
-	net.WriteTable(Notification.Presets[Type])
+	net.WriteTable({Notification.Presets[Type], Locale})
 	net.WriteString(Text)
 	net.Send(IsValid( Player ) and Player or player.GetAll())
 end
 
-function Notification.ChatAlert( Text, Player )
+function Notification.ChatAlert( Text, Locale, Player )
 	net.Start("lava_chatalert")
-	net.WriteString( Text )
+	net.WriteTable({Text, Locale})
 	net.Send(IsValid( Player ) and Player or player.GetAll())
 end
 
@@ -92,15 +92,15 @@ gameevent.Listen("player_connect")
 gameevent.Listen("player_disconnect")
 
 hook.Add("player_connect", "JoinNotif", function(data)
-	Notification.SendType("Join", data.name .. " has connected to the server!")
+	Notification.SendType("Join", data.name .. " has connected to the server!", {"~joinPrefix", data.name, "~joinSuffix"})
 end)
 
 hook.Add("player_disconnect", "JoinNotif", function(data)
-	Notification.SendType("Leave", data.name .. " has left the server. ( " .. data.reason .. " )")
+	Notification.SendType("Leave", data.name .. " has left the server. ( " .. data.reason .. " )", {"~leavePrefix", data.name, "~leaveSuffixAfterName", data.reason, "~leaveSuffixAfterReason"})
 end)
 
 hook.Add("PlayerInitialSpawn", "EnteredServer", function(Player)
-	Notification.SendType("Enter", Player:Nick() .. " has entered the server!")
+	Notification.SendType("Enter", Player:Nick() .. " has entered the server!", {"~enterPrefix", Player:Nick(), "~enterSuffix"})
 end)
 
 _G.Notification = Notification
