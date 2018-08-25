@@ -56,12 +56,12 @@ hook.Add("HUDPaint", "RenderZoom", function()
 	local Text = ( m_InitialFOV / m_ZDelta ):Round( 2 ):max( 1.2 ) .. "x"
 	local t_Wide = FontFunctions.GetWide( Text, "ChatFont" )
 
-	draw.WebImage( Emoji.Get( 96 ), ScrW() / 2 + mWHM * 2, ScrH() - mWHM * 2.1, mWHM, mWHM, m_In and White or White - 100, 0 )
-	draw.WebImage( Emoji.Get( 227 ), ScrW() / 2 + mWHM * 2, ScrH() - mWHM, mWHM, mWHM, m_Out and White or White - 100, 0 )
+	draw.WebImage( Emoji.Get( "1f1ea" ), ScrW() / 2 + mWHM * 2, ScrH() - mWHM * 2.1, mWHM, mWHM, m_In and White or White - 100, 0 )
+	draw.WebImage( Emoji.Get( "1f1f6" ), ScrW() / 2 + mWHM * 2, ScrH() - mWHM, mWHM, mWHM, m_Out and White or White - 100, 0 )
 
 
-	draw.WebImage( Emoji.Get( 317 ), ScrW() / 2 - mWHM * 3, ScrH() - mWHM * 2.5, mWHM * 1.7, mWHM * 1.7 )
-	draw.WebImage( Emoji.Get( 1433 ), ScrW() / 2 - mWHM * 3, ScrH() - mWHM * 2.5, mWHM * 1.7, mWHM * 1.7, nil, ( m_ZDelta / 100 ):sin() * 3600, 0  )
+	draw.WebImage( Emoji.Get( "1f300" ), ScrW() / 2 - mWHM * 3, ScrH() - mWHM * 2.5, mWHM * 1.7, mWHM * 1.7 )
+	draw.WebImage( Emoji.Get( "1f50d" ), ScrW() / 2 - mWHM * 3, ScrH() - mWHM * 2.5, mWHM * 1.7, mWHM * 1.7, nil, ( m_ZDelta / 100 ):sin() * 3600, 0  )
 	draw.SimpleText( Text, "ChatFont", ScrW() / 2 - t_Wide / 2, ScrH() - mWHM * 2, pColor(), TEXT_ALIGN_CENTRE )
 end)
 

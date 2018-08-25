@@ -82,8 +82,8 @@ hook.Add("PostRenderVGUI", "RenderEmojis", function()
 	end
 
 	if m_ESPMeter < 100 and not m_IsMutatorActive then
-		draw.WebImage(Emoji.Get( 734 ), ScrW()/2, ScrH() - ScrH()/10, ScrH()/7, ScrH()/7, pColor():Alpha( 100 ), 0 )
-		draw.WebImage(Emoji.Get( 734 ), ScrW()/2, ScrH() - ScrH()/10, m_ESPMeter/100*ScrH()/7, m_ESPMeter/100*ScrH()/7, White:Alpha( m_HaveUsedupMeter and 100 or 255 ), 0 )
+		draw.WebImage(Emoji.Get( "1f441" ), ScrW()/2, ScrH() - ScrH()/10, ScrH()/7, ScrH()/7, pColor():Alpha( 100 ), 0 )
+		draw.WebImage(Emoji.Get( "1f441" ), ScrW()/2, ScrH() - ScrH()/10, m_ESPMeter/100*ScrH()/7, m_ESPMeter/100*ScrH()/7, White:Alpha( m_HaveUsedupMeter and 100 or 255 ), 0 )
 		if not m_Activate then
 			m_ESPMeter = m_ESPMeter:Approach( 100, FrameTime() * 10 )
 		end
