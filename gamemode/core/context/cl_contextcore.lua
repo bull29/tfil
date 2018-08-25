@@ -17,7 +17,7 @@ end
 hook.Add("DrawOverlay", "DrawContextCusror", function()
 	if m_HaveFullyInitializedWorldPanel and vgui.CursorVisible() then
 		local x, y = gui.MousePos()
-		draw.WebImage(Emoji.Get(input.IsMouseDown(107) and 1563 or 1560), x - 16, y, 32, 32)
+		draw.WebImage(Emoji.Get(input.IsMouseDown(107) and "1f595-1f3fe" or "1f595-1f3fd"), x - 16, y, 32, 32)
 
 		if vgui.GetHoveredPanel() and system.IsWindows() then
 			vgui.GetHoveredPanel():SetCursor"blank"
