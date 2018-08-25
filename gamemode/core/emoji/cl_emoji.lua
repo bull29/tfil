@@ -1,23 +1,24 @@
 local file = file
 local tostring = tostring
 local Numbers = {
-	["."] = 2465,
-	["0"] = 2645,
-	["1"] = 2648,
-	["2"] = 2649,
-	["3"] = 2652,
-	["4"] = 2653,
-	["5"] = 2654,
-	["6"] = 2655,
-	["7"] = 2656,
-	["8"] = 2657,
-	["9"] = 2658
+	["."] = "23fa",
+	["0"] = "30-20e3",
+	["1"] = "31-20e3",
+	["2"] = "32-20e3",
+	["3"] = "33-20e3",
+	["4"] = "34-20e3",
+	["5"] = "35-20e3",
+	["6"] = "36-20e3",
+	["7"] = "37-20e3",
+	["8"] = "38-20e3",
+	["9"] = "39-20e3"
 }
 
 file.CreateDir("tfil")
 
 local Emoji = {}
 Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
+Emoji.LegacyIndex = {}
 
 function Emoji.GetRandom()
 	return table.Random(Emoji.Index)
@@ -25,7 +26,7 @@ end
 
 function Emoji.Get(name)
 	if not file.Exists( "tfil/emoji.txt", "DATA" ) then return end
-	return Emoji.Index[name]
+	return Emoji.Index[name] or Emoji.Index[tonumber( name )]
 end
 
 function Emoji.ParseNumber( num )
@@ -60,11 +61,14 @@ function Emoji.BuildPanel()
 		i:RemoveChildren()
 
 
-		for k, v in SortedPairs(Emoji.Index) do
+		for k, v in SortedPairsByValue(Emoji.Index) do
 			if not a or tostring( k ):find(a) then
-				local x = i:Add("DPanel")
+				local x = i:Add("DButton")
+				x:SetText""
 				x:SetSize(ScrW() / 17, ScrH() / 7)
-
+				x.DoClick = function( )
+					SetClipboardText( k )
+				end
 				x.Paint = function(s, w, h)
 					draw.RoundedBox(0, 0, 0, w, h, color)
 					draw.SimpleText(k, "ChatFont", edge, h - FontFunctions.GetTall("ChatFont") - edge)
@@ -90,17 +94,16 @@ end
 
 hook.RunOnce("PreDrawHUD", function()
 	if not file.Exists("tfil/emoji.txt", "DATA") then
-		http.Fetch("http://twitter.github.io/twemoji/2/test/preview.html", function(body)
-			local tab = {}
-			local t = body:Split("<li>&#x")
-
-			for i = 2, #t do
-				table.insert(tab, "https://twemoji.maxcdn.com/2/72x72/" .. (t[i]:Trim():Split(";</li>")[1]:lower():gsub(";&#x", "-")) .. ".png")
-			end
-
-			file.Write("tfil/emoji.txt", util.TableToJSON(tab))
-			Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
-		end)
+		local fileof = file.Read( "tfil/emojidata.txt" ):gsub("\r", "" )
+		local ftab = {}
+		local ltab = {}
+		local tab = fileof:Split("\n")
+		for item in Values( tab ) do
+			ftab[ tostring( item:gsub( ".+72x72/", "" ):gsub(".png", "" ) ) ] = item
+			table.insert( ltab, item )
+		end
+		file.Write("tfil/emoji.txt", util.TableToJSON( ftab ))
+		Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
 	else
 		Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
 	end
