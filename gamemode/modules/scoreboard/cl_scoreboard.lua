@@ -34,10 +34,10 @@ hook.RunOnce("HUDPaint", function()
 	b:SetTall( ScrH()/25 )
 	b.Paint = function( s, w, h )
 		draw.Rect( 0, 0, w, h, pColor() - 100 )
-		draw.WebImage( Emoji.Get( 835 ), h/2, h/2, h * 0.9, h * 0.9, nil, 0 )
+		draw.WebImage( Emoji.Get( "1f465" ), h/2, h/2, h * 0.9, h * 0.9, nil, 0 )
 		draw.SimpleText( player.GetCount() .. "/" .. game.MaxPlayers(), "lava_score_title_sub", h * 1.2, h/2, nil, 0, 1 )
 
-		draw.WebImage( Emoji.Get( 330 ), w - h/2, h/2, h * 0.85, h * 0.85, nil, 0 )
+		draw.WebImage( Emoji.Get( "1f30e" ), w - h/2, h/2, h * 0.85, h * 0.85, nil, 0 )
 		draw.SimpleText( game.GetMap(), "lava_score_title_sub", w - h * 1.2, h/2, nil, 2, 1 )
 
 		draw.SimpleText( ((Config.GetMapSwitchTime() - GetGlobalInt("$NextMapTime", 0 ) ):max( 0 ) .. " Round(s) until the next map. "), "lava_score_title_sub", w/2, h/2, nil, 1, 1 )
@@ -47,7 +47,7 @@ hook.RunOnce("HUDPaint", function()
 	m:SetSize(ScrH() * 0.8 / 8, ScrH() * 0.8 / 8)
 	m.Shift = false
 	m.PaintCircle = function(s, w, h)
-		draw.WebImage(Emoji.Get(328), w / 2, h / 2, w, h, nil, CurTime():cos() * -15)
+		draw.WebImage(Emoji.Get("1f30b"), w / 2, h / 2, w, h, nil, CurTime():cos() * -15)
 		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - ( not m.Shift and 50 or -50 ) )
 	end
 
@@ -172,7 +172,7 @@ hook.RunOnce("HUDPaint", function()
 		aHeader:SetTextInset(ScrW() / 100, 0)
 		aHeader.Paint = function(s, w, h)
 			draw.Rect(0, 0, w, h, pColor() - 75)
-			draw.WebImage( Emoji.Get( 1411 ), w - h * 1.9, h * 0.1, h * 0.8, h* 0.8 )
+			draw.WebImage( Emoji.Get( "1f4f6" ), w - h * 1.9, h * 0.1, h * 0.8, h* 0.8 )
 		end
 
 		for Player in Values(player.GetAlive()) do
@@ -218,22 +218,22 @@ function GM:ScoreboardHide()
 end
 
 hook.Add("Lava.PopulateScoreboardPlayerButtons", "AddDefaultButtons", function( func )
-	func( 2620, "Show Profile", function( Player )
+	func( "1f31a", "Show Profile", function( Player )
 		Player:ShowProfile()
 	end)
-	func( 1427, "Toggle Mute", function( Player, Panel )
+	func( "1f92b", "Toggle Mute", function( Player, Panel )
 		Player:SetMuted( not Player:IsMuted() )
 		chat.AddText( ("Player ${1} has been ${2}."):fill( Player:Nick(), Player:IsMuted() and "Muted" or "Unmuted") )
 	end)
-	func( 1384, "Toggle Chat Mute", function( Player )
+	func( "1f4ac", "Toggle Chat Mute", function( Player )
 		Player.m_IsChatMuted = not Player.m_IsChatMuted
 		chat.AddText( ("Player ${1} has been ${2} in chat (Messages still log to console)."):fill( Player:Nick(), Player.m_IsChatMuted and "Muted" or "Unmuted") )
 	end)
-	func( 1453, "Copy SteamID", function( Player )
+	func( "1f4cb", "Copy SteamID", function( Player )
 		SetClipboardText( Player:SteamID64() )
 		chat.AddText( ("${1}'s SteamID ${2} has been copied to clipboard."):fill( Player:Nick(), Player:SteamID64()) )
 	end)
-	func( 2424, "?????", function() end)
+	func( "1f4a9", "?????", function() end)
 end)
 
 hook.RunOnce( "HUDPaint", function() 
