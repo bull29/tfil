@@ -27,8 +27,8 @@ end)
 hook.Add("PostRenderVGUI", "DrawHelperscreen", function()
 	if not m_ShouldDrawHelperScreen or not LocalPlayer():Alive() then return end
 
-	draw.WebImage( Emoji.Get( 2625 ), ScrW()/2 + ScrH()/40, ScrH() * 0.125, ScrH()/15, ScrH()/15, nil, ( CurTime() * 5 ):sin() * -15 )
-	draw.WebImage( Emoji.Get( 2626 ), ScrW()/2 - ScrH()/40, ScrH() * 0.125, ScrH()/15, ScrH()/15, nil, ( CurTime() * 5 ):sin() * 15 )
+	draw.WebImage( Emoji.Get( "2753" ), ScrW()/2 + ScrH()/40, ScrH() * 0.125, ScrH()/15, ScrH()/15, nil, ( CurTime() * 5 ):sin() * -15 )
+	draw.WebImage( Emoji.Get( "2754" ), ScrW()/2 - ScrH()/40, ScrH() * 0.125, ScrH()/15, ScrH()/15, nil, ( CurTime() * 5 ):sin() * 15 )
 	draw.SimpleText( "HELP SCREEN", "lava_help_title", ScrW()/2, ScrH() * 0.2, sCol + 50, 1, 1 )
 	draw.SimpleText( "Press F2 at any time to close/view this screen again.", "lava_help_title_sub", ScrW()/2, ScrH() * 0.35, sCol, 1, 1 )
 
