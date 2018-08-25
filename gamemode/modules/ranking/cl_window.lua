@@ -280,7 +280,7 @@ end)
 
 
 hook.Add("Lava.PopulateWidgetMenu", "MakeStatsWindow", function( Context )
-	Context.NewWidget( "Global Leaderboards", 1367, function()
+	Context.NewWidget( "Server Leaderboards", "1f3c6", function()
 		Ranking.MakeRequest(page, 25, sel, asc, "", function(data, dataS)
 			tbl = {
 				data = data,

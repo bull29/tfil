@@ -30,7 +30,7 @@ hook.Add("CalcView", "ThirdPersonView", function(ply, pos, angles, fov)
 end)
 
 hook.Add("Lava.PopulateWidgetMenu", "Register3PWidget", function(Context)
-	Context.NewWidget("Toggle Thirdperson", 835, function()
+	Context.NewWidget("Toggle Thirdperson", "1f465", function()
 		_ontp = not _ontp
 	end)
 end)

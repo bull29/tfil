@@ -1,7 +1,7 @@
 local m_DisableRenderHUD
 
 hook.Add("Lava.PopulateWidgetMenu", "CreateScreenshotPane", function( Context )
-	Context.NewWidget( "Screenshot Mode", 1413, function()
+	Context.NewWidget( "Screenshot Mode", "1f3a5", function()
 		m_DisableRenderHUD = not m_DisableRenderHUD
 	end)
 end)
