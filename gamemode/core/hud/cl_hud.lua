@@ -50,7 +50,7 @@ hook.RunOnce("HUDPaint", function()
 		local floor = (h / 20):floor()
 		draw.WebImage(WebElements.CircleOutline, 0, 0, w, h, pColor() - 50)
 		draw.WebImage(WebElements.Circle, floor, floor, w - floor * 2, h - floor * 2, (pColor() - 100))
-		draw.WebImage(Emoji.Get(2628), h / 4.8, h / 4, w - h / 2.4, h - h / 2.4)
+		draw.WebImage(Emoji.Get("2764"), h / 4.8, h / 4, w - h / 2.4, h - h / 2.4)
 		draw.WebImage(WebElements.CircleOutline, floor, floor, w - floor * 2, h - floor * 2, pColor())
 	end
 
@@ -95,12 +95,12 @@ hook.RunOnce("HUDPaint", function()
 
 	tt.PaintCircle = function(s, w, h)
 		if iDex < 4 then
-			draw.WebImage(Emoji.Get(495), h / 2, h / 2, h, h, nil, -CurTime():cos() * 25)
-			draw.WebImage(Emoji.Get(iDex == 1 and 2188 or iDex == 2 and 2189 or 2190), h / 2, h / 2, h * 0.8, h * 0.8, nil, CurTime():cos() * 30)
+			draw.WebImage(Emoji.Get("1f3b4"), h / 2, h / 2, h, h, nil, -CurTime():cos() * 25)
+			draw.WebImage(Emoji.Get(iDex == 1 and "1f947" or iDex == 2 and "1f948" or "1f949"), h / 2, h / 2, h * 0.8, h * 0.8, nil, CurTime():cos() * 30)
 		else
-			draw.WebImage(Emoji.Get(2189), h / 3, h / 3 * 2, h / 2, h / 2, nil, CurTime():sin() * 10)
-			draw.WebImage(Emoji.Get(2190), h / 3 * 2, h / 3 * 2, h / 2, h / 2, nil, CurTime():sin() * -10)
-			draw.WebImage(Emoji.Get(2188), h / 2, h / 3, h / 2, h / 2, nil, 0)
+			draw.WebImage(Emoji.Get("1f948"), h / 3, h / 3 * 2, h / 2, h / 2, nil, CurTime():sin() * 10)
+			draw.WebImage(Emoji.Get("1f949"), h / 3 * 2, h / 3 * 2, h / 2, h / 2, nil, CurTime():sin() * -10)
+			draw.WebImage(Emoji.Get("1f947"), h / 2, h / 3, h / 2, h / 2, nil, 0)
 		end
 	end
 
@@ -151,9 +151,9 @@ hook.RunOnce("HUDPaint", function()
 	end
 
 	k.PaintCircle = function(s, w, h)
-		draw.WebImage(Emoji.Get(1457), 0, 0, w, h, nil, CurTime():sin() * 15, true)
-		draw.WebImage(Emoji.Get(2440), h / 6, h / 2 + CurTime():sin() * h / 4, h / 5, h / 5, nil, 0)
-		draw.WebImage(Emoji.Get(531), w - h / 6, h / 2 + -CurTime():sin() * h / 4, h / 3, h / 3, nil, 0)
+		draw.WebImage(Emoji.Get("1f525"), 0, 0, w, h, nil, CurTime():sin() * 15, true)
+		draw.WebImage(Emoji.Get("2195"), h / 6, h / 2 + CurTime():sin() * h / 4, h / 5, h / 5, nil, 0)
+		draw.WebImage(Emoji.Get("1f3c3-1f3fb"), w - h / 6, h / 2 + -CurTime():sin() * h / 4, h / 3, h / 3, nil, 0)
 	end
 
 	-- 1499
