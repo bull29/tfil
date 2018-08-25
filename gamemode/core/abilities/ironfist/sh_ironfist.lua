@@ -14,4 +14,4 @@ hook.Add("Lava.PostPlayerSpawn", "Iron Fist", function( Player )
 	end
 end)
 
-Abilities.Register("Iron Fist", [[Because of vigorous use of both your hands, your punches cause players to go flying towards wherever you happen to be aiming, much stronger than the right-handed normies. Unfortunately, you move slower than everyone.]], 1990 )
+Abilities.Register("Iron Fist", [[Because of vigorous use of both your hands, your punches cause players to go flying towards wherever you happen to be aiming, much stronger than the right-handed normies. Unfortunately, you move slower than everyone.]], "1f91c-1f3fc" )

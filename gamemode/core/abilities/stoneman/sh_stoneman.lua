@@ -6,4 +6,4 @@ hook.Add("Lava.PlayerPushPlayer", "Stoneman", function( Attacker, Victim )
 	end
 end)
 
-Abilities.Register("Stoneman", [[You're immune to pushes, any attempts to push you end up whipping the player who pushed you back.]], 1597 )
+Abilities.Register("Stoneman", [[You're immune to pushes, any attempts to push you end up whipping the player who pushed you back.]], "1f5ff" )

@@ -6,33 +6,33 @@ local pairs = pairs
 local CurTime = CurTime
 
 local Range = {
-	[200] = 2521,
-	[250] = 1901,
-	[300] = 520,
-	[350] = 1867,
-	[400] = 558,
-	[450] = 1958,
-	[500] = 1818,
-	[550] = 1817,
-	[600] = 1809,
-	[650] = 615,
-	[700] = 616,
-	[750] = 1792,
-	[800] = 1794,
-	[850] = 1791,
-	[900] = 2584,
-	[950] = 1955,
-	[1000] = 1790
+	[200] = "267f",
+	[250] = "1f6b6-1f3fb",
+	[300] = "1f3c3-1f3fb",
+	[350] = "1f6b4-1f3fb-200d-2642-fe0f",
+	[400] = "1f6f4",
+	[450] = "1f3c7",
+	[500] = "1f68e",
+	[550] = "1f695",
+	[600] = "1f693",
+	[650] = "1f3cd",
+	[700] = "1f3ce",
+	[750] = "1f54a",
+	[800] = "1f685",
+	[850] = "1f681",
+	[900] = "1f6e9",
+	[950] = "1f6f0",
+	[1000] = "1f680"
 }
 
 local function GetSpeedEmoji(PlayerSpeed)
-	if PlayerSpeed <= 250 then return 2521 end
+	if PlayerSpeed <= 250 then return "267f" end
 
 	for k, v in pairs(Range) do
 		if PlayerSpeed:inrange(k, k + 50) then return v end
 	end
 
-	return 1790
+	return "2728"
 end
 
 hook.Add("PlayerTick", "UsainBolt", function(Player, MoveData)
@@ -72,4 +72,4 @@ Abilities.Register("Usain Jolt", [[You gain increasing
 	speeds as long as you're still
 	sprinting. Your jumping power
 	correlates directly to your sprint speed.
-	You take half fall damage.]], 2291)
+	You take half fall damage.]], "1f9d6-1f3ff-200d-2642-fe0f")

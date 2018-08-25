@@ -36,8 +36,8 @@ hook.Add("HUDPaint", "DrawJiffy", function()
 		end
 
 		if LocalPlayer():GetAbilityMeter() ~= 100 then
-			draw.WebImage(Emoji.Get(1325), ScrW() / 2, ScrH() - ScrH() / 5, ScrH() / 6, ScrH() / 6, pColor():Alpha(150), 0)
-			draw.WebImage(Emoji.Get(1325), ScrW() / 2, ScrH() - ScrH() / 5, (LocalPlayer():GetAbilityMeter() / 100) * ScrH() / 6, (LocalPlayer():GetAbilityMeter() / 100) * ScrH() / 6, nil, 0)
+			draw.WebImage(Emoji.Get("1f4a5"), ScrW() / 2, ScrH() - ScrH() / 5, ScrH() / 6, ScrH() / 6, pColor():Alpha(150), 0)
+			draw.WebImage(Emoji.Get("1f4a5"), ScrW() / 2, ScrH() - ScrH() / 5, (LocalPlayer():GetAbilityMeter() / 100) * ScrH() / 6, (LocalPlayer():GetAbilityMeter() / 100) * ScrH() / 6, nil, 0)
 		end
 	elseif IsValid(JiffyPointer) then
 		JiffyPointer:Remove()
@@ -83,4 +83,4 @@ hook.Add("SetupMove", "JiffyJerry", function(Player, Movedata)
 	end
 end)
 
-Abilities.Register("Jiffy Jerry", [[Thanks to your quick stealth and reflexes, you can be in and out in a jiffy. Hold SHIFT then R to quickly teleport to locations in a Jiffy.]], 820)
+Abilities.Register("Jiffy Jerry", [[Thanks to your quick stealth and reflexes, you can be in and out in a jiffy. Hold SHIFT then R to quickly teleport to locations in a Jiffy.]], "1f31f")

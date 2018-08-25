@@ -155,7 +155,7 @@ hook.RunOnce("HUDPaint", function()
 		draw.Rect( 0, 0, w, h, DarkColor)
 		draw.Rect( h * 0.1, h * 0.1, w - h * 0.2, h * 0.8, pColor():Alpha(50))
 		draw.Rect(h * 0.1, h * 0.1, (s.Meter / 100) * (w - h * 0.2), h * 0.8, LocalPlayer():HasUsedUpAbility() and (pColor() - 50):Alpha(100) or pColor())
-		draw.WebImage( Emoji.Get( 2236 ), h * 0.1 + (s.Meter / 100) * (w - h * 0.2), h/2, h, h, nil, CurTime():cos() * 360 )
+		draw.WebImage( Emoji.Get( "1f98e" ), h * 0.1 + (s.Meter / 100) * (w - h * 0.2), h/2, h, h, nil, CurTime():cos() * 360 )
 	end
 end)
 
@@ -195,4 +195,4 @@ end)
 
 Abilities.Register("Chameleon", [[( NOTE: This Ability is present for showcase purposes and is currently in Beta. ) At the cost of slower movespeeds
 	You can climb any world brush and parkour! Hold Space while facing a flat wall!
-	Careful though!]], 2236)
+	Careful though!]], "1f98e")

@@ -5,4 +5,4 @@ hook.Add("Lava.ESPOverride", "EmojiMoviebySony", function( Player )
 	end
 end)
 
-Abilities.Register("Emoji Whisperer", [[Due to your binge watching of the Emoji Movie, you have developed a spiritual connection with Emojis and can sense them for an infinite amount of time.]], 734 )
+Abilities.Register("Emoji Whisperer", [[Due to your binge watching of the Emoji Movie, you have developed a spiritual connection with Emojis and can sense them for an infinite amount of time.]], "1f441" )

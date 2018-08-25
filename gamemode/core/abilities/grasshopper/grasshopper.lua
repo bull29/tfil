@@ -25,4 +25,4 @@ hook.Add("GetFallDamage", "AvoidFallDamageGrass", function(Player, Speed)
 end)
 
 
-Abilities.Register("Grasshopper", [[You sexually identify as an grasshopper and as a result, you can triple jump. You have a slightly higher jump-power than others, taking 75% less fall damage.]], 2245 )
+Abilities.Register("Grasshopper", [[You sexually identify as an grasshopper and as a result, you can triple jump. You have a slightly higher jump-power than others, taking 75% less fall damage.]], "1f997" )

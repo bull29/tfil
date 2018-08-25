@@ -19,5 +19,5 @@ Abilities.Register("Thunder Thighs", [[Due to intense and
 	exertions you're immune to Lava
 	up to your pelvis. 
 	Guess why. You also take
-	no fall damage.]], 832 )
+	no fall damage.]], "1f9b5-1f3fc" )
 

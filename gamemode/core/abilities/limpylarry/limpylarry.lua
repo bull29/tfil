@@ -82,4 +82,4 @@ Abilities.Register("Limpy Larry", [[( Currently in Beta. ) By pressing 'R',
 	damage whilst Ragdolled. 
 	Use your limpness to squeeze into otherwise
 	unreachable spots.
-	]], 385 )
+	]], "1f346" )

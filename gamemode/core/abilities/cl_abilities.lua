@@ -89,5 +89,5 @@ local function CreateAbilitiesPanel()
 end
 
 hook.Add("Lava.PopulateWidgetMenu", "CreateAbilitiesWidget", function(Context)
-	Context.NewWidget("Abilities", 733, CreateAbilitiesPanel)
+	Context.NewWidget("Abilities", "1f441-200d-1f5e8", CreateAbilitiesPanel)
 end)

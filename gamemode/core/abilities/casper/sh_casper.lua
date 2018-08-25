@@ -38,8 +38,8 @@ local m_Meter
 hook.Add("HUDPaint", "CasperMeter", function()
 	m_Meter = LocalPlayer():GetAbilityMeter()
 	if m_Meter == 100 or not LocalPlayer():HasAbility("Casper") or not LocalPlayer():Alive() then return end
-	draw.WebImage(Emoji.Get(1200), ScrW() / 2, ScrH() - ScrH() / 10, ScrH() / 7, ScrH() / 7, pColor():Alpha(100), 0)
-	draw.WebImage(Emoji.Get(1200), ScrW() / 2, ScrH() - ScrH() / 10, m_Meter / 100 * ScrH() / 7, m_Meter / 100 * ScrH() / 7, White:Alpha(LocalPlayer():HasUsedUpAbility() and 100 or 255), 0)
+	draw.WebImage(Emoji.Get("1f47b"), ScrW() / 2, ScrH() - ScrH() / 10, ScrH() / 7, ScrH() / 7, pColor():Alpha(100), 0)
+	draw.WebImage(Emoji.Get("1f47b"), ScrW() / 2, ScrH() - ScrH() / 10, m_Meter / 100 * ScrH() / 7, m_Meter / 100 * ScrH() / 7, White:Alpha(LocalPlayer():HasUsedUpAbility() and 100 or 255), 0)
 end)
 
 local GhostMat = Material("models/shiny")
@@ -58,7 +58,7 @@ hook.Add("CalcMainActivity", "CASPERANIM", function(Player)
 	if Player:HasAbility("Casper") and not Player:OnGround() and Player:IsAbilityInUse() then return ACT_HL2MP_SWIM, -1 end
 end)
 
-Abilities.Register("Casper", [[You don't collide with players and move slightly faster than others. Extremely beneficial on maps with narrow pathways. You can also hold R to hover above ground for a limited amount of time.]], 1200, function(Player)
+Abilities.Register("Casper", [[You don't collide with players and move slightly faster than others. Extremely beneficial on maps with narrow pathways. You can also hold R to hover above ground for a limited amount of time.]], "1f47b", function(Player)
 	Player:CollisionRulesChanged()
 	Player:SetRunSpeed(225 * 1.3)
 	Player:SetWalkSpeed(175 * 1.3)
