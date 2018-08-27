@@ -157,3 +157,8 @@ surface.CreateFont("lava_winscreen_nick", {
 	font = "Roboto Condensed",
 	size = ScrH()/40
 })
+
+surface.CreateFont("lava_color_picker_text", {
+	font = "Roboto Condensed",
+	size = ScrH()/55
+})

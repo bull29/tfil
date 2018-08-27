@@ -23,15 +23,32 @@ function GM:PlayerLoadout( Player )
 	Player:Give("lava_fists")
 end
 
+local function ProcessColor( Player )
+
+	local Prefered = Player:GetInfo( "lava_player_color" )
+	local Fallback = Vector((1):random(255) / 255, (1):random(255) / 255, (1):random(255) / 255)
+
+	if Prefered ~= "random" then
+		Prefered = Prefered:Split( "_" )
+		for i = 1, 3 do
+			local n = tonumber( Prefered[ i ] )
+			if not n or n > 255 or n < 0 then
+				return Fallback
+			end
+			return Vector( Prefered[ 1 ] / 255, Prefered[ 2 ] / 255, Prefered[ 3 ] / 255 )
+		end
+	end
+
+	return Fallback
+end
+
 function GM:PlayerSetModel( Player )
 	if Player:IsLavaCreator() then
 		Player:SetModel( "models/player/monk.mdl" )
-		Player:SetPlayerColor( Vector( 0.75, 0, 0 ) )
-		Player:SetupHands()
-		return
+	else
+		Player:SetModel(("models/player/Group01/male_0${1}.mdl"):fill(math.random(1, 9)))
 	end
-	Player:SetModel(("models/player/Group01/male_0${1}.mdl"):fill(math.random(1, 9)))
-	Player:SetPlayerColor(Vector((1):random(255) / 255, (1):random(255) / 255, (1):random(255) / 255))
+	Player:SetPlayerColor( ProcessColor( Player ) )
 	Player:SetupHands()
 end
 
