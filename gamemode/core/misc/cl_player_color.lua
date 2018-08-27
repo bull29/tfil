@@ -53,4 +53,6 @@ local function PlayerColorPanel()
 end
 
 
-LavaContextWidget.NewWidget( "Change Player Color", "1f3a8", PlayerColorPanel )
+hook.Add("Lava.PopulateWidgetMenu", "AddColorWidget", function( Context )
+	Context.NewWidget( "Change Player Color", "1f3a8", PlayerColorPanel )
+end)
