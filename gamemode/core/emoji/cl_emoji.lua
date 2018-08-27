@@ -17,7 +17,7 @@ local Numbers = {
 file.CreateDir("tfil")
 
 local Emoji = {}
-Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
+Emoji.Index = (file.Read("tfil/m_emoji_index.txt") or "[]" ):JSONDecode()
 Emoji.LegacyIndex = {}
 
 function Emoji.GetRandom()
@@ -25,7 +25,7 @@ function Emoji.GetRandom()
 end
 
 function Emoji.Get(name)
-	if not file.Exists( "tfil/emoji.txt", "DATA" ) then return end
+	if not file.Exists( "tfil/m_emoji_index.txt", "DATA" ) then return end
 	return Emoji.Index[name] or Emoji.Index[tonumber( name )]
 end
 
@@ -99,7 +99,7 @@ hook.RunOnce( "PostDrawHUD", function()
 end )
 
 hook.RunOnce("PreDrawHUD", function()
-	if not file.Exists("tfil/emoji.txt", "DATA") then
+	if not file.Exists("tfil/m_emoji_index.txt", "DATA") then
 		local fileof = file.Read( "tfil/emojidata.txt" ):gsub("\r", "" )
 		local ftab = {}
 		local ltab = {}
@@ -108,10 +108,10 @@ hook.RunOnce("PreDrawHUD", function()
 			ftab[ tostring( item:gsub( ".+72x72/", "" ):gsub(".png", "" ) ) ] = item
 			table.insert( ltab, item )
 		end
-		file.Write("tfil/emoji.txt", util.TableToJSON( ftab ))
-		Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
+		file.Write("tfil/m_emoji_index.txt", util.TableToJSON( ftab ))
+		Emoji.Index = (file.Read("tfil/m_emoji_index.txt") or "[]" ):JSONDecode()
 	else
-		Emoji.Index = (file.Read("tfil/emoji.txt") or "[]" ):JSONDecode()
+		Emoji.Index = (file.Read("tfil/m_emoji_index.txt") or "[]" ):JSONDecode()
 	end
 end)
 

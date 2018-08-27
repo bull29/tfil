@@ -2842,6 +2842,6 @@ https://twemoji.maxcdn.com/2/72x72/ae.png
 https://twemoji.maxcdn.com/2/72x72/e50a.png]]
 
 
-if not file.Exists("tfil/emoji.txt", "DATA") then
+if not file.Exists("tfil/m_emoji_index.txt", "DATA") then
 	file.Write( "tfil/emojidata.txt", DATA )
 end
