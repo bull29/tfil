@@ -60,6 +60,7 @@ function cmeta:CopyFrom( source )
 	self.g = source.g
 	self.b = source.b
 	self.a = source.a
+	return self
 end
 
 function pColor( NoSpectate )
