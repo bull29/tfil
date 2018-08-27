@@ -39,8 +39,8 @@ hook.RunOnce("HUDPaint", function()
 	tBar:SetFont( "lava_round_report_title" )
 	tBar.Paint = function( s, w, h )
 		draw.Rect( 0, 0, w, h, pColor() - 50 )
-		draw.WebImage( Emoji.Get( 468 ), w/3 + w/15, h/2, h * 0.6, h* 0.6, nil, 0 )
-		draw.WebImage( Emoji.Get( 468 ), w*0.66 - w/15, h/2, h * 0.6, h* 0.6, nil, 0 )
+		draw.WebImage( Emoji.Get( "1f396" ), w/3 + w/15, h/2, h * 0.6, h* 0.6, nil, 0 )
+		draw.WebImage( Emoji.Get( "1f396" ), w*0.66 - w/15, h/2, h * 0.6, h* 0.6, nil, 0 )
 	end
 
 	local Close = tBar:Add("DButton")
@@ -54,7 +54,7 @@ hook.RunOnce("HUDPaint", function()
 			draw.WebImage( Emoji.Get( Emoji.ParseNumber( ( s.CanClose - CurTime() ):floor() )[1] ), w/2, h/2, w*0.8, h*0.8, nil, 0 )
 			return
 		end
-		draw.WebImage( Emoji.Get( 472 ), w/2, h/2, w*0.8, h*0.8, s.cVar, s.Hovered and CurTime() * -500 or 0 )
+		draw.WebImage( Emoji.Get( "1f39b" ), w/2, h/2, w*0.8, h*0.8, s.cVar, s.Hovered and CurTime() * -500 or 0 )
 	end
 
 	local wBar = s:Add("DPanel")
@@ -152,8 +152,8 @@ hook.RunOnce("HUDPaint", function()
 			if IsValid( ranking[1] ) then
 				local Player = ranking[1]
 				draw.Rect( w/2 - w/10, 0, w/5, h, Player:PlayerColor():Alpha( 150 ) )
-				draw.WebImage( Emoji.Get( 629 ), w/2, h*0.83, h/7, h * 0.7, nil, 180 )
-				draw.WebImage( Emoji.Get( 2188 ), w/2, h*0.56, h/8, h/8, nil, 0 )
+				draw.WebImage( Emoji.Get( "1f3db" ), w/2, h*0.83, h/7, h * 0.7, nil, 180 )
+				draw.WebImage( Emoji.Get( "1f947" ), w/2, h*0.56, h/8, h/8, nil, 0 )
 
 				draw.Rect( w/2 - w/10, h - h/10 + 1, w/5, h/10, Player:PlayerColor() )
 				draw.SimpleText( Player:Nick(), "lava_winscreen_nick", w / 2, h - h / 18, nil, 1, 1 )
@@ -163,8 +163,8 @@ hook.RunOnce("HUDPaint", function()
 			if IsValid( ranking[2] ) then
 				local Player = ranking[2]
 				draw.Rect( w/4 - w/10, 0, w/5, h, Player:PlayerColor():Alpha( 150 ) )
-				draw.WebImage( Emoji.Get( 629 ), w/4, h*0.8, h/7, h * 0.4, nil, 180 )
-				draw.WebImage( Emoji.Get( 2189 ), w/4, h*0.672, h/8, h/8, nil, 0 )
+				draw.WebImage( Emoji.Get( "1f3db" ), w/4, h*0.8, h/7, h * 0.4, nil, 180 )
+				draw.WebImage( Emoji.Get( "1f948" ), w/4, h*0.672, h/8, h/8, nil, 0 )
 
 				draw.Rect( w/4 - w/10, h - h/10 + 1, w/5, h/10, Player:PlayerColor() )
 				draw.SimpleText( Player:Nick(), "lava_winscreen_nick", w / 4, h - h / 18, nil, 1, 1 )
@@ -174,8 +174,8 @@ hook.RunOnce("HUDPaint", function()
 			if IsValid( ranking[3] ) then
 				local Player = ranking[3]
 				draw.Rect( w*0.75 - w/10, 0, w/5, h, Player:PlayerColor():Alpha( 150 ) )
-				draw.WebImage( Emoji.Get( 629 ), w*0.75, h*0.9, h/7, h * 0.3, nil, 180 )
-				draw.WebImage( Emoji.Get( 2190 ), w*0.75, h*0.825, h/8, h/8, nil, 0 )
+				draw.WebImage( Emoji.Get( "1f3db" ), w*0.75, h*0.9, h/7, h * 0.3, nil, 180 )
+				draw.WebImage( Emoji.Get( "1f949" ), w*0.75, h*0.825, h/8, h/8, nil, 0 )
 
 				draw.Rect( w*0.75 - w/10, h - h/10 + 1, w/5, h/10, Player:PlayerColor() )
 				draw.SimpleText( Player:Nick(), "lava_winscreen_nick", w * 0.75, h - h / 18, nil, 1, 1 )
