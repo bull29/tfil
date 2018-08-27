@@ -37,55 +37,55 @@ end
 Notification.CreateType("General", {
 	SOUND = "ambient/water/drip2.wav",
 	TIME = 5,
-	ICON = 2438
+	ICON = "1f31f"
 })
 
 Notification.CreateType("Join", {
 	SOUND = "garrysmod/save_load4.wav",
 	TIME = 6,
-	ICON = 347
+	ICON = "1f31d"
 })
 
 Notification.CreateType("Enter", {
 	SOUND = "garrysmod/save_load1.wav",
 	TIME = 6,
-	ICON = 348
+	ICON = "1f31e"
 })
 
 Notification.CreateType("Leave", {
 	SOUND = "garrysmod/save_load2.wav",
 	TIME = 6,
-	ICON = 346
+	ICON = "1f31a"
 })
 
 Notification.CreateType("Winner", {
 	SOUND = "garrysmod/save_load3.wav",
 	TIME = 10,
-	ICON = 2188
+	ICON = "1f396"
 })
 
 Notification.CreateType("Mutator", {
 	SOUND = "npc/scanner/scanner_siren1.wav",
 	TIME = 10,
-	ICON = 2
+	ICON = "1f387"
 })
 
 Notification.CreateType("Chance", {
 	SOUND = "garrysmod/save_load3.wav",
 	TIME = 6,
-	ICON = 493
+	ICON = "1f3b2"
 })
 
 Notification.CreateType("AFK", {
 	SOUND = "plats/elevbell1.wav",
 	TIME = 9,
-	ICON = 1384
+	ICON = "1f4a4"
 })
 
 Notification.CreateType("AFKBack", {
 	SOUND = "plats/elevbell1.wav",
 	TIME = 9,
-	ICON = 1941
+	ICON = "1f440"
 })
 
 gameevent.Listen("player_connect")

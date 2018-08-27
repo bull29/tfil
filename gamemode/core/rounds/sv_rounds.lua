@@ -73,7 +73,7 @@ function Rounds.Start()
 	SetRoundState("Started")
 	SetTimer(os.time() + Config.GetRoundTime())
 
-	Notification.Create("The Round has Started! The Floor is Lava!", { SOUND = "ambient/water/drip2.wav", TIME = 5, ICON = 328 })
+	Notification.Create("The Round has Started! The Floor is Lava!", { SOUND = "ambient/water/drip2.wav", TIME = 5, ICON = "1f31f" })
 end
 
 function Rounds.PostRound()
