@@ -41,7 +41,7 @@ function Player:PlayerColor()
 end
 
 function Player:EmojiID()
-	return util.CRC((self:Nick() or 1566124349)) % #Emoji.Index
+	return Emoji.LegacyIndex[ util.CRC((self:Nick() or 1566124349)) % #Emoji.LegacyIndex ]
 end
 
 function Player:KeyHoldNoSpam( key, mcdata, delay )

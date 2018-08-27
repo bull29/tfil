@@ -91,6 +91,12 @@ function Emoji.BuildPanel()
 	end
 end
 
+hook.RunOnce( "PostDrawHUD", function()
+	Emoji.LegacyIndex = {}
+	for k, v in pairs( Emoji.Index ) do
+		table.insert( Emoji.LegacyIndex, k )
+	end
+end )
 
 hook.RunOnce("PreDrawHUD", function()
 	if not file.Exists("tfil/emoji.txt", "DATA") then
