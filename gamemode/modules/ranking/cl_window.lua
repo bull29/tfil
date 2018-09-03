@@ -67,7 +67,7 @@ hook.RunOnce("HUDPaint", function()
 	Close:GenerateColorShift( "cVar", White - 100, White, 512 )
 	Close.DoClick = function() p:Hide() end
 	Close.Paint = function( s, w, h )
-		draw.WebImage( Emoji.Get( 472 ), w/2, h/2, w*0.8, h*0.8, s.cVar, s.Hovered and CurTime() * -500 or 0 )
+		draw.WebImage( Emoji.Get( "1f39b" ), w/2, h/2, w*0.8, h*0.8, s.cVar, s.Hovered and CurTime() * -500 or 0 )
 	end
 
 	local search = p:Add("DTextEntry")
@@ -95,7 +95,7 @@ hook.RunOnce("HUDPaint", function()
 	prevpage:SetPos(ScrH() * 0.12, ScrH() * 0.0125)
 	prevpage:SetSize(ScrH() * 0.025, ScrH() * 0.025)
 	prevpage.Paint = function(s, w, h)
-		draw.WebImage(Emoji.Get(2638), 0, 0, w, h)
+		draw.WebImage(Emoji.Get("25c0"), 0, 0, w, h)
 	end
 	prevpage.DoClick = function()
 		page = math.max(page - 1, 1)
@@ -117,7 +117,7 @@ hook.RunOnce("HUDPaint", function()
 	nextpage:SetPos(ScrH() * 0.145, ScrH() * 0.0125)
 	nextpage:SetSize(ScrH() * 0.025, ScrH() * 0.025)
 	nextpage.Paint = function(s, w, h)
-		draw.WebImage(Emoji.Get(2632), 0, 0, w, h)
+		draw.WebImage(Emoji.Get("25b6"), 0, 0, w, h)
 	end
 	nextpage.DoClick = function()
 		page = page + 1
@@ -194,7 +194,7 @@ hook.RunOnce("HUDPaint", function()
 			e:SetSize(ScrH() / 25 - WebElements.Edge/2, ScrH() / 25 - WebElements.Edge/2)
 			e:SetPos( p:GetTall() + WebElements.Edge * 2, WebElements.Edge / 4)
 			e.PaintCircle = function( s, w, h )
-				draw.WebImage( Emoji.Get( util.CRC((data.name or 1566124349)) % #Emoji.Index ), 0, 0, w, h )
+				draw.WebImage( Emoji.Get( Emoji.LegacyIndex[ util.CRC((data.name or 1566124349)) % #Emoji.LegacyIndex ] ), 0, 0, w, h )
 				draw.WebImage( WebElements.CircleOutline, 0, 0, w, h, clr)
 			end
 
