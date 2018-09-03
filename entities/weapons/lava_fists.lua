@@ -349,9 +349,19 @@ if SERVER then return end
 local surface = surface
 local draw = draw
 local c_CValue = 1
+local c_CurrentColor = pColor( 255, 0, 0 )
+local c_DesiredColor = CurrentColor
 local pColor = pColor
 local vgui = vgui
 local CrosshairPos = {}
+
+local function EyeTraceEntity()
+	local t = LocalPlayer():EyeEntity()
+
+	if IsValid( t ) and type( t ) == "Player" then
+		return t:PlayerColor()
+	end
+end
 
 function SWEP:DrawHUD()
 	if vgui.CursorVisible() then return end
@@ -371,13 +381,18 @@ function SWEP:DrawHUD()
 		tVal = nil
 	end
 
+	c_DesiredColor = EyeTraceEntity() or pColor()
+	c_CurrentColor = c_CurrentColor:Lerp( c_DesiredColor, FrameTime() * 3 ):Alpha(255 - c_CValue)
+
+
 	if LocalPlayer():ShouldDrawLocalPlayer() then
 		c_CValue = c_CValue:Clamp(10, ScrH() / 20)
 	end
 
 	local xE, xT = (ScrH() / 100 + c_CValue), (c_CValue * ScrH() / 300)
-	draw.WebImage(WebElements.QuadCircle, tosc.x, tosc.y, xE / 2 + (CurTime() * 10):sin() * 5, xE / 2 + (CurTime() * 10):sin() * 5, pColor():Alpha(255 - c_CValue), (c_CValue / 5):sin() * 180)
-	draw.WebImage(WebElements.CircleOutline, tosc.x, tosc.y, xT + (CurTime() * 10):sin() * 5, xT + (CurTime() * 10):sin() * 5, pColor():Alpha(255 - c_CValue), 0)
+	draw.WebImage(WebElements.QuadCircle, tosc.x, tosc.y, xE / 2 + (CurTime() * 10):sin() * 5 * 2, xE / 2 + (CurTime() * 10):sin() * 5 * 2, c_CurrentColor, (c_CValue / 5):sin() * 180)
+	draw.WebImage(WebElements.QuadCircle, tosc.x, tosc.y, xE / 2 + (CurTime() * 5):sin() * 5 * 5 * 2, xE / 2 + (CurTime() * 5):sin() * 5 * 5 * 2, c_CurrentColor, (c_CValue / 5):sin() * 180)
+
 	local Size = ScrH() / 12
 
 	for i = 1, self:GetEggs() do
