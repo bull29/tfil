@@ -10,115 +10,50 @@ hook.RunOnce("HUDPaint", function()
 	local EmojiDictionary = file.Read("tfil/emojidictionary.txt"):JSONDecode()
 
 	hook.Add("Lava.PostLavaRender", "EmojiReactions", function(a, b)
-		if b then return end
-
-		for Player in Values(player.GetAll()) do
-			if not Player:Alive() or (Player == LocalPlayer() and not Player:ShouldDrawLocalPlayer()) then continue end
-
-			Player:OnBoneExisting("ValveBiped.Bip01_Head1", function(bid)
-				if Player.m_CurrentEmojis and Player.m_EmojiShowTime then
-					PlayerAlphas[Player] = PlayerAlphas[Player] or 0
-
-					if Player.m_EmojiShowTime > CurTime() then
-						PlayerAlphas[Player] = PlayerAlphas[Player]:lerp(255)
-					end
-
-					if PlayerAlphas[Player] > 1 then
-						if Player.m_EmojiShowTime < CurTime() then
-							PlayerAlphas[Player] = PlayerAlphas[Player]:lerp(0)
-						end
-
-						cam.Wrap3D2D(function()
-							draw.WebImage(WebElements.SpeechBubble, 0, -40, 40, 40, (Player:PlayerColor() - 50):Alpha(PlayerAlphas[Player]))
-							local Amount = #Player.m_CurrentEmojis
-
-							for i = 1, Amount do
-								local Size = (20 / Amount):min(10):max(5)
-								draw.WebImage(Emoji.Get(Player.m_CurrentEmojis[i]), 20 + (i - 1) * Size - (Amount - 1) * Size / 2, -25, Size, Size, White:Alpha(PlayerAlphas[Player]), 0)
-							end
-						end, Player:GetBonePosition(bid), Angle(0, 270 + EyeAngles().y, 90), 1)
-
-						if Player.m_EmojiPreText then
-							if Player.m_EmojiPostText == "" then
-								Player.m_EmojiPostText = nil
-							end
-
-							cam.Wrap3D2D(function()
-								draw.SimpleText(Player.m_EmojiPreText, "lava_emoji_reaction", not Player.m_EmojiPostText and 400 or 275, not Player.m_EmojiPostText and -725 or -575, White:Alpha(PlayerAlphas[Player]), not Player.m_EmojiPostText and 1 or 2)
-
-								if Player.m_EmojiPostText then
-									draw.SimpleText(Player.m_EmojiPostText, "lava_emoji_reaction", 525, -575, White:Alpha(PlayerAlphas[Player]), 0)
-								end
-							end, Player:GetBonePosition(bid), Angle(0, 270 + EyeAngles().y, 90), 0.05)
-						end
-					else
-						Player.m_EmojiPreText = nil
-						Player.m_EmojiPostText = nil
-						Player.m_CurrentEmojis = {}
-					end
+		for _, Player in pairs( player.GetAll() ) do
+			Player.m_BubbleAlpha = Player.m_BubbleAlpha or 0
+			if Player.m_EmojiDisappearTime and Player.m_EmojiDisappearTime < CurTime() and Player.m_BubbleAlpha then
+				Player.m_BubbleAlpha = Player.m_BubbleAlpha:lerp( 0 )
+				if Player.m_BubbleAlpha < 5 then
+					Player.m_ActiveEmojis = {}
 				end
-			end)
+			end
+			if Player.m_ActiveEmojis and Player.m_ActiveEmojis[ 1 ] then
+			--if Player == LocalPlayer() then continue end
+				if Player.m_EmojiDisappearTime > CurTime() then
+					Player.m_BubbleAlpha = Player.m_BubbleAlpha:lerp( 255 )
+				end
+				cam.Wrap3D2D( function()
+					surface.SetAlphaMultiplier( Player.m_BubbleAlpha / 255 )
+					draw.WebImage( "https://i.imgur.com/rrSZw9C.png", 0, 0, 50, 50, pColor() )
+
+					local Amount = #Player.m_ActiveEmojis
+					for i = 1, Amount do
+						local Size = (20 / Amount * 1.8 ):min(10):max( 3 )
+						draw.WebImage(Emoji.Get(Player.m_ActiveEmojis[i]), 24 + (i - 1) * Size - (Amount - 1) * Size / 2, 19, Size, Size, nil, 0)
+					end
+					surface.SetAlphaMultiplier( 1 )
+				end, Player:EyePos() + Vector( 0, 0, 50 ), Angle(0, 270 + EyeAngles().y, 90), 1 )
+			end
 		end
 	end)
 
 	hook.Add("OnPlayerChat", "EmojiInterperate", function(Player, Text)
-		if Text:match("^%$%d+$") then
-			local int = tonumber((Text:match("^%$%d+"):gsub("%D", "")))
-			if int > 2661 or int < 0 then return end
-			Player.m_CurrentEmojis = Player.m_CurrentEmojis or {}
-			table.insert(Player.m_CurrentEmojis, int)
+		if not Text:StartWith( "$<em>{" ) then return end
 
-			if #Player.m_CurrentEmojis > 6 then
-				table.remove(Player.m_CurrentEmojis, 1)
+		local Emote = Text:match( "$<em>%{.+%}" ):gsub( "$<em>%{", "" ):gsub( "%}", "" )
+		
+		if Emoji.Get( Emote ) then
+			if not Player.m_ActiveEmojis then
+				Player.m_ActiveEmojis = {}
 			end
-
-			Player.m_EmojiShowTime = CurTime() + 7
 			Player:EmitSound("garrysmod/balloon_pop_cute.wav")
-
-			return true
-		end
-
-		if Text:match("%{%$%d+%}") then
-			local data = Text:match("%{%$%d+%}")
-			local EmojiNum = data:gsub("[%{%$%}]", "")
-			local Prepend = Text:Split(data)[1]
-			local Postend = Text:Split(data)[2]
-			Player.m_CurrentEmojis = Player.m_CurrentEmojis or {}
-			table.insert(Player.m_CurrentEmojis, int)
-
-			if #Player.m_CurrentEmojis > 6 then
-				table.remove(Player.m_CurrentEmojis, 1)
+			table.insert( Player.m_ActiveEmojis, Emote )
+			if #Player.m_ActiveEmojis == 7 then
+				table.remove( Player.m_ActiveEmojis, 1 )
 			end
-
-			Player.m_EmojiShowTime = CurTime() + 10
-			Player.m_EmojiPreText = Prepend
-			Player.m_EmojiPostText = Postend:gsub("^%s", "")
-			Player:EmitSound("garrysmod/balloon_pop_cute.wav")
-
+			Player.m_EmojiDisappearTime = CurTime() + 6
 			return true
-		end
-
-		local x = Text:match("^%$%a+%=%d+$")
-
-		if x then
-			if Player == LocalPlayer() then
-				local Variable = x:gsub("^%$", ""):gsub("%=.+", "")
-				local EmojiBind = tonumber((x:gsub("^%$.+%=", ""))):max(0):min(2661)
-				chat.AddText(pColor(), "Word " .. Variable .. " has been binded to Emoji #" .. EmojiBind)
-				EmojiDictionary[Variable] = EmojiBind
-				file.Write("tfil/emojidictionary.txt", util.TableToJSON(EmojiDictionary))
-			end
-
-			return true
-		end
-	end)
-
-	hook.Add("OnChatTab", "EmojiBind", function(Text)
-		if Text:sub(1, 1) == "$" and EmojiDictionary[Text:gsub("%$", "")] then
-			return "$" .. EmojiDictionary[Text:gsub("%$", "")]
-		elseif Text:match("%{%a+}") then
-			local match = Text:match("%{%a+}")
-			if EmojiDictionary[match:gsub("%A", "")] then return Text:gsub("%{" .. match:gsub("%A", "") .. "%}", "{$" .. EmojiDictionary[match:gsub("%A", "")] .. "}") end
 		end
 	end)
 
@@ -154,21 +89,21 @@ hook.RunOnce("HUDPaint", function()
 	local LocalPlayerAlpha = 0
 
 	hook.Add("HUDPaint", "RenderLocalPlayer", function()
-		if LocalPlayer():Alive() and LocalPlayer().m_CurrentEmojis and LocalPlayer().m_EmojiShowTime and LocalPlayer().m_EmojiShowTime > CurTime() and not LocalPlayer():ShouldDrawLocalPlayer() then
+		if LocalPlayer():Alive() and LocalPlayer().m_ActiveEmojis and LocalPlayer().m_EmojiDisappearTime and LocalPlayer().m_EmojiDisappearTime > CurTime() and not LocalPlayer():ShouldDrawLocalPlayer() then
 			LocalPlayerAlpha = LocalPlayerAlpha:lerp(255)
 		elseif LocalPlayerAlpha > 1 then
 			LocalPlayerAlpha = LocalPlayerAlpha:lerp(0)
 		elseif LocalPlayerAlpha < 1 and not LocalPlayer():ShouldDrawLocalPlayer() then
-			LocalPlayer().m_CurrentEmojis = {}
+			LocalPlayer().m_ActiveEmojis = {}
 		end
 
-		if LocalPlayerAlpha > 1 and LocalPlayer():Alive() and LocalPlayer().m_CurrentEmojis then
+		if LocalPlayerAlpha > 1 and LocalPlayer():Alive() and LocalPlayer().m_ActiveEmojis then
 			draw.WebImage(WebElements.SpeechBubble, ScrW() * 0.25, ScrH() - ScrH() / 8, ScrH() / 4, ScrH() / 4, (pColor() - 50):Alpha(LocalPlayerAlpha), 0)
-			local Amount = #LocalPlayer().m_CurrentEmojis
+			local Amount = #LocalPlayer().m_ActiveEmojis
 
 			for i = 1, Amount do
 				local Size = (ScrW() * 0.05 / Amount):min(ScrW() * 0.5):max(ScrH() / 32)
-				draw.WebImage(Emoji.Get(LocalPlayer().m_CurrentEmojis[i]), ScrW() * 0.25 + (i - 1) * Size - (Amount - 1) * Size / 2, ScrH() - ScrH() / 32 - ScrH() / 8, Size, Size, White:Alpha(LocalPlayerAlpha), 0)
+				draw.WebImage(Emoji.Get(LocalPlayer().m_ActiveEmojis[i]), ScrW() * 0.25 + (i - 1) * Size - (Amount - 1) * Size / 2, ScrH() - ScrH() / 32 - ScrH() / 8, Size, Size, White:Alpha(LocalPlayerAlpha), 0)
 			end
 		end
 	end)

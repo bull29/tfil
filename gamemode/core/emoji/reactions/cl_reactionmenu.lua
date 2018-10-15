@@ -12,7 +12,7 @@ local draw = draw
 local White = color_white
 local surface = surface
 local Color = Color
-local Defaults = {1600, 1599, 1631, 1723, 1562, 1329, 385, 396, 1340, 2, 1318, 1463, 1457, 1462, 1622, 9}
+local Defaults = {"1f602", "1f60d", "1f346", "1f4a6", "1f914", "1f31e", "2728", "1f595-1f3fd", "1f4a9", "1f4af", "1f4a1", "1f525" }
 
 if not file.Exists("tfil/emojireactions.txt", "DATA") then
 	file.Write("tfil/emojireactions.txt", util.TableToJSON(Defaults))
@@ -67,7 +67,7 @@ hook.RunOnce("HUDPaint", function()
 
 	config.Paint = function(s, w, h)
 		config:Center()
-		draw.WebImage(Emoji.Get(2528), w / 2, h / 2, w, h, s.smo, CurTime():cos() * 25)
+		draw.WebImage(Emoji.Get("2699"), w / 2, h / 2, w, h, s.smo, CurTime():cos() * 25)
 	end
 
 	ls.Repopulate = function()
@@ -124,7 +124,7 @@ hook.RunOnce("HUDPaint", function()
 			end
 		elseif ls:IsVisible() then
 			if LastHovered then
-				RunConsoleCommand("say", "$" .. LastHovered.Emoji)
+				RunConsoleCommand("say", "$<em>{" .. LastHovered.Emoji .. "}")
 				LastHovered = nil
 			end
 
@@ -209,6 +209,7 @@ hook.RunOnce("HUDPaint", function()
 			co:RemoveChildren()
 
 			for Emote in Values(Emotes) do
+				print( Emote )
 				local d = co:Add("DLabel")
 				d:SetText("")
 				d:SetSize((eui:GetWide() / #Emotes):min(ScrH() / 20), (eui:GetWide() / #Emotes):min(ScrH() / 20))
@@ -216,7 +217,7 @@ hook.RunOnce("HUDPaint", function()
 				d:GenerateColorShift("pma", Color(170, 170, 170), White, 512)
 
 				d.Paint = function(s, w, h)
-					draw.WebImage(Emoji.Get(s.Hovered and 1581 or Emote), 0, 0, w, h, s.pma)
+					draw.WebImage( s.Hovered and Emoji.Get( "1f52a" ) or Emoji.Get( Emote ), 0, 0, w, h, s.pma)
 				end
 
 				d.DoClick = function()
@@ -239,15 +240,15 @@ hook.RunOnce("HUDPaint", function()
 		dp:SetSpaceX(WebElements.Edge / 2)
 		dp:SetSpaceY(WebElements.Edge / 2)
 
-		for i = 1, #Emoji.Index do
+		for i, _ in SortedPairsByValue( Emoji.Index ) do
 			local ex = dp:Add("DLabel")
 			ex:SetSize(eui:GetWide() / 10, eui:GetWide() / 10)
 			ex:SetMouseInputEnabled(true)
 			ex:SetText("")
 			ex:GenerateColorShift("ma", Color(120, 120, 120), White, 512)
-
+			
 			ex.Paint = function(s, w, h)
-				draw.WebImage(Emoji.Get(i), 0, 0, w, h, s.ma)
+				draw.WebImage( _, 0, 0, w, h, s.ma)
 			end
 
 			ex.DoClick = function(s, w, h)
@@ -295,7 +296,7 @@ hook.Add("StartChat", "DrawEmoteBox", function()
 		end
 
 		t.DoClick = function()
-			RunConsoleCommand("say", "$" .. Emotes[#Emotes - i])
+			RunConsoleCommand("say", "$<em>{" .. Emotes[#Emotes - i] .. "}")
 		end
 	end
 end)
