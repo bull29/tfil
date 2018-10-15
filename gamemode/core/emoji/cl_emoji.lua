@@ -29,6 +29,16 @@ file.CreateDir("tfil")
 
 local Emoji = {}
 Emoji.Index = ( file.Read("tfil/m_emoji_index.txt") or "[]" ):JSONDecode()
+Emoji.LegacyIndex = {}
+
+hook.RunOnce( "PostDrawHUD", function()
+	Emoji.LegacyIndex = {}
+	for k, v in pairs( Emoji.Index ) do
+		table.insert( Emoji.LegacyIndex, k )
+	end
+end )
+
+
 
 function Emoji.GetRandom()
 	return table.Random(Emoji.Index)
