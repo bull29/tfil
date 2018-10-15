@@ -37,16 +37,17 @@ local util = util
 local Vector = Vector
 local m_HasDispatchedEgg
 
-function SWEP:Initialize()
-	self:SetHoldType("normal")
-	self:SetEggs(6)
-end
-
 function SWEP:SetupDataTables()
 	self:NetworkVar("Int", 0, "Eggs")
 	self:NetworkVar("Float", 0, "NextMeleeAttack")
 	self:NetworkVar("Float", 1, "NextSprint")
 end
+
+function SWEP:Initialize()
+	self:SetHoldType("normal")
+	self:SetEggs(6)
+end
+
 
 function SWEP:UpdateNextSprint()
 	local vm = self.Owner:GetViewModel()
@@ -319,7 +320,7 @@ else
 	hook.Add("HUDPaint", "AddEggz", function()
 		local Weapon = LocalPlayer():GetActiveWeapon()
 
-		if Weapon:IsValid() and Weapon:GetClass() == "lava_fists" then
+		if Weapon:IsValid() and Weapon:GetClass() == "lava_fists" and Weapon.GetEggs then
 			EggCount = EggCount or Weapon:GetEggs()
 
 			if ( LocalPlayer():HasAbility("Egg Meister") and m_HasDispatchedEgg ) or EggCount < Weapon:GetEggs() then
@@ -349,7 +350,7 @@ if SERVER then return end
 local surface = surface
 local draw = draw
 local c_CValue = 1
-local c_CurrentColor = pColor( 255, 0, 0 )
+local c_CurrentColor = Color( 255, 0, 0 )
 local c_DesiredColor = CurrentColor
 local pColor = pColor
 local vgui = vgui
